@@ -24,6 +24,7 @@ import (
 type Server struct {
 	ProjectDir        string
 	DefaultProjectDir string
+	Port              uint16
 }
 
 func (s *Server) Start() error {
@@ -31,7 +32,7 @@ func (s *Server) Start() error {
 	unixForwardHandler := newForwardedUnixHandler()
 
 	sshServer := ssh.Server{
-		Addr: fmt.Sprintf(":%d", config.SSH_PORT),
+		Addr: fmt.Sprintf(":%d", s.Port),
 		Handler: func(session ssh.Session) {
 			switch ss := session.Subsystem(); ss {
 			case "":
