@@ -41,7 +41,6 @@ import type { WebhookControllerGetStatus200Response } from '../models'
 import type { WebhookInitializationStatus } from '../models'
 /**
  * WebhooksApi - axios parameter creator
- * @export
  */
 export const WebhooksApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -329,7 +328,6 @@ export const WebhooksApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * WebhooksApi - functional programming interface
- * @export
  */
 export const WebhooksApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = WebhooksApiAxiosParamCreator(configuration)
@@ -516,7 +514,6 @@ export const WebhooksApiFp = function (configuration?: Configuration) {
 
 /**
  * WebhooksApi - factory interface
- * @export
  */
 export const WebhooksApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = WebhooksApiFp(configuration)
@@ -630,9 +627,6 @@ export const WebhooksApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * WebhooksApi - object-oriented interface
- * @export
- * @class WebhooksApi
- * @extends {BaseAPI}
  */
 export class WebhooksApi extends BaseAPI {
   /**
@@ -642,7 +636,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerGetAppPortalAccess(
     organizationId: string,
@@ -661,7 +654,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerGetInitializationStatus(
     organizationId: string,
@@ -681,7 +673,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerGetMessageAttempts(
     organizationId: string,
@@ -700,7 +691,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerGetStatus(xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return WebhooksApiFp(this.configuration)
@@ -715,7 +705,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerInitializeWebhooks(
     organizationId: string,
@@ -735,7 +724,6 @@ export class WebhooksApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof WebhooksApi
    */
   public webhookControllerSendWebhook(
     organizationId: string,

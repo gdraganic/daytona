@@ -16,22 +16,7 @@
 // @ts-ignore
 import type { RunnerMetrics } from './runner-metrics'
 
-/**
- *
- * @export
- * @interface RunnerInfoResponseDTO
- */
 export interface RunnerInfoResponseDTO {
-  /**
-   *
-   * @type {RunnerMetrics}
-   * @memberof RunnerInfoResponseDTO
-   */
   metrics?: RunnerMetrics
-  /**
-   *
-   * @type {string}
-   * @memberof RunnerInfoResponseDTO
-   */
   version?: string
 }

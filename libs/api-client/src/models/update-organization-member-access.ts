@@ -12,22 +12,13 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface UpdateOrganizationMemberAccess
- */
 export interface UpdateOrganizationMemberAccess {
   /**
    * Organization member role
-   * @type {string}
-   * @memberof UpdateOrganizationMemberAccess
    */
   role: UpdateOrganizationMemberAccessRoleEnum
   /**
    * Array of assigned role IDs
-   * @type {Array<string>}
-   * @memberof UpdateOrganizationMemberAccess
    */
   assignedRoleIds: Array<string>
 }

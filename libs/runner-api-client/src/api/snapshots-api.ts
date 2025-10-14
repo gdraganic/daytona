@@ -41,7 +41,6 @@ import type { PullSnapshotRequestDTO } from '../models'
 import type { SnapshotExistsResponse } from '../models'
 /**
  * SnapshotsApi - axios parameter creator
- * @export
  */
 export const SnapshotsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -253,7 +252,6 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * SnapshotsApi - functional programming interface
- * @export
  */
 export const SnapshotsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SnapshotsApiAxiosParamCreator(configuration)
@@ -380,7 +378,6 @@ export const SnapshotsApiFp = function (configuration?: Configuration) {
 
 /**
  * SnapshotsApi - factory interface
- * @export
  */
 export const SnapshotsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SnapshotsApiFp(configuration)
@@ -441,9 +438,6 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
 
 /**
  * SnapshotsApi - object-oriented interface
- * @export
- * @class SnapshotsApi
- * @extends {BaseAPI}
  */
 export class SnapshotsApi extends BaseAPI {
   /**
@@ -452,7 +446,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {BuildSnapshotRequestDTO} request Build snapshot request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public buildSnapshot(request: BuildSnapshotRequestDTO, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -467,7 +460,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {boolean} [follow] Whether to follow the log output
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public getBuildLogs(snapshotRef: string, follow?: boolean, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -481,7 +473,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {PullSnapshotRequestDTO} request Pull snapshot
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public pullSnapshot(request: PullSnapshotRequestDTO, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -495,7 +486,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} snapshot Snapshot name and tag
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public removeSnapshot(snapshot: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -509,7 +499,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} snapshot Snapshot name and tag
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public snapshotExists(snapshot: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)

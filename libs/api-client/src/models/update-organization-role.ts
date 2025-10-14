@@ -12,28 +12,17 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface UpdateOrganizationRole
- */
 export interface UpdateOrganizationRole {
   /**
    * The name of the role
-   * @type {string}
-   * @memberof UpdateOrganizationRole
    */
   name: string
   /**
    * The description of the role
-   * @type {string}
-   * @memberof UpdateOrganizationRole
    */
   description: string
   /**
    * The list of permissions assigned to the role
-   * @type {Array<string>}
-   * @memberof UpdateOrganizationRole
    */
   permissions: Array<UpdateOrganizationRolePermissionsEnum>
 }

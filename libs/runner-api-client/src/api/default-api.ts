@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { RunnerInfoResponseDTO } from '../models'
 /**
  * DefaultApi - axios parameter creator
- * @export
  */
 export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -106,7 +105,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * DefaultApi - functional programming interface
- * @export
  */
 export const DefaultApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
@@ -158,7 +156,6 @@ export const DefaultApiFp = function (configuration?: Configuration) {
 
 /**
  * DefaultApi - factory interface
- * @export
  */
 export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = DefaultApiFp(configuration)
@@ -186,9 +183,6 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * DefaultApi - object-oriented interface
- * @export
- * @class DefaultApi
- * @extends {BaseAPI}
  */
 export class DefaultApi extends BaseAPI {
   /**
@@ -196,7 +190,6 @@ export class DefaultApi extends BaseAPI {
    * @summary Health check
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DefaultApi
    */
   public healthCheck(options?: RawAxiosRequestConfig) {
     return DefaultApiFp(this.configuration)
@@ -209,7 +202,6 @@ export class DefaultApi extends BaseAPI {
    * @summary Runner info
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DefaultApi
    */
   public runnerInfo(options?: RawAxiosRequestConfig) {
     return DefaultApiFp(this.configuration)

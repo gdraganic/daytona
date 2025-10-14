@@ -12,58 +12,13 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface FileInfo
- */
 export interface FileInfo {
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   name: string
-  /**
-   *
-   * @type {boolean}
-   * @memberof FileInfo
-   */
   isDir: boolean
-  /**
-   *
-   * @type {number}
-   * @memberof FileInfo
-   */
   size: number
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   modTime: string
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   mode: string
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   permissions: string
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   owner: string
-  /**
-   *
-   * @type {string}
-   * @memberof FileInfo
-   */
   group: string
 }

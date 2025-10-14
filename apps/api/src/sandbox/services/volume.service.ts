@@ -259,4 +259,40 @@ export class VolumeService {
       this.logger.error(err)
     }
   }
+
+  /**
+   * Find volumes in pending states for manager processing.
+   */
+  async findPendingVolumes(): Promise<Volume[]> {
+    return this.volumeRepository.find({
+      where: {
+        state: In([VolumeState.PENDING_CREATE, VolumeState.PENDING_DELETE]),
+      },
+    })
+  }
+
+  /**
+   * Update volume state (used by manager during processing).
+   */
+  async updateVolumeState(volumeId: string, state: VolumeState, errorReason?: string): Promise<void> {
+    const updateData: Partial<Volume> = { state }
+    if (errorReason !== undefined) {
+      updateData.errorReason = errorReason
+    }
+    await this.volumeRepository.update(volumeId, updateData)
+  }
+
+  /**
+   * Save volume with updated state (used by manager).
+   */
+  async saveVolume(volumeData: Partial<Volume> & { id: string }): Promise<Volume> {
+    return this.volumeRepository.save(volumeData as Volume)
+  }
+
+  /**
+   * Delete volume by criteria (used by manager for cleanup).
+   */
+  async deleteVolumeByCriteria(criteria: { organizationId: string; name: string; state: VolumeState }): Promise<void> {
+    await this.volumeRepository.delete(criteria)
+  }
 }

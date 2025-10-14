@@ -1,0 +1,142 @@
+services:
+  debezium:
+    image: debezium/connect:2.7.3.Final
+    container_name: debezium
+    depends_on:
+      kafka:
+        condition: service_healthy
+    # ports:
+    #   - "8083:8083"
+    network_mode: host
+    environment:
+      BOOTSTRAP_SERVERS: localhost:9092
+      GROUP_ID: debezium
+      CONFIG_STORAGE_TOPIC: debezium_configs
+      OFFSET_STORAGE_TOPIC: debezium_offsets
+      STATUS_STORAGE_TOPIC: debezium_statuses
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Auto-register Debezium connector on startup
+  debezium-init:
+    image: curlimages/curl:latest
+    container_name: debezium-init
+    depends_on:
+      debezium:
+        condition: service_healthy
+    network_mode: host
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for Debezium Connect to be ready..."
+        sleep 5
+        
+        echo "Checking if connector already exists..."
+        if curl -f -s http://localhost:8083/connectors/cdc-connector > /dev/null 2>&1; then
+          echo "Connector 'cdc-connector' already exists, skipping creation"
+          exit 0
+        fi
+        
+        echo "Creating Debezium PostgreSQL connector..."
+        curl -i -X POST -H "Accept:application/json" -H "Content-Type:application/json" \
+          http://localhost:8083/connectors/ -d '{
+            "name": "cdc-connector",
+            "config": {
+                "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+                "database.hostname": "db",
+                "database.port": "5432",
+                "database.user": "user",
+                "database.password": "pass",
+                "database.dbname": "application_ctx",
+                "database.server.name": "daytona",
+                "table.include.list": "public.sandbox",
+                "plugin.name": "pgoutput",
+                "publication.name": "dbz_publication",
+                "slot.name": "debezium_slot",
+                "topic.prefix": "cdc",
+                "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+                "key.converter.schemas.enable": false,
+                "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+                "value.converter.schemas.enable": false,
+                "transforms": "unwrap",
+                "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+                "transforms.unwrap.drop.tombstones": false,
+                "transforms.unwrap.delete.handling.mode": "rewrite",
+                "transforms.unwrap.add.fields": "op,table,source.ts_ms",
+                "snapshot.mode": "initial",
+                "slot.drop.on.stop": "false",
+                "publication.autocreate.mode": "all_tables"
+            }
+        }'
+        
+        echo ""
+        echo "Connector created! Checking status..."
+        sleep 2
+        curl http://localhost:8083/connectors/cdc-connector/status
+        
+        echo ""
+        echo "Done! CDC is now active."
+
+  kafka:
+    image: apache/kafka:4.0.0
+    # ports:
+    #   - 9092:9092
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "/opt/kafka/bin/kafka-topics.sh", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@localhost:9093'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_LISTENERS: EXTERNAL://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: EXTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 6
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    # ports:
+    #   - 8088:8080
+    network_mode: host
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kafka
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: localhost:9092
+    depends_on:
+      - kafka
+
+  kafka-console-consumer:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-console-consumer
+    depends_on:
+      kafka:
+        condition: service_healthy
+    network_mode: host
+    entrypoint: []
+    command:
+      - bash
+      - -c
+      - |
+        echo 'Waiting for topic to be created...'
+        sleep 10
+        echo 'Starting console consumer for CDC events...'
+        kafka-console-consumer \
+          --bootstrap-server localhost:9092 \
+          --topic cdc.public.sandbox \
+          --from-beginning \
+          --property print.key=true \
+          --property print.timestamp=true

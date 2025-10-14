@@ -12,28 +12,17 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CreateApiKey
- */
 export interface CreateApiKey {
   /**
    * The name of the API key
-   * @type {string}
-   * @memberof CreateApiKey
    */
   name: string
   /**
    * The list of organization resource permissions assigned to the API key
-   * @type {Array<string>}
-   * @memberof CreateApiKey
    */
   permissions: Array<CreateApiKeyPermissionsEnum>
   /**
    * When the API key expires
-   * @type {Date}
-   * @memberof CreateApiKey
    */
   expiresAt?: Date | null
 }

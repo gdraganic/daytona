@@ -5,7 +5,18 @@
 
 import { ForbiddenException, Injectable, Logger, NotFoundException, ConflictException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Not, Repository, LessThan, In, JsonContains, FindOptionsWhere, ILike } from 'typeorm'
+import {
+  DataSource,
+  Not,
+  Repository,
+  LessThan,
+  In,
+  JsonContains,
+  FindOptionsWhere,
+  ILike,
+  Raw,
+  MoreThanOrEqual,
+} from 'typeorm'
 import { Sandbox } from '../entities/sandbox.entity'
 import { CreateSandboxDto } from '../dto/create-sandbox.dto'
 import { SandboxState } from '../enums/sandbox-state.enum'
@@ -67,6 +78,11 @@ import { customAlphabet as customNanoid, nanoid, urlAlphabet } from 'nanoid'
 import { WithInstrumentation } from '../../common/decorators/otel.decorator'
 import { validateMountPaths } from '../utils/volume-mount-path-validation.util'
 import { SandboxRepository } from '../repositories/sandbox.repository'
+import { JobService } from './job.service'
+import { JobType, ResourceType } from '../dto/job.dto'
+import { Transactional } from '../../common/decorators/transactional.decorator'
+import { DockerRegistryService } from '../../docker-registry/services/docker-registry.service'
+import { SnapshotService } from './snapshot.service'
 
 const DEFAULT_CPU = 1
 const DEFAULT_MEMORY = 1
@@ -96,6 +112,10 @@ export class SandboxService {
     private readonly runnerAdapterFactory: RunnerAdapterFactory,
     private readonly organizationUsageService: OrganizationUsageService,
     private readonly redisLockProvider: RedisLockProvider,
+    private readonly dataSource: DataSource,
+    private readonly jobService: JobService,
+    private readonly dockerRegistryService: DockerRegistryService,
+    private readonly snapshotService: SnapshotService,
   ) {}
 
   protected getLockKey(id: string): string {
@@ -270,6 +290,7 @@ export class SandboxService {
     return sandbox
   }
 
+  @Transactional()
   async createFromSnapshot(
     createSandboxDto: CreateSandboxDto,
     organization: Organization,
@@ -432,6 +453,58 @@ export class SandboxService {
       sandbox.pending = true
 
       await this.sandboxRepository.insert(sandbox)
+      // For v3 runners, create CREATE_SANDBOX job immediately in the same transaction
+      if (runner.version === '3') {
+        // Get registry for the snapshot
+        const registry = await this.dockerRegistryService.findOneBySnapshotImageName(
+          snapshot.internalName,
+          organization.id,
+        )
+        if (!registry) {
+          throw new BadRequestError('No registry found for snapshot')
+        }
+
+        const metadata = {
+          limitNetworkEgress: String(organization.sandboxLimitedNetworkEgress),
+          organizationId: organization.id,
+          organizationName: organization.name,
+          sandboxName: sandbox.name,
+        }
+
+        const payload = {
+          snapshot: snapshot.internalName,
+          cpu: sandbox.cpu,
+          mem: sandbox.mem,
+          disk: sandbox.disk,
+          gpu: sandbox.gpu,
+          osUser: sandbox.osUser,
+          env: sandbox.env,
+          labels: sandbox.labels,
+          volumes: sandbox.volumes,
+          authToken: sandbox.authToken,
+          networkBlockAll: sandbox.networkBlockAll,
+          networkAllowList: sandbox.networkAllowList,
+          registry: {
+            id: registry.id,
+            username: registry.username,
+            password: registry.password,
+            server: registry.url,
+          },
+          entrypoint: snapshot.entrypoint,
+          metadata,
+        }
+
+        await this.jobService.createJob(
+          (this as any).manager, // EntityManager from @Transactional decorator
+          JobType.CREATE_SANDBOX,
+          runner.id,
+          ResourceType.SANDBOX,
+          sandbox.id,
+          payload,
+        )
+        this.logger.log(`Created CREATE_SANDBOX job for v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+      }
+
       return SandboxDto.fromSandbox(sandbox)
     } catch (error) {
       if (error.code === '23505') {
@@ -515,6 +588,7 @@ export class SandboxService {
     return SandboxDto.fromSandbox(result)
   }
 
+  @Transactional()
   async createFromBuildInfo(createSandboxDto: CreateSandboxDto, organization: Organization): Promise<SandboxDto> {
     let pendingCpuIncrement: number | undefined
     let pendingMemoryIncrement: number | undefined
@@ -632,6 +706,49 @@ export class SandboxService {
       sandbox.pending = true
 
       await this.sandboxRepository.insert(sandbox)
+
+      // For v3 runners, create CREATE_SANDBOX job immediately in the same transaction
+      // Only if sandbox has a runner and is not PENDING_BUILD
+      if (runner && runner.version === '3' && sandbox.state !== SandboxState.PENDING_BUILD) {
+        // For buildInfo sandboxes, we need to extract entrypoint from dockerfile
+        const entrypoint = this.getEntrypointFromDockerfile(createSandboxDto.buildInfo.dockerfileContent)
+
+        const metadata = {
+          limitNetworkEgress: String(organization.sandboxLimitedNetworkEgress),
+          organizationId: organization.id,
+          organizationName: organization.name,
+          sandboxName: sandbox.name,
+        }
+
+        const payload = {
+          snapshot: sandbox.buildInfo.snapshotRef,
+          cpu: sandbox.cpu,
+          mem: sandbox.mem,
+          disk: sandbox.disk,
+          gpu: sandbox.gpu,
+          osUser: sandbox.osUser,
+          env: sandbox.env,
+          labels: sandbox.labels,
+          volumes: sandbox.volumes,
+          buildInfo: sandbox.buildInfo,
+          authToken: sandbox.authToken,
+          networkBlockAll: sandbox.networkBlockAll,
+          networkAllowList: sandbox.networkAllowList,
+          entrypoint,
+          metadata,
+        }
+
+        await this.jobService.createJob(
+          (this as any).manager, // EntityManager from @Transactional decorator
+          JobType.CREATE_SANDBOX,
+          runner.id,
+          ResourceType.SANDBOX,
+          sandbox.id,
+          payload,
+        )
+        this.logger.log(`Created CREATE_SANDBOX job for v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+      }
+
       return SandboxDto.fromSandbox(sandbox)
     } catch (error) {
       if (error.code === '23505') {
@@ -941,6 +1058,7 @@ export class SandboxService {
     return sandbox.runnerId || null
   }
 
+  @Transactional()
   async destroy(sandboxIdOrName: string, organizationId?: string): Promise<Sandbox> {
     const sandbox = await this.findOneByIdOrName(sandboxIdOrName, organizationId)
 
@@ -953,60 +1071,97 @@ export class SandboxService {
     sandbox.name = 'DESTROYED_' + sandbox.name + '_' + Date.now()
     await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
 
+    // For v3 runners, create job immediately in the same transaction
+    if (sandbox.runnerId) {
+      const runner = await this.runnerService.findOne(sandbox.runnerId)
+      if (runner && runner.version === '3') {
+        await this.jobService.createJob(
+          (this as any).manager, // EntityManager from @Transactional decorator
+          JobType.DESTROY_SANDBOX,
+          runner.id,
+          ResourceType.SANDBOX,
+          sandbox.id,
+        )
+        this.logger.log(`Created DESTROY_SANDBOX job for v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+      }
+    }
+
     this.eventEmitter.emit(SandboxEvents.DESTROYED, new SandboxDestroyedEvent(sandbox))
     return sandbox
   }
 
+  @Transactional()
   async start(sandboxIdOrName: string, organization: Organization): Promise<Sandbox> {
     let pendingCpuIncrement: number | undefined
     let pendingMemoryIncrement: number | undefined
     let pendingDiskIncrement: number | undefined
 
-    const sandbox = await this.findOneByIdOrName(sandboxIdOrName, organization.id)
-
-    if (sandbox.state === SandboxState.STARTED && sandbox.desiredState === SandboxDesiredState.STARTED) {
-      return sandbox
-    }
-
-    if (String(sandbox.state) !== String(sandbox.desiredState)) {
-      // Allow start of stopped | archived and archiving | archived sandboxes
-      if (
-        sandbox.desiredState !== SandboxDesiredState.ARCHIVED ||
-        (sandbox.state !== SandboxState.STOPPED && sandbox.state !== SandboxState.ARCHIVING)
-      ) {
-        throw new SandboxError('State change in progress')
-      }
-    }
-
-    if (![SandboxState.STOPPED, SandboxState.ARCHIVED, SandboxState.ARCHIVING].includes(sandbox.state)) {
-      throw new SandboxError('Sandbox is not in valid state')
-    }
-
-    if (sandbox.pending) {
-      throw new SandboxError('Sandbox state change in progress')
-    }
-
-    this.organizationService.assertOrganizationIsNotSuspended(organization)
-
-    const { pendingCpuIncremented, pendingMemoryIncremented, pendingDiskIncremented } =
-      await this.validateOrganizationQuotas(organization, sandbox.cpu, sandbox.mem, sandbox.disk, sandbox.id)
-
-    if (pendingCpuIncremented) {
-      pendingCpuIncrement = sandbox.cpu
-    }
-    if (pendingMemoryIncremented) {
-      pendingMemoryIncrement = sandbox.mem
-    }
-    if (pendingDiskIncremented) {
-      pendingDiskIncrement = sandbox.disk
-    }
-
-    sandbox.pending = true
-    sandbox.desiredState = SandboxDesiredState.STARTED
-    sandbox.authToken = nanoid(32).toLocaleLowerCase()
-
     try {
-      await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
+      const sandbox = await this.findOneByIdOrName(sandboxIdOrName, organization.id)
+
+      if (sandbox.state === SandboxState.STARTED && sandbox.desiredState === SandboxDesiredState.STARTED) {
+        return sandbox
+      }
+
+      if (String(sandbox.state) !== String(sandbox.desiredState)) {
+        // Allow start of stopped | archived and archiving | archived sandboxes
+        if (
+          sandbox.desiredState !== SandboxDesiredState.ARCHIVED ||
+          (sandbox.state !== SandboxState.STOPPED && sandbox.state !== SandboxState.ARCHIVING)
+        ) {
+          throw new SandboxError('State change in progress')
+        }
+      }
+
+      if (![SandboxState.STOPPED, SandboxState.ARCHIVED, SandboxState.ARCHIVING].includes(sandbox.state)) {
+        throw new SandboxError('Sandbox is not in valid state')
+      }
+
+      if (sandbox.pending) {
+        throw new SandboxError('Sandbox state change in progress')
+      }
+
+      this.organizationService.assertOrganizationIsNotSuspended(organization)
+
+      const { pendingCpuIncremented, pendingMemoryIncremented, pendingDiskIncremented } =
+        await this.validateOrganizationQuotas(organization, sandbox.cpu, sandbox.mem, sandbox.disk, sandbox.id)
+
+      if (pendingCpuIncremented) {
+        pendingCpuIncrement = sandbox.cpu
+      }
+      if (pendingMemoryIncremented) {
+        pendingMemoryIncrement = sandbox.mem
+      }
+      if (pendingDiskIncremented) {
+        pendingDiskIncrement = sandbox.disk
+      }
+
+      sandbox.pending = true
+      sandbox.desiredState = SandboxDesiredState.STARTED
+      await this.sandboxRepository.save(sandbox)
+
+      // For v3 runners, create job immediately in the same transaction
+      if (sandbox.runnerId) {
+        const runner = await this.runnerService.findOne(sandbox.runnerId)
+        if (runner && runner.version === '3') {
+          const metadata = {
+            limitNetworkEgress: String(organization.sandboxLimitedNetworkEgress),
+          }
+          await this.jobService.createJob(
+            (this as any).manager, // EntityManager from @Transactional decorator
+            JobType.START_SANDBOX,
+            runner.id,
+            ResourceType.SANDBOX,
+            sandbox.id,
+            { metadata },
+          )
+          this.logger.log(`Created START_SANDBOX job for v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+        }
+      }
+
+      this.eventEmitter.emit(SandboxEvents.STARTED, new SandboxStartedEvent(sandbox))
+
+      return sandbox
     } catch (error) {
       await this.rollbackPendingUsage(
         organization.id,
@@ -1016,12 +1171,9 @@ export class SandboxService {
       )
       throw error
     }
-
-    this.eventEmitter.emit(SandboxEvents.STARTED, new SandboxStartedEvent(sandbox))
-
-    return sandbox
   }
 
+  @Transactional()
   async stop(sandboxIdOrName: string, organizationId?: string): Promise<Sandbox> {
     const sandbox = await this.findOneByIdOrName(sandboxIdOrName, organizationId)
 
@@ -1046,6 +1198,22 @@ export class SandboxService {
     }
 
     await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
+
+    // For v3 runners, create job immediately in the same transaction
+    if (sandbox.runnerId) {
+      const runner = await this.runnerService.findOne(sandbox.runnerId)
+      if (runner && runner.version === '3') {
+        const jobType = sandbox.autoDeleteInterval === 0 ? JobType.DESTROY_SANDBOX : JobType.STOP_SANDBOX
+        await this.jobService.createJob(
+          (this as any).manager, // EntityManager from @Transactional decorator
+          jobType,
+          runner.id,
+          ResourceType.SANDBOX,
+          sandbox.id,
+        )
+        this.logger.log(`Created ${jobType} job for v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+      }
+    }
 
     if (sandbox.autoDeleteInterval === 0) {
       this.eventEmitter.emit(SandboxEvents.DESTROYED, new SandboxDestroyedEvent(sandbox))
@@ -1289,6 +1457,255 @@ export class SandboxService {
     return sandbox.public
   }
 
+  /**
+   * Handle auto-stop check cron job.
+   * Processes sandboxes that have exceeded their auto-stop interval.
+   * For v3 runners, creates STOP_SANDBOX or DESTROY_SANDBOX jobs.
+   * For v0 runners, triggers the reconciler via event emission.
+   */
+  async handleAutoStopCheck(): Promise<void> {
+    // Get all ready runners
+    const allRunners = await this.runnerService.findAll()
+    const readyRunners = allRunners.filter((runner) => runner.state === RunnerState.READY)
+
+    // Process all runners in parallel
+    await Promise.all(
+      readyRunners.map(async (runner) => {
+        const sandboxes = await this.sandboxRepository.find({
+          where: {
+            runnerId: runner.id,
+            organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
+            state: SandboxState.STARTED,
+            desiredState: SandboxDesiredState.STARTED,
+            pending: Not(true),
+            autoStopInterval: Not(0),
+            lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoStopInterval"`),
+          },
+          order: {
+            lastBackupAt: 'ASC',
+          },
+          take: 10,
+        })
+
+        await Promise.all(
+          sandboxes.map(async (sandbox) => {
+            const lockKey = `sync-instance-state-${sandbox.id}`
+            const acquired = await this.redisLockProvider.lock(lockKey, 30)
+            if (!acquired) {
+              return
+            }
+
+            try {
+              sandbox.pending = true
+              //  if auto-delete interval is 0, delete the sandbox immediately
+              if (sandbox.autoDeleteInterval === 0) {
+                sandbox.desiredState = SandboxDesiredState.DESTROYED
+              } else {
+                sandbox.desiredState = SandboxDesiredState.STOPPED
+              }
+              await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
+
+              // For v3 runners, create job immediately
+              if (runner.version === '3') {
+                const jobType = sandbox.autoDeleteInterval === 0 ? JobType.DESTROY_SANDBOX : JobType.STOP_SANDBOX
+                await this.jobService.createJob(null, jobType, runner.id, ResourceType.SANDBOX, sandbox.id)
+                this.logger.log(`Created ${jobType} job for auto-stop on v3 runner ${runner.id}, sandbox ${sandbox.id}`)
+              }
+
+              // Emit event for v0 runners (triggers reconciler)
+              if (sandbox.autoDeleteInterval === 0) {
+                this.eventEmitter.emit(SandboxEvents.DESTROYED, new SandboxDestroyedEvent(sandbox))
+              } else {
+                this.eventEmitter.emit(SandboxEvents.STOPPED, new SandboxStoppedEvent(sandbox))
+              }
+            } catch (error) {
+              this.logger.error(`Error processing auto-stop state for sandbox ${sandbox.id}:`, error)
+            } finally {
+              await this.redisLockProvider.unlock(lockKey)
+            }
+          }),
+        )
+      }),
+    )
+  }
+
+  /**
+   * Handle auto-archive check cron job.
+   * Processes stopped sandboxes that have exceeded their auto-archive interval.
+   * For v3 runners, creates ARCHIVE_SANDBOX jobs.
+   * For v0 runners, triggers the reconciler via event emission.
+   */
+  async handleAutoArchiveCheck(): Promise<void> {
+    const sandboxes = await this.sandboxRepository.find({
+      where: {
+        organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
+        state: SandboxState.STOPPED,
+        desiredState: SandboxDesiredState.STOPPED,
+        pending: Not(true),
+        lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoArchiveInterval"`),
+      },
+      order: {
+        lastBackupAt: 'ASC',
+      },
+      take: 100,
+    })
+
+    await Promise.all(
+      sandboxes.map(async (sandbox) => {
+        const lockKey = `sync-instance-state-${sandbox.id}`
+        const acquired = await this.redisLockProvider.lock(lockKey, 30)
+        if (!acquired) {
+          return
+        }
+
+        try {
+          sandbox.desiredState = SandboxDesiredState.ARCHIVED
+          await this.sandboxRepository.save(sandbox)
+
+          // TODO: For v3 runners, implement ARCHIVE_SANDBOX job type
+          // For now, archive operations go through reconciler for both v0 and v3
+
+          // Emit event (triggers reconciler)
+          this.eventEmitter.emit(SandboxEvents.ARCHIVED, new SandboxArchivedEvent(sandbox))
+        } catch (error) {
+          this.logger.error(`Error processing auto-archive state for sandbox ${sandbox.id}:`, error)
+        } finally {
+          await this.redisLockProvider.unlock(lockKey)
+        }
+      }),
+    )
+  }
+
+  /**
+   * Handle auto-delete check cron job.
+   * Processes stopped sandboxes that have exceeded their auto-delete interval.
+   * For v3 runners, creates DESTROY_SANDBOX jobs.
+   * For v0 runners, triggers the reconciler via event emission.
+   */
+  async handleAutoDeleteCheck(): Promise<void> {
+    // Get all ready runners
+    const allRunners = await this.runnerService.findAll()
+    const readyRunners = allRunners.filter((runner) => runner.state === RunnerState.READY)
+
+    // Process all runners in parallel
+    await Promise.all(
+      readyRunners.map(async (runner) => {
+        const sandboxes = await this.sandboxRepository.find({
+          where: {
+            runnerId: runner.id,
+            organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
+            state: SandboxState.STOPPED,
+            desiredState: SandboxDesiredState.STOPPED,
+            pending: Not(true),
+            autoDeleteInterval: MoreThanOrEqual(0),
+            lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoDeleteInterval"`),
+          },
+          order: {
+            lastActivityAt: 'ASC',
+          },
+          take: 100,
+        })
+
+        await Promise.all(
+          sandboxes.map(async (sandbox) => {
+            const lockKey = `sync-instance-state-${sandbox.id}`
+            const acquired = await this.redisLockProvider.lock(lockKey, 30)
+            if (!acquired) {
+              return
+            }
+
+            try {
+              sandbox.pending = true
+              sandbox.desiredState = SandboxDesiredState.DESTROYED
+              await this.sandboxRepository.save(sandbox)
+
+              // For v3 runners, create job immediately
+              if (runner.version === '3') {
+                await this.jobService.createJob(
+                  null,
+                  JobType.DESTROY_SANDBOX,
+                  runner.id,
+                  ResourceType.SANDBOX,
+                  sandbox.id,
+                )
+                this.logger.log(
+                  `Created DESTROY_SANDBOX job for auto-delete on v3 runner ${runner.id}, sandbox ${sandbox.id}`,
+                )
+              }
+
+              // Emit event for v0 runners (triggers reconciler)
+              this.eventEmitter.emit(SandboxEvents.DESTROYED, new SandboxDestroyedEvent(sandbox))
+            } catch (error) {
+              this.logger.error(`Error processing auto-delete state for sandbox ${sandbox.id}:`, error)
+            } finally {
+              await this.redisLockProvider.unlock(lockKey)
+            }
+          }),
+        )
+      }),
+    )
+  }
+
+  /**
+   * Find sandboxes with state mismatches for reconciler sync.
+   * Returns sandbox IDs that need state reconciliation.
+   */
+  async findSandboxesForSync(maxCount = 100): Promise<string[]> {
+    const queryBuilder = this.sandboxRepository
+      .createQueryBuilder('sandbox')
+      .select(['sandbox.id'])
+      .where('sandbox.state NOT IN (:...excludedStates)', {
+        excludedStates: [SandboxState.DESTROYED, SandboxState.ERROR, SandboxState.BUILD_FAILED],
+      })
+      .andWhere('sandbox."desiredState"::text != sandbox.state::text')
+      .andWhere('sandbox."desiredState"::text != :archived', { archived: SandboxDesiredState.ARCHIVED })
+      .orderBy('sandbox."lastActivityAt"', 'DESC')
+      .limit(maxCount)
+
+    const results = await queryBuilder.getRawMany()
+    return results.map((row) => row.sandbox_id)
+  }
+
+  /**
+   * Find sandboxes with archived desired state for reconciler sync.
+   */
+  async findArchivedDesiredStateSandboxes(): Promise<Sandbox[]> {
+    return await this.sandboxRepository.find({
+      where: {
+        state: In([SandboxState.ARCHIVING, SandboxState.STOPPED]),
+        desiredState: SandboxDesiredState.ARCHIVED,
+      },
+      take: 100,
+      order: {
+        lastActivityAt: 'ASC',
+      },
+    })
+  }
+
+  /**
+   * Get a sandbox by ID for reconciler processing.
+   * Throws NotFoundException if not found.
+   */
+  async getSandboxForReconciler(sandboxId: string): Promise<Sandbox> {
+    const sandbox = await this.sandboxRepository.findOneBy({
+      id: sandboxId,
+    })
+    if (!sandbox) {
+      throw new NotFoundException(`Sandbox ${sandboxId} not found`)
+    }
+    return sandbox
+  }
+
+  /**
+   * Update sandbox to ERROR state (used by reconciler on failures).
+   */
+  async markSandboxAsError(sandboxId: string, errorReason: string): Promise<void> {
+    await this.sandboxRepository.update(sandboxId, {
+      state: SandboxState.ERROR,
+      errorReason,
+    })
+  }
+
   @OnEvent(OrganizationEvents.SUSPENDED_SANDBOX_STOPPED)
   async handleSuspendedSandboxStopped(event: OrganizationSuspendedSandboxStoppedEvent) {
     await this.stop(event.sandboxId).catch((error) => {
@@ -1409,5 +1826,158 @@ export class SandboxService {
       .getRawMany()
 
     return result.map((row) => row.region)
+  }
+
+  // Extract entrypoint from Dockerfile content
+  private getEntrypointFromDockerfile(dockerfileContent: string): string[] {
+    // Match ENTRYPOINT with either a string or JSON array
+    const entrypointMatch = dockerfileContent.match(/ENTRYPOINT\s+(.*)/)
+    if (entrypointMatch) {
+      const rawEntrypoint = entrypointMatch[1].trim()
+      try {
+        // Try parsing as JSON array
+        const parsed = JSON.parse(rawEntrypoint)
+        if (Array.isArray(parsed)) {
+          return parsed
+        }
+      } catch {
+        // Fallback: it's probably a plain string
+        return [rawEntrypoint.replace(/["']/g, '')]
+      }
+    }
+
+    // Match CMD with either a string or JSON array
+    const cmdMatch = dockerfileContent.match(/CMD\s+(.*)/)
+    if (cmdMatch) {
+      const rawCmd = cmdMatch[1].trim()
+      try {
+        const parsed = JSON.parse(rawCmd)
+        if (Array.isArray(parsed)) {
+          return parsed
+        }
+      } catch {
+        return [rawCmd.replace(/["']/g, '')]
+      }
+    }
+
+    return ['sleep', 'infinity']
+  }
+
+  /**
+   * Find sandboxes needing backup for a specific runner.
+   * Used by BackupManager cron job.
+   */
+  async findSandboxesNeedingBackup(runnerId: string, limit = 10): Promise<Sandbox[]> {
+    return this.sandboxRepository.find({
+      where: {
+        runnerId,
+        organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
+        state: SandboxState.STARTED,
+        backupState: In([BackupState.NONE, BackupState.COMPLETED]),
+        lastBackupAt: Raw((alias) => `${alias} IS NULL OR ${alias} < NOW() - INTERVAL '1 hour'`),
+        autoDeleteInterval: Not(0),
+      },
+      order: {
+        lastBackupAt: 'ASC',
+      },
+      take: limit,
+    })
+  }
+
+  /**
+   * Find sandboxes with backup in progress for archival.
+   * Used by BackupManager cron job.
+   */
+  async findSandboxesWithBackupForArchival(limit = 100): Promise<Sandbox[]> {
+    return this.sandboxRepository
+      .createQueryBuilder('sandbox')
+      .where('sandbox.backupState = :backupState', { backupState: BackupState.IN_PROGRESS })
+      .andWhere('sandbox.state = :state', { state: SandboxState.STOPPED })
+      .andWhere('sandbox.desiredState = :desiredState', { desiredState: SandboxDesiredState.ARCHIVED })
+      .orderBy('sandbox.lastBackupAt', 'ASC')
+      .take(limit)
+      .getMany()
+  }
+
+  /**
+   * Count sandboxes with backup in progress.
+   * Used by BackupManager to check concurrency limits.
+   */
+  async countSandboxesWithBackupInProgress(runnerId: string): Promise<number> {
+    return this.sandboxRepository.count({
+      where: {
+        runnerId,
+        backupState: BackupState.IN_PROGRESS,
+      },
+    })
+  }
+
+  /**
+   * Find sandbox by ID and fail if not found.
+   * Used by BackupManager for processing.
+   */
+  async findSandboxByIdOrFail(sandboxId: string): Promise<Sandbox> {
+    return this.sandboxRepository.findOneByOrFail({ id: sandboxId })
+  }
+
+  /**
+   * Save sandbox (used by BackupManager for backup state updates).
+   */
+  async saveSandbox(sandbox: Sandbox): Promise<Sandbox> {
+    return this.sandboxRepository.save(sandbox)
+  }
+
+  /**
+   * Find sandboxes with pending or in-progress backups (used by BackupManager.checkBackupStates).
+   */
+  async findSandboxesWithPendingOrInProgressBackups(limit = 100): Promise<Sandbox[]> {
+    return (
+      this.sandboxRepository
+        .createQueryBuilder('sandbox')
+        .innerJoin('runner', 'r', 'r.id = sandbox.runnerId')
+        .where('sandbox.state IN (:...states)', {
+          states: [SandboxState.ARCHIVING, SandboxState.STARTED, SandboxState.STOPPED],
+        })
+        .andWhere('sandbox.backupState IN (:...backupStates)', {
+          backupStates: [BackupState.PENDING, BackupState.IN_PROGRESS],
+        })
+        .andWhere('r.state = :ready', { ready: RunnerState.READY })
+        // Prioritize manual archival action, then auto-archive poller, then ad-hoc backup poller
+        .addSelect(
+          `
+        CASE sandbox.state
+          WHEN :archiving THEN 1
+          WHEN :stopped   THEN 2
+          WHEN :started   THEN 3
+          ELSE 999
+        END
+        `,
+          'state_priority',
+        )
+        .setParameters({
+          archiving: SandboxState.ARCHIVING,
+          stopped: SandboxState.STOPPED,
+          started: SandboxState.STARTED,
+        })
+        .orderBy('state_priority', 'ASC')
+        .addOrderBy('sandbox.lastBackupAt', 'ASC', 'NULLS FIRST') // Process sandboxes with no backups first
+        .addOrderBy('sandbox.createdAt', 'ASC') // For equal lastBackupAt, process older sandboxes first
+        .take(limit)
+        .getMany()
+    )
+  }
+
+  /**
+   * Find sandboxes that need initial backups (used by BackupManager.syncStopStateCreateBackups).
+   */
+  async findSandboxesNeedingInitialBackup(limit = 100): Promise<Sandbox[]> {
+    return this.sandboxRepository
+      .createQueryBuilder('sandbox')
+      .innerJoin('runner', 'r', 'r.id = sandbox.runnerId')
+      .where('sandbox.state IN (:...states)', { states: [SandboxState.ARCHIVING, SandboxState.STOPPED] })
+      .andWhere('sandbox.backupState = :none', { none: BackupState.NONE })
+      .andWhere('r.state = :ready', { ready: RunnerState.READY })
+      .take(limit)
+      .getMany()
   }
 }

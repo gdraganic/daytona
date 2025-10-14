@@ -41,7 +41,6 @@ import type { CreateUser } from '../models'
 import type { User } from '../models'
 /**
  * UsersApi - axios parameter creator
- * @export
  */
 export const UsersApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -389,7 +388,6 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * UsersApi - functional programming interface
- * @export
  */
 export const UsersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = UsersApiAxiosParamCreator(configuration)
@@ -600,7 +598,6 @@ export const UsersApiFp = function (configuration?: Configuration) {
 
 /**
  * UsersApi - factory interface
- * @export
  */
 export const UsersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = UsersApiFp(configuration)
@@ -697,9 +694,6 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * UsersApi - object-oriented interface
- * @export
- * @class UsersApi
- * @extends {BaseAPI}
  */
 export class UsersApi extends BaseAPI {
   /**
@@ -708,7 +702,6 @@ export class UsersApi extends BaseAPI {
    * @param {CreateUser} createUser
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public createUser(createUser: CreateUser, options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -721,7 +714,6 @@ export class UsersApi extends BaseAPI {
    * @summary Enroll in SMS MFA
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public enrollInSmsMfa(options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -734,7 +726,6 @@ export class UsersApi extends BaseAPI {
    * @summary Get authenticated user
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public getAuthenticatedUser(options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -747,7 +738,6 @@ export class UsersApi extends BaseAPI {
    * @summary Get available account providers
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public getAvailableAccountProviders(options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -761,7 +751,6 @@ export class UsersApi extends BaseAPI {
    * @param {string} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public getUser(id: string, options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -775,7 +764,6 @@ export class UsersApi extends BaseAPI {
    * @param {CreateLinkedAccount} createLinkedAccount
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public linkAccount(createLinkedAccount: CreateLinkedAccount, options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -788,7 +776,6 @@ export class UsersApi extends BaseAPI {
    * @summary List all users
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public listUsers(options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -802,7 +789,6 @@ export class UsersApi extends BaseAPI {
    * @param {string} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public regenerateKeyPair(id: string, options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)
@@ -817,7 +803,6 @@ export class UsersApi extends BaseAPI {
    * @param {string} providerUserId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof UsersApi
    */
   public unlinkAccount(provider: string, providerUserId: string, options?: RawAxiosRequestConfig) {
     return UsersApiFp(this.configuration)

@@ -61,7 +61,6 @@ import type { UpdateOrganizationQuota } from '../models'
 import type { UpdateOrganizationRole } from '../models'
 /**
  * OrganizationsApi - axios parameter creator
- * @export
  */
 export const OrganizationsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -1256,7 +1255,6 @@ export const OrganizationsApiAxiosParamCreator = function (configuration?: Confi
 
 /**
  * OrganizationsApi - functional programming interface
- * @export
  */
 export const OrganizationsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = OrganizationsApiAxiosParamCreator(configuration)
@@ -1935,7 +1933,6 @@ export const OrganizationsApiFp = function (configuration?: Configuration) {
 
 /**
  * OrganizationsApi - factory interface
- * @export
  */
 export const OrganizationsApiFactory = function (
   configuration?: Configuration,
@@ -2319,9 +2316,6 @@ export const OrganizationsApiFactory = function (
 
 /**
  * OrganizationsApi - object-oriented interface
- * @export
- * @class OrganizationsApi
- * @extends {BaseAPI}
  */
 export class OrganizationsApi extends BaseAPI {
   /**
@@ -2330,7 +2324,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} invitationId Invitation ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public acceptOrganizationInvitation(invitationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2345,7 +2338,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} invitationId Invitation ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public cancelOrganizationInvitation(organizationId: string, invitationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2359,7 +2351,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {CreateOrganization} createOrganization
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public createOrganization(createOrganization: CreateOrganization, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2374,7 +2365,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {CreateOrganizationInvitation} createOrganizationInvitation
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public createOrganizationInvitation(
     organizationId: string,
@@ -2393,7 +2383,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {CreateOrganizationRole} createOrganizationRole
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public createOrganizationRole(
     organizationId: string,
@@ -2411,7 +2400,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} invitationId Invitation ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public declineOrganizationInvitation(invitationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2425,7 +2413,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public deleteOrganization(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2440,7 +2427,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} userId User ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public deleteOrganizationMember(organizationId: string, userId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2455,7 +2441,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} roleId Role ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public deleteOrganizationRole(organizationId: string, roleId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2469,7 +2454,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public getOrganization(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2483,7 +2467,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public getOrganizationBySandboxId(sandboxId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2496,7 +2479,6 @@ export class OrganizationsApi extends BaseAPI {
    * @summary Get count of organization invitations for authenticated user
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public getOrganizationInvitationsCountForAuthenticatedUser(options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2510,7 +2492,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public getOrganizationUsageOverview(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2524,7 +2505,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public leaveOrganization(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2538,7 +2518,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public listOrganizationInvitations(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2551,7 +2530,6 @@ export class OrganizationsApi extends BaseAPI {
    * @summary List organization invitations for authenticated user
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public listOrganizationInvitationsForAuthenticatedUser(options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2565,7 +2543,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public listOrganizationMembers(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2579,7 +2556,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public listOrganizationRoles(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2592,7 +2568,6 @@ export class OrganizationsApi extends BaseAPI {
    * @summary List organizations
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public listOrganizations(options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2607,7 +2582,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {OrganizationSuspension} [organizationSuspension]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public suspendOrganization(
     organizationId: string,
@@ -2625,7 +2599,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {string} organizationId Organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public unsuspendOrganization(organizationId: string, options?: RawAxiosRequestConfig) {
     return OrganizationsApiFp(this.configuration)
@@ -2641,7 +2614,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {UpdateOrganizationMemberAccess} updateOrganizationMemberAccess
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public updateAccessForOrganizationMember(
     organizationId: string,
@@ -2662,7 +2634,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {UpdateOrganizationInvitation} updateOrganizationInvitation
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public updateOrganizationInvitation(
     organizationId: string,
@@ -2682,7 +2653,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {UpdateOrganizationQuota} updateOrganizationQuota
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public updateOrganizationQuota(
     organizationId: string,
@@ -2702,7 +2672,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {UpdateOrganizationRole} updateOrganizationRole
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public updateOrganizationRole(
     organizationId: string,
@@ -2722,7 +2691,6 @@ export class OrganizationsApi extends BaseAPI {
    * @param {OrganizationSandboxDefaultLimitedNetworkEgress} organizationSandboxDefaultLimitedNetworkEgress
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof OrganizationsApi
    */
   public updateSandboxDefaultLimitedNetworkEgress(
     organizationId: string,

@@ -14,8 +14,6 @@
 
 /**
  * Volume state
- * @export
- * @enum {string}
  */
 
 export const VolumeState = {

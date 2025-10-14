@@ -12,52 +12,33 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ApiKeyList
- */
 export interface ApiKeyList {
   /**
    * The name of the API key
-   * @type {string}
-   * @memberof ApiKeyList
    */
   name: string
   /**
    * The masked API key value
-   * @type {string}
-   * @memberof ApiKeyList
    */
   value: string
   /**
    * When the API key was created
-   * @type {Date}
-   * @memberof ApiKeyList
    */
   createdAt: Date
   /**
    * The list of organization resource permissions assigned to the API key
-   * @type {Array<string>}
-   * @memberof ApiKeyList
    */
   permissions: Array<ApiKeyListPermissionsEnum>
   /**
    * When the API key was last used
-   * @type {Date}
-   * @memberof ApiKeyList
    */
   lastUsedAt: Date | null
   /**
    * When the API key expires
-   * @type {Date}
-   * @memberof ApiKeyList
    */
   expiresAt: Date | null
   /**
    * The user ID of the user who created the API key
-   * @type {string}
-   * @memberof ApiKeyList
    */
   userId: string
 }

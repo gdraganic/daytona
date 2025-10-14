@@ -41,7 +41,6 @@ import type { RegistryPushAccessDto } from '../models'
 import type { UpdateDockerRegistry } from '../models'
 /**
  * DockerRegistryApi - axios parameter creator
- * @export
  */
 export const DockerRegistryApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -367,7 +366,6 @@ export const DockerRegistryApiAxiosParamCreator = function (configuration?: Conf
 
 /**
  * DockerRegistryApi - functional programming interface
- * @export
  */
 export const DockerRegistryApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = DockerRegistryApiAxiosParamCreator(configuration)
@@ -559,7 +557,6 @@ export const DockerRegistryApiFp = function (configuration?: Configuration) {
 
 /**
  * DockerRegistryApi - factory interface
- * @export
  */
 export const DockerRegistryApiFactory = function (
   configuration?: Configuration,
@@ -680,9 +677,6 @@ export const DockerRegistryApiFactory = function (
 
 /**
  * DockerRegistryApi - object-oriented interface
- * @export
- * @class DockerRegistryApi
- * @extends {BaseAPI}
  */
 export class DockerRegistryApi extends BaseAPI {
   /**
@@ -692,7 +686,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public createRegistry(
     createDockerRegistry: CreateDockerRegistry,
@@ -711,7 +704,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public deleteRegistry(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return DockerRegistryApiFp(this.configuration)
@@ -726,7 +718,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public getRegistry(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return DockerRegistryApiFp(this.configuration)
@@ -740,7 +731,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public getTransientPushAccess(xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return DockerRegistryApiFp(this.configuration)
@@ -754,7 +744,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public listRegistries(xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return DockerRegistryApiFp(this.configuration)
@@ -769,7 +758,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public setDefaultRegistry(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return DockerRegistryApiFp(this.configuration)
@@ -785,7 +773,6 @@ export class DockerRegistryApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof DockerRegistryApi
    */
   public updateRegistry(
     id: string,

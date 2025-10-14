@@ -19,28 +19,8 @@ import type { EnumsBackupState } from './enums-backup-state'
 // @ts-ignore
 import type { EnumsSandboxState } from './enums-sandbox-state'
 
-/**
- *
- * @export
- * @interface SandboxInfoResponse
- */
 export interface SandboxInfoResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof SandboxInfoResponse
-   */
   backupError?: string
-  /**
-   *
-   * @type {EnumsBackupState}
-   * @memberof SandboxInfoResponse
-   */
   backupState?: EnumsBackupState
-  /**
-   *
-   * @type {EnumsSandboxState}
-   * @memberof SandboxInfoResponse
-   */
   state?: EnumsSandboxState
 }

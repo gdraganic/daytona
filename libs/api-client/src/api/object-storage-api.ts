@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { StorageAccessDto } from '../models'
 /**
  * ObjectStorageApi - axios parameter creator
- * @export
  */
 export const ObjectStorageApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -85,7 +84,6 @@ export const ObjectStorageApiAxiosParamCreator = function (configuration?: Confi
 
 /**
  * ObjectStorageApi - functional programming interface
- * @export
  */
 export const ObjectStorageApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ObjectStorageApiAxiosParamCreator(configuration)
@@ -118,7 +116,6 @@ export const ObjectStorageApiFp = function (configuration?: Configuration) {
 
 /**
  * ObjectStorageApi - factory interface
- * @export
  */
 export const ObjectStorageApiFactory = function (
   configuration?: Configuration,
@@ -142,9 +139,6 @@ export const ObjectStorageApiFactory = function (
 
 /**
  * ObjectStorageApi - object-oriented interface
- * @export
- * @class ObjectStorageApi
- * @extends {BaseAPI}
  */
 export class ObjectStorageApi extends BaseAPI {
   /**
@@ -153,7 +147,6 @@ export class ObjectStorageApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ObjectStorageApi
    */
   public getPushAccess(xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ObjectStorageApiFp(this.configuration)

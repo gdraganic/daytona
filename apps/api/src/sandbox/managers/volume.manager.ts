@@ -4,10 +4,9 @@
  */
 
 import { Injectable, Logger, OnApplicationShutdown, OnModuleInit } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, In } from 'typeorm'
 import { Volume } from '../entities/volume.entity'
 import { VolumeState } from '../enums/volume-state.enum'
+import { VolumeService } from '../services/volume.service'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { S3Client, CreateBucketCommand, ListBucketsCommand, PutBucketTaggingCommand } from '@aws-sdk/client-s3'
 import { InjectRedis } from '@nestjs-modules/ioredis'
@@ -34,8 +33,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
   private s3Client: S3Client
 
   constructor(
-    @InjectRepository(Volume)
-    private readonly volumeRepository: Repository<Volume>,
+    private readonly volumeService: VolumeService,
     private readonly configService: TypedConfigService,
     @InjectRedis() private readonly redis: Redis,
     private readonly redisLockProvider: RedisLockProvider,
@@ -98,11 +96,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
         return
       }
 
-      const pendingVolumes = await this.volumeRepository.find({
-        where: {
-          state: In([VolumeState.PENDING_CREATE, VolumeState.PENDING_DELETE]),
-        },
-      })
+      const pendingVolumes = await this.volumeService.findPendingVolumes()
 
       await Promise.all(
         pendingVolumes.map(async (volume) => {
@@ -147,10 +141,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       }
     } catch (error) {
       this.logger.error(`Error processing volume ${volume.id}:`, error)
-      await this.volumeRepository.update(volume.id, {
-        state: VolumeState.ERROR,
-        errorReason: error.message,
-      })
+      await this.volumeService.updateVolumeState(volume.id, VolumeState.ERROR, error.message)
     }
   }
 
@@ -160,7 +151,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       await this.redis.setex(lockKey, 30, '1')
 
       // Update state to CREATING
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.CREATING,
       })
@@ -201,14 +192,14 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       await this.redis.setex(lockKey, 30, '1')
 
       // Update volume state to READY
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.READY,
       })
       this.logger.debug(`Volume ${volume.id} created successfully`)
     } catch (error) {
       this.logger.error(`Error creating volume ${volume.id}:`, error)
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.ERROR,
         errorReason: error.message,
@@ -222,7 +213,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       await this.redis.setex(lockKey, 30, '1')
 
       // Update state to DELETING
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.DELETING,
       })
@@ -237,14 +228,14 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       await this.redis.setex(lockKey, 30, '1')
 
       // Delete any existing volume record with the deleted state and the same name in the same organization
-      await this.volumeRepository.delete({
+      await this.volumeService.deleteVolumeByCriteria({
         organizationId: volume.organizationId,
         name: `${volume.name}-deleted`,
         state: VolumeState.DELETED,
       })
 
       // Update volume state to DELETED and rename
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.DELETED,
         name: `${volume.name}-deleted`,
@@ -252,7 +243,7 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
       this.logger.debug(`Volume ${volume.id} deleted successfully`)
     } catch (error) {
       this.logger.error(`Error deleting volume ${volume.id}:`, error)
-      await this.volumeRepository.save({
+      await this.volumeService.saveVolume({
         ...volume,
         state: VolumeState.ERROR,
         errorReason: error.message,

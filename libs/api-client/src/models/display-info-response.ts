@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface DisplayInfoResponse
- */
 export interface DisplayInfoResponse {
   /**
    * Array of display information for all connected displays
-   * @type {Array<object>}
-   * @memberof DisplayInfoResponse
    */
   displays: Array<object>
 }

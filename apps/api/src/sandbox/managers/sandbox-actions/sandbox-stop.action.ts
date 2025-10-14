@@ -29,6 +29,12 @@ export class SandboxStopAction extends SandboxAction {
 
   async run(sandbox: Sandbox, lockCode: LockCode): Promise<SyncState> {
     const runner = await this.runnerService.findOne(sandbox.runnerId)
+
+    // For v3 runners, skip reconciler - state updates are handled by SandboxJobService
+    if (runner?.version === '3') {
+      return DONT_SYNC_AGAIN
+    }
+
     if (runner.state !== RunnerState.READY) {
       return DONT_SYNC_AGAIN
     }
@@ -37,8 +43,11 @@ export class SandboxStopAction extends SandboxAction {
 
     switch (sandbox.state) {
       case SandboxState.STARTED: {
-        // stop sandbox
-        await runnerAdapter.stopSandbox(sandbox.id)
+        // For v3 runners, job is already created in sandbox.service.ts
+        // Skip adapter call and just update state
+        if (runner.version !== '3') {
+          await runnerAdapter.stopSandbox(sandbox.id)
+        }
         await this.updateSandboxState(sandbox.id, SandboxState.STOPPING, lockCode)
         //  sync states again immediately for sandbox
         return SYNC_AGAIN

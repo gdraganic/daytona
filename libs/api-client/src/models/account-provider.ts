@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface AccountProvider
- */
 export interface AccountProvider {
-  /**
-   *
-   * @type {string}
-   * @memberof AccountProvider
-   */
   name: string
-  /**
-   *
-   * @type {string}
-   * @memberof AccountProvider
-   */
   displayName: string
 }

@@ -1,6 +1,16 @@
 import nx from '@nx/eslint-plugin'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
+import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const require = createRequire(import.meta.url)
+
+// Load custom rule
+const noInjectRepositoryOutsideServices = require(resolve(__dirname, 'eslint-rules/no-inject-repository-outside-services.js'))
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -15,6 +25,11 @@ export default [
     plugins: {
       react,
       'react-hooks': reactHooks,
+      // 'custom': {
+      //   rules: {
+      //     'no-inject-repository-outside-services': noInjectRepositoryOutsideServices,
+      //   },
+      // },
     },
     rules: {
       '@nx/enforce-module-boundaries': [
@@ -43,6 +58,13 @@ export default [
       '@typescript-eslint/no-useless-escape': 'off',
     },
   },
+  // {
+  //   // Enforce @InjectRepository only in services
+  //   files: ['**/*.ts'],
+  //   rules: {
+  //     'custom/no-inject-repository-outside-services': 'error',
+  //   },
+  // },
   {
     files: ['src/migrations/**/*.ts'],
     rules: {

@@ -33,6 +33,12 @@ export class SandboxDestroyAction extends SandboxAction {
     }
 
     const runner = await this.runnerService.findOne(sandbox.runnerId)
+
+    // For v3 runners, skip reconciler - state updates are handled by SandboxJobService
+    if (runner?.version === '3') {
+      return DONT_SYNC_AGAIN
+    }
+
     if (runner.state !== RunnerState.READY) {
       return DONT_SYNC_AGAIN
     }
@@ -67,7 +73,11 @@ export class SandboxDestroyAction extends SandboxAction {
             await this.updateSandboxState(sandbox.id, SandboxState.DESTROYING, lockCode)
             return SYNC_AGAIN
           }
-          await runnerAdapter.destroySandbox(sandbox.id)
+          // For v3 runners, job is already created in sandbox.service.ts
+          // Skip adapter call
+          if (runner.version !== '3') {
+            await runnerAdapter.destroySandbox(sandbox.id)
+          }
         } catch (e) {
           //  if the sandbox is not found on runner, it is already destroyed
           if (e.response?.status !== 404) {

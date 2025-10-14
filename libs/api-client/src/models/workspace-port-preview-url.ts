@@ -12,22 +12,17 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface WorkspacePortPreviewUrl
- */
 export interface WorkspacePortPreviewUrl {
   /**
    * Preview url
-   * @type {string}
-   * @memberof WorkspacePortPreviewUrl
    */
   url: string
   /**
    * Access token
-   * @type {string}
-   * @memberof WorkspacePortPreviewUrl
    */
   token: string
+  /**
+   * Legacy preview url using runner domain
+   */
+  legacyProxyUrl?: string
 }

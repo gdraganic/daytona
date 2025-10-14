@@ -14,8 +14,6 @@
 
 /**
  * The state of the sandbox
- * @export
- * @enum {string}
  */
 
 export const SandboxState = {

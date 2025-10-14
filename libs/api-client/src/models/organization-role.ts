@@ -12,52 +12,33 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface OrganizationRole
- */
 export interface OrganizationRole {
   /**
    * Role ID
-   * @type {string}
-   * @memberof OrganizationRole
    */
   id: string
   /**
    * Role name
-   * @type {string}
-   * @memberof OrganizationRole
    */
   name: string
   /**
    * Role description
-   * @type {string}
-   * @memberof OrganizationRole
    */
   description: string
   /**
    * Roles assigned to the user
-   * @type {Array<string>}
-   * @memberof OrganizationRole
    */
   permissions: Array<OrganizationRolePermissionsEnum>
   /**
    * Global role flag
-   * @type {boolean}
-   * @memberof OrganizationRole
    */
   isGlobal: boolean
   /**
    * Creation timestamp
-   * @type {Date}
-   * @memberof OrganizationRole
    */
   createdAt: Date
   /**
    * Last update timestamp
-   * @type {Date}
-   * @memberof OrganizationRole
    */
   updatedAt: Date
 }

@@ -12,29 +12,18 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface SandboxInfo
- */
 export interface SandboxInfo {
   /**
    * The creation timestamp of the project
-   * @type {string}
-   * @memberof SandboxInfo
    */
   created: string
   /**
    * Deprecated: The name of the sandbox
-   * @type {string}
-   * @memberof SandboxInfo
    * @deprecated
    */
   name: string
   /**
    * Additional metadata provided by the provider
-   * @type {string}
-   * @memberof SandboxInfo
    */
   providerMetadata?: string
 }

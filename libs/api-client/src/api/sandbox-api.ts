@@ -51,7 +51,6 @@ import type { SshAccessValidationDto } from '../models'
 import type { UpdateSandboxStateDto } from '../models'
 /**
  * SandboxApi - axios parameter creator
- * @export
  */
 export const SandboxApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -1336,7 +1335,6 @@ export const SandboxApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SandboxApi - functional programming interface
- * @export
  */
 export const SandboxApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SandboxApiAxiosParamCreator(configuration)
@@ -2103,7 +2101,6 @@ export const SandboxApiFp = function (configuration?: Configuration) {
 
 /**
  * SandboxApi - factory interface
- * @export
  */
 export const SandboxApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SandboxApiFp(configuration)
@@ -2583,9 +2580,6 @@ export const SandboxApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * SandboxApi - object-oriented interface
- * @export
- * @class SandboxApi
- * @extends {BaseAPI}
  */
 export class SandboxApi extends BaseAPI {
   /**
@@ -2595,7 +2589,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public archiveSandbox(sandboxIdOrName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2610,7 +2603,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public createBackup(sandboxIdOrName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2625,7 +2617,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public createSandbox(createSandbox: CreateSandbox, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2641,7 +2632,6 @@ export class SandboxApi extends BaseAPI {
    * @param {number} [expiresInMinutes] Expiration time in minutes (default: 60)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public createSshAccess(
     sandboxIdOrName: string,
@@ -2661,7 +2651,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public deleteSandbox(sandboxIdOrName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2677,7 +2666,6 @@ export class SandboxApi extends BaseAPI {
    * @param {boolean} [follow] Whether to follow the logs stream
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getBuildLogs(
     sandboxIdOrName: string,
@@ -2698,7 +2686,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getPortPreviewUrl(
     sandboxIdOrName: string,
@@ -2719,7 +2706,6 @@ export class SandboxApi extends BaseAPI {
    * @param {boolean} [verbose] Include verbose output
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getSandbox(
     sandboxIdOrName: string,
@@ -2738,7 +2724,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getSandboxRegions(xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2754,7 +2739,6 @@ export class SandboxApi extends BaseAPI {
    * @param {boolean} [skipReconcilingSandboxes] Skip sandboxes where state differs from desired state
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getSandboxesForRunner(
     xDaytonaOrganizationID?: string,
@@ -2776,7 +2760,6 @@ export class SandboxApi extends BaseAPI {
    * @param {boolean} [includeErroredDeleted] Include errored and deleted sandboxes
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public listSandboxes(
     xDaytonaOrganizationID?: string,
@@ -2815,7 +2798,6 @@ export class SandboxApi extends BaseAPI {
    * @param {ListSandboxesPaginatedOrderEnum} [order] Direction to sort by
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public listSandboxesPaginated(
     xDaytonaOrganizationID?: string,
@@ -2875,7 +2857,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public replaceLabels(
     sandboxIdOrName: string,
@@ -2896,7 +2877,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [token] SSH access token to revoke. If not provided, all SSH access for the sandbox will be revoked.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public revokeSshAccess(
     sandboxIdOrName: string,
@@ -2917,7 +2897,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public setAutoArchiveInterval(
     sandboxIdOrName: string,
@@ -2938,7 +2917,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public setAutoDeleteInterval(
     sandboxIdOrName: string,
@@ -2959,7 +2937,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public setAutostopInterval(
     sandboxIdOrName: string,
@@ -2979,7 +2956,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public startSandbox(sandboxIdOrName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -2994,7 +2970,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public stopSandbox(sandboxIdOrName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -3025,7 +3000,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public updatePublicStatus(
     sandboxIdOrName: string,
@@ -3046,7 +3020,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public updateSandboxState(
     sandboxId: string,
@@ -3066,7 +3039,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public validateSshAccess(token: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -3075,9 +3047,6 @@ export class SandboxApi extends BaseAPI {
   }
 }
 
-/**
- * @export
- */
 export const ListSandboxesPaginatedStatesEnum = {
   CREATING: 'creating',
   RESTORING: 'restoring',
@@ -3097,9 +3066,6 @@ export const ListSandboxesPaginatedStatesEnum = {
 } as const
 export type ListSandboxesPaginatedStatesEnum =
   (typeof ListSandboxesPaginatedStatesEnum)[keyof typeof ListSandboxesPaginatedStatesEnum]
-/**
- * @export
- */
 export const ListSandboxesPaginatedSortEnum = {
   ID: 'id',
   NAME: 'name',
@@ -3111,9 +3077,6 @@ export const ListSandboxesPaginatedSortEnum = {
 } as const
 export type ListSandboxesPaginatedSortEnum =
   (typeof ListSandboxesPaginatedSortEnum)[keyof typeof ListSandboxesPaginatedSortEnum]
-/**
- * @export
- */
 export const ListSandboxesPaginatedOrderEnum = {
   ASC: 'asc',
   DESC: 'desc',

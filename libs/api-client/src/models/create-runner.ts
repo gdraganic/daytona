@@ -12,83 +12,18 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CreateRunner
- */
 export interface CreateRunner {
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   domain: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   apiUrl: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   proxyUrl: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   apiKey: string
-  /**
-   *
-   * @type {number}
-   * @memberof CreateRunner
-   */
   cpu: number
-  /**
-   *
-   * @type {number}
-   * @memberof CreateRunner
-   */
   memoryGiB: number
-  /**
-   *
-   * @type {number}
-   * @memberof CreateRunner
-   */
   diskGiB: number
-  /**
-   *
-   * @type {number}
-   * @memberof CreateRunner
-   */
   gpu: number
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   gpuType: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   class: CreateRunnerClassEnum
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   region: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateRunner
-   */
   version: string
 }
 

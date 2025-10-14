@@ -14,8 +14,6 @@
 
 /**
  * The desired state of the sandbox
- * @export
- * @enum {string}
  */
 
 export const SandboxDesiredState = {

@@ -12,47 +12,12 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CreateAuditLog
- */
 export interface CreateAuditLog {
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   actorId: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   actorEmail: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   organizationId?: string
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   action: CreateAuditLogActionEnum
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   targetType?: CreateAuditLogTargetTypeEnum
-  /**
-   *
-   * @type {string}
-   * @memberof CreateAuditLog
-   */
   targetId?: string
 }
 

@@ -1,0 +1,72 @@
+{
+  "name": "runner-service",
+  "$schema": "../../runner_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/runner-service",
+  "tags": [],
+  "targets": {
+    "copy-daemon-bin": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cp dist/apps/daemon-amd64 {projectRoot}/internal/daemon/static/daemon-amd64"
+      },
+      "dependsOn": [
+        {
+          "target": "build-amd64",
+          "projects": "daemon"
+        }
+      ]
+    },
+    "build": {
+      "executor": "@nx-go/nx-go:build",
+      "options": {
+        "main": "{projectRoot}/cmd/runner-service/main.go",
+        "outputPath": "dist/apps/runner-service"
+      },
+      "configurations": {
+        "production": {
+          "flags": ["-ldflags \"-X 'github.com/daytonaio/runner-service/internal.Version=$VERSION'\""]
+        }
+      },
+      "dependsOn": ["copy-daemon-bin"]
+    },
+    "build-amd64": {
+      "executor": "@nx-go/nx-go:build",
+      "options": {
+        "main": "{projectRoot}/cmd/runner-service/main.go",
+        "outputPath": "dist/apps/runner-service-amd64",
+        "env": {
+          "GOARCH": "amd64"
+        }
+      },
+      "configurations": {
+        "production": {
+          "flags": ["-ldflags \"-X 'github.com/daytonaio/runner-service/internal.Version=$VERSION'\""]
+        }
+      },
+      "dependsOn": ["copy-daemon-bin"]
+    },
+    "serve": {
+      "executor": "@nx-go/nx-go:serve",
+      "options": {
+        "main": "{projectRoot}/cmd/runner-service/main.go"
+      },
+      "configurations": {
+        "production": {}
+      },
+      "dependsOn": ["copy-daemon-bin"]
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd {projectRoot} && go fmt ./... && prettier --write \"**/*.{yaml,json}\""
+      }
+    },
+    "test": {
+      "executor": "@nx-go/nx-go:test"
+    },
+    "lint": {
+      "executor": "@nx-go/nx-go:lint"
+    }
+  }
+}

@@ -14,8 +14,6 @@
 
 /**
  * The class of the runner
- * @export
- * @enum {string}
  */
 
 export const SandboxClass = {

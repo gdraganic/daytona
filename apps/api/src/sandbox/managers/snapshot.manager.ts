@@ -4,9 +4,7 @@
  */
 
 import { Injectable, Logger, NotFoundException, OnApplicationShutdown } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
 import { Cron, CronExpression } from '@nestjs/schedule'
-import { In, LessThan, MoreThanOrEqual, Not, Repository } from 'typeorm'
 import { DockerRegistryService } from '../../docker-registry/services/docker-registry.service'
 import { Snapshot } from '../entities/snapshot.entity'
 import { SnapshotState } from '../enums/snapshot-state.enum'
@@ -21,11 +19,11 @@ import { RegistryType } from '../../docker-registry/enums/registry-type.enum'
 import { RedisLockProvider } from '../common/redis-lock.provider'
 import { OrganizationService } from '../../organization/services/organization.service'
 import { DockerRegistry } from '../../docker-registry/entities/docker-registry.entity'
-import { BuildInfo } from '../entities/build-info.entity'
 import { fromAxiosError } from '../../common/utils/from-axios-error'
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { Redis } from 'ioredis'
 import { RunnerService } from '../services/runner.service'
+import { SnapshotService } from '../services/snapshot.service'
 import { RunnerAdapterFactory } from '../runner-adapter/runnerAdapter'
 
 import { TrackableJobExecutions } from '../../common/interfaces/trackable-job-executions'
@@ -47,15 +45,8 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
   constructor(
     @InjectRedis() private readonly redis: Redis,
-    @InjectRepository(Snapshot)
-    private readonly snapshotRepository: Repository<Snapshot>,
-    @InjectRepository(SnapshotRunner)
-    private readonly snapshotRunnerRepository: Repository<SnapshotRunner>,
-    @InjectRepository(Runner)
-    private readonly runnerRepository: Repository<Runner>,
-    @InjectRepository(BuildInfo)
-    private readonly buildInfoRepository: Repository<BuildInfo>,
     private readonly runnerService: RunnerService,
+    private readonly snapshotService: SnapshotService,
     private readonly dockerRegistryService: DockerRegistryService,
     private readonly dockerProvider: DockerProvider,
     private readonly runnerAdapterFactory: RunnerAdapterFactory,
@@ -84,15 +75,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
     const skip = (await this.redis.get('sync-runner-snapshots-skip')) || 0
 
-    const snapshots = await this.snapshotRepository
-      .createQueryBuilder('snapshot')
-      .innerJoin('organization', 'org', 'org.id = snapshot.organizationId')
-      .where('snapshot.state = :snapshotState', { snapshotState: SnapshotState.ACTIVE })
-      .andWhere('org.suspended = false')
-      .orderBy('snapshot.createdAt', 'ASC')
-      .take(100)
-      .skip(Number(skip))
-      .getMany()
+    const snapshots = await this.snapshotService.findActiveSnapshotsForSync(100, Number(skip))
 
     if (snapshots.length === 0) {
       await this.redis.set('sync-runner-snapshots-skip', 0)
@@ -126,18 +109,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       return
     }
 
-    const runnerSnapshots = await this.snapshotRunnerRepository
-      .createQueryBuilder('snapshotRunner')
-      .where({
-        state: In([
-          SnapshotRunnerState.PULLING_SNAPSHOT,
-          SnapshotRunnerState.BUILDING_SNAPSHOT,
-          SnapshotRunnerState.REMOVING,
-        ]),
-      })
-      .orderBy('RANDOM()')
-      .take(100)
-      .getMany()
+    const runnerSnapshots = await this.snapshotService.findSnapshotRunnersInProcessingStates(100)
 
     await Promise.allSettled(
       runnerSnapshots.map((snapshotRunner) => {
@@ -150,7 +122,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
               return
             }
             this.logger.error(`Error syncing runner snapshot state ${snapshotRunner.id}: ${fromAxiosError(err)}`)
-            this.snapshotRunnerRepository.update(snapshotRunner.id, {
+            this.snapshotService.updateSnapshotRunner(snapshotRunner.id, {
               state: SnapshotRunnerState.ERROR,
               errorReason: fromAxiosError(err).message,
             })
@@ -163,15 +135,11 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async syncRunnerSnapshotState(snapshotRunner: SnapshotRunner): Promise<void> {
-    const runner = await this.runnerRepository.findOne({
-      where: {
-        id: snapshotRunner.runnerId,
-      },
-    })
+    const runner = await this.runnerService.findOne(snapshotRunner.runnerId)
     if (!runner) {
       //  cleanup the snapshot runner record if the runner is not found
       //  this can happen if the runner is deleted from the database without cleaning up the snapshot runners
-      await this.snapshotRunnerRepository.delete(snapshotRunner.id)
+      await this.snapshotService.deleteSnapshotRunner(snapshotRunner.id)
       this.logger.warn(
         `Runner ${snapshotRunner.runnerId} not found while trying to process snapshot runner ${snapshotRunner.id}. Snapshot runner has been removed.`,
       )
@@ -180,7 +148,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     if (runner.state !== RunnerState.READY) {
       //  todo: handle timeout policy
       //  for now just remove the snapshot runner record if the runner is not ready
-      await this.snapshotRunnerRepository.delete(snapshotRunner.id)
+      await this.snapshotService.deleteSnapshotRunner(snapshotRunner.id)
 
       throw new RunnerNotReadyError(`Runner ${runner.id} is not ready`)
     }
@@ -201,20 +169,13 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   async propagateSnapshotToRunners(internalSnapshotName: string) {
     //  todo: remove try catch block and implement error handling
     try {
-      const runners = await this.runnerRepository.find({
-        where: {
-          state: RunnerState.READY,
-          unschedulable: false,
-        },
-      })
+      const runners = await this.runnerService.findReadySchedulableRunners()
 
       //  get all runners that have the snapshot in their base image
-      const snapshotRunners = await this.snapshotRunnerRepository.find({
-        where: {
-          snapshotRef: internalSnapshotName,
-          state: In([SnapshotRunnerState.READY, SnapshotRunnerState.PULLING_SNAPSHOT]),
-        },
-      })
+      const snapshotRunners = await this.snapshotService.findSnapshotRunnersBySnapshotRef(internalSnapshotName, [
+        SnapshotRunnerState.READY,
+        SnapshotRunnerState.PULLING_SNAPSHOT,
+      ])
       //  filter duplicate snapshot runner records
       const snapshotRunnersDistinctRunnersIds = [
         ...new Set(snapshotRunners.map((snapshotRunner) => snapshotRunner.runnerId)),
@@ -236,12 +197,10 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
       const results = await Promise.allSettled(
         runnersToPropagateTo.map(async (runner) => {
-          let snapshotRunner = await this.snapshotRunnerRepository.findOne({
-            where: {
-              snapshotRef: internalSnapshotName,
-              runnerId: runner.id,
-            },
-          })
+          let snapshotRunner = await this.snapshotService.findSnapshotRunnerByRefAndRunner(
+            internalSnapshotName,
+            runner.id,
+          )
 
           try {
             if (snapshotRunner && !snapshotRunner.snapshotRef) {
@@ -255,7 +214,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
               snapshotRunner.snapshotRef = internalSnapshotName
               snapshotRunner.runnerId = runner.id
               snapshotRunner.state = SnapshotRunnerState.PULLING_SNAPSHOT
-              await this.snapshotRunnerRepository.save(snapshotRunner)
+              await this.snapshotService.saveSnapshotRunner(snapshotRunner)
               await this.propagateSnapshotToRunner(internalSnapshotName, runner)
             } else if (snapshotRunner.state === SnapshotRunnerState.PULLING_SNAPSHOT) {
               await this.handleSnapshotRunnerStatePullingSnapshot(snapshotRunner)
@@ -264,7 +223,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
             this.logger.error(`Error propagating snapshot to runner ${runner.id}: ${fromAxiosError(err)}`)
             snapshotRunner.state = SnapshotRunnerState.ERROR
             snapshotRunner.errorReason = err.message
-            await this.snapshotRunnerRepository.update(snapshotRunner.id, snapshotRunner)
+            await this.snapshotService.updateSnapshotRunner(snapshotRunner.id, snapshotRunner)
           }
         }),
       )
@@ -307,17 +266,13 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async handleSnapshotRunnerStatePullingSnapshot(snapshotRunner: SnapshotRunner) {
-    const runner = await this.runnerRepository.findOneOrFail({
-      where: {
-        id: snapshotRunner.runnerId,
-      },
-    })
+    const runner = await this.runnerService.findOneOrFail(snapshotRunner.runnerId)
 
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (exists) {
       snapshotRunner.state = SnapshotRunnerState.READY
-      await this.snapshotRunnerRepository.save(snapshotRunner)
+      await this.snapshotService.saveSnapshotRunner(snapshotRunner)
       return
     }
 
@@ -326,7 +281,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     if (Date.now() - snapshotRunner.createdAt.getTime() > timeoutMs) {
       snapshotRunner.state = SnapshotRunnerState.ERROR
       snapshotRunner.errorReason = 'Timeout while pulling snapshot'
-      await this.snapshotRunnerRepository.save(snapshotRunner)
+      await this.snapshotService.saveSnapshotRunner(snapshotRunner)
       return
     }
 
@@ -339,17 +294,13 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async handleSnapshotRunnerStateBuildingSnapshot(snapshotRunner: SnapshotRunner) {
-    const runner = await this.runnerRepository.findOneOrFail({
-      where: {
-        id: snapshotRunner.runnerId,
-      },
-    })
+    const runner = await this.runnerService.findOneOrFail(snapshotRunner.runnerId)
 
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (exists) {
       snapshotRunner.state = SnapshotRunnerState.READY
-      await this.snapshotRunnerRepository.save(snapshotRunner)
+      await this.snapshotService.saveSnapshotRunner(snapshotRunner)
       return
     }
   }
@@ -365,34 +316,23 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     }
 
     //  get all snapshots
-    const snapshots = await this.snapshotRepository.find({
-      where: {
-        state: SnapshotState.REMOVING,
-      },
-    })
+    const snapshots = await this.snapshotService.findSnapshotsByState(SnapshotState.REMOVING)
 
     await Promise.all(
       snapshots.map(async (snapshot) => {
-        const countActiveSnapshots = await this.snapshotRepository.count({
-          where: {
-            state: SnapshotState.ACTIVE,
-            internalName: snapshot.internalName,
-          },
-        })
+        const countActiveSnapshots = await this.snapshotService.countSnapshotsByStateAndInternalName(
+          SnapshotState.ACTIVE,
+          snapshot.internalName,
+        )
 
         // Only remove snapshot runners if no other snapshots depend on them
         if (countActiveSnapshots === 0) {
-          await this.snapshotRunnerRepository.update(
-            {
-              snapshotRef: snapshot.internalName,
-            },
-            {
-              state: SnapshotRunnerState.REMOVING,
-            },
-          )
+          await this.snapshotService.updateSnapshotRunnersBySnapshotRef(snapshot.internalName, {
+            state: SnapshotRunnerState.REMOVING,
+          })
         }
 
-        await this.snapshotRepository.remove(snapshot)
+        await this.snapshotService.removeSnapshotEntity(snapshot)
       }),
     )
 
@@ -409,11 +349,12 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     //  this cron job will process the snapshot states until the snapshot is active (or error)
 
     //  get all snapshots
-    const snapshots = await this.snapshotRepository.find({
-      where: {
-        state: Not(In([SnapshotState.ACTIVE, SnapshotState.ERROR, SnapshotState.BUILD_FAILED, SnapshotState.INACTIVE])),
-      },
-    })
+    const snapshots = await this.snapshotService.findSnapshotsNotInStates([
+      SnapshotState.ACTIVE,
+      SnapshotState.ERROR,
+      SnapshotState.BUILD_FAILED,
+      SnapshotState.INACTIVE,
+    ])
 
     await Promise.all(
       snapshots.map(async (snapshot) => {
@@ -497,22 +438,18 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     }
 
     snapshotRunner.state = SnapshotRunnerState.REMOVING
-    await this.snapshotRunnerRepository.save(snapshotRunner)
+    await this.snapshotService.saveSnapshotRunner(snapshotRunner)
   }
 
   async handleSnapshotRunnerStateRemoving(snapshotRunner: SnapshotRunner) {
-    const runner = await this.runnerRepository.findOne({
-      where: {
-        id: snapshotRunner.runnerId,
-      },
-    })
+    const runner = await this.runnerService.findOne(snapshotRunner.runnerId)
     if (!runner) {
       //  generally this should not happen
       //  in case the runner has been deleted from the database, delete the snapshot runner record
       const errorMessage = `Runner not found while trying to remove snapshot ${snapshotRunner.snapshotRef} from runner ${snapshotRunner.runnerId}`
       this.logger.warn(errorMessage)
 
-      this.snapshotRunnerRepository.delete(snapshotRunner.id).catch((err) => {
+      this.snapshotService.deleteSnapshotRunner(snapshotRunner.id).catch((err) => {
         this.logger.error(fromAxiosError(err))
       })
       return
@@ -521,7 +458,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       //  this should never happen
       //  remove the snapshot runner record (it will be recreated again by the snapshot propagation job)
       this.logger.warn(`Internal snapshot name not found for snapshot runner ${snapshotRunner.id}`)
-      this.snapshotRunnerRepository.delete(snapshotRunner.id).catch((err) => {
+      this.snapshotService.deleteSnapshotRunner(snapshotRunner.id).catch((err) => {
         this.logger.error(fromAxiosError(err))
       })
       return
@@ -530,13 +467,13 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (!exists) {
-      await this.snapshotRunnerRepository.delete(snapshotRunner.id)
+      await this.snapshotService.deleteSnapshotRunner(snapshotRunner.id)
     } else {
       //  just in case the snapshot is still there
       runnerAdapter.removeSnapshot(snapshotRunner.snapshotRef).catch((err) => {
         //  this should not happen, and is not critical
         //  if the runner can not remote the snapshot, just delete the runner record
-        this.snapshotRunnerRepository.delete(snapshotRunner.id).catch((err) => {
+        this.snapshotService.deleteSnapshotRunner(snapshotRunner.id).catch((err) => {
           this.logger.error(fromAxiosError(err))
         })
         //  and log the error for tracking
@@ -547,14 +484,10 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async handleSnapshotStateRemoving(snapshot: Snapshot) {
-    const snapshotRunnerItems = await this.snapshotRunnerRepository.find({
-      where: {
-        snapshotRef: snapshot.internalName,
-      },
-    })
+    const snapshotRunnerItems = await this.snapshotService.findSnapshotRunnersBySnapshotRefOnly(snapshot.internalName)
 
     if (snapshotRunnerItems.length === 0) {
-      await this.snapshotRepository.remove(snapshot)
+      await this.snapshotService.removeSnapshotEntity(snapshot)
     }
   }
 
@@ -594,7 +527,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
       // Assign the runner ID to the snapshot for tracking build progress
       snapshot.buildRunnerId = runner.id
-      await this.snapshotRepository.save(snapshot)
+      await this.snapshotService.saveSnapshot(snapshot)
 
       const registry = await this.dockerRegistryService.getDefaultInternalRegistry()
 
@@ -607,7 +540,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       const internalSnapshotName = `${registry.url}/${registry.project}/${snapshot.buildInfo.snapshotRef}`
 
       snapshot.internalName = internalSnapshotName
-      await this.snapshotRepository.save(snapshot)
+      await this.snapshotService.saveSnapshot(snapshot)
 
       // Wait for 30 seconds because of Harbor's delay at making newly created snapshots available
       await new Promise((resolve) => setTimeout(resolve, 30000))
@@ -703,7 +636,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       }
     }
 
-    await this.snapshotRepository.save(snapshot)
+    await this.snapshotService.saveSnapshot(snapshot)
   }
 
   async handleSnapshotStatePendingValidation(snapshot: Snapshot) {
@@ -716,15 +649,9 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
         // Snapshots that have gone through the build process are already in the internal registry
         snapshot.internalName = await this.pushSnapshotToInternalRegistry(snapshot.id)
       }
-      const runner = await this.runnerRepository.findOne({
-        where: {
-          state: RunnerState.READY,
-          unschedulable: Not(true),
-          availabilityScore: MoreThanOrEqual(
-            this.configService.getOrThrow('runnerUsage.declarativeBuildScoreThreshold'),
-          ),
-        },
-      })
+      const runner = await this.runnerService.findReadyRunnerWithMinScore(
+        this.configService.getOrThrow('runnerUsage.declarativeBuildScoreThreshold'),
+      )
       // Propagate snapshot to one runner so it can be used immediately
       if (runner) {
         await this.propagateSnapshotToRunner(snapshot.internalName, runner)
@@ -767,11 +694,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async validateSnapshotRuntime(snapshotId: string): Promise<void> {
-    const snapshot = await this.snapshotRepository.findOneOrFail({
-      where: {
-        id: snapshotId,
-      },
-    })
+    const snapshot = await this.snapshotService.findSnapshotByIdOrFail(snapshotId)
 
     let containerId: string | null = null
 
@@ -808,11 +731,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async pushSnapshotToInternalRegistry(snapshotId: string): Promise<string> {
-    const snapshot = await this.snapshotRepository.findOneOrFail({
-      where: {
-        id: snapshotId,
-      },
-    })
+    const snapshot = await this.snapshotService.findSnapshotByIdOrFail(snapshotId)
 
     const registry = await this.dockerRegistryService.getDefaultInternalRegistry()
     if (!registry) {
@@ -827,7 +746,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     const internalSnapshotName = `${registry.url.replace(/^(https?:\/\/)/, '')}/${registry.project}/${snapshot.id}:${tag}`
 
     snapshot.internalName = internalSnapshotName
-    await this.snapshotRepository.save(snapshot)
+    await this.snapshotService.saveSnapshot(snapshot)
 
     // Tag the snapshot with the internal registry name
     await this.dockerProvider.tagImage(snapshot.imageName, internalSnapshotName)
@@ -839,11 +758,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   async retrySnapshotRunnerPull(snapshotRunner: SnapshotRunner) {
-    const runner = await this.runnerRepository.findOneOrFail({
-      where: {
-        id: snapshotRunner.runnerId,
-      },
-    })
+    const runner = await this.runnerService.findOneOrFail(snapshotRunner.runnerId)
 
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
 
@@ -854,16 +769,12 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   }
 
   private async updateSnapshotState(snapshotId: string, state: SnapshotState, errorReason?: string) {
-    const snapshot = await this.snapshotRepository.findOneOrFail({
-      where: {
-        id: snapshotId,
-      },
-    })
+    const snapshot = await this.snapshotService.findSnapshotByIdOrFail(snapshotId)
     snapshot.state = state
     if (errorReason) {
       snapshot.errorReason = errorReason
     }
-    await this.snapshotRepository.save(snapshot)
+    await this.snapshotService.saveSnapshot(snapshot)
   }
 
   @Cron(CronExpression.EVERY_HOUR, { name: 'cleanup-old-buildinfo-snapshot-runners' })
@@ -881,11 +792,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       oneDayAgo.setDate(oneDayAgo.getDate() - 1)
 
       // Find all BuildInfo entities that haven't been used in over a day
-      const oldBuildInfos = await this.buildInfoRepository.find({
-        where: {
-          lastUsedAt: LessThan(oneDayAgo),
-        },
-      })
+      const oldBuildInfos = await this.snapshotService.findOldBuildInfos(oneDayAgo)
 
       if (oldBuildInfos.length === 0) {
         return
@@ -893,10 +800,9 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
       const snapshotRefs = oldBuildInfos.map((buildInfo) => buildInfo.snapshotRef)
 
-      const result = await this.snapshotRunnerRepository.update(
-        { snapshotRef: In(snapshotRefs) },
-        { state: SnapshotRunnerState.REMOVING },
-      )
+      const result = await this.snapshotService.updateSnapshotRunnersBySnapshotRefs(snapshotRefs, {
+        state: SnapshotRunnerState.REMOVING,
+      })
 
       if (result.affected > 0) {
         this.logger.debug(`Marked ${result.affected} SnapshotRunners for removal due to unused BuildInfo`)
@@ -921,30 +827,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     try {
       const twoWeeksAgo = new Date(Date.now() - 14 * 1000 * 60 * 60 * 24)
 
-      const oldSnapshots = await this.snapshotRepository
-        .createQueryBuilder('snapshot')
-        .where('snapshot.general = false')
-        .andWhere('snapshot.state = :snapshotState', { snapshotState: SnapshotState.ACTIVE })
-        .andWhere('(snapshot."lastUsedAt" IS NULL OR snapshot."lastUsedAt" < :twoWeeksAgo)', { twoWeeksAgo })
-        .andWhere('snapshot."createdAt" < :twoWeeksAgo', { twoWeeksAgo })
-        .andWhere(
-          () => {
-            const query = this.snapshotRepository
-              .createQueryBuilder('s')
-              .select('1')
-              .where('s."internalName" = snapshot."internalName"')
-              .andWhere('s.state = :activeState')
-              .andWhere('(s."lastUsedAt" >= :twoWeeksAgo OR s."createdAt" >= :twoWeeksAgo)')
-
-            return `NOT EXISTS (${query.getQuery()})`
-          },
-          {
-            activeState: SnapshotState.ACTIVE,
-            twoWeeksAgo,
-          },
-        )
-        .take(100)
-        .getMany()
+      const oldSnapshots = await this.snapshotService.findOldInactiveSnapshots(twoWeeksAgo, 100)
 
       if (oldSnapshots.length === 0) {
         return
@@ -952,17 +835,16 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
       // Deactivate the snapshots
       const snapshotIds = oldSnapshots.map((snapshot) => snapshot.id)
-      await this.snapshotRepository.update({ id: In(snapshotIds) }, { state: SnapshotState.INACTIVE })
+      await this.snapshotService.updateSnapshots(snapshotIds, { state: SnapshotState.INACTIVE })
 
       // Get internal names of deactivated snapshots
       const internalNames = oldSnapshots.map((snapshot) => snapshot.internalName).filter((name) => name) // Filter out null/undefined values
 
       if (internalNames.length > 0) {
         // Set associated SnapshotRunner records to REMOVING state
-        const result = await this.snapshotRunnerRepository.update(
-          { snapshotRef: In(internalNames) },
-          { state: SnapshotRunnerState.REMOVING },
-        )
+        const result = await this.snapshotService.updateSnapshotRunnersBySnapshotRefs(internalNames, {
+          state: SnapshotRunnerState.REMOVING,
+        })
 
         this.logger.debug(
           `Deactivated ${oldSnapshots.length} snapshots and marked ${result.affected} SnapshotRunners for removal`,
@@ -987,44 +869,13 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
     try {
       // Only fetch inactive snapshots that have associated snapshot runner entries
-      const queryResult = await this.snapshotRepository
-        .createQueryBuilder('snapshot')
-        .select('snapshot."internalName"')
-        .where('snapshot.state = :snapshotState', { snapshotState: SnapshotState.INACTIVE })
-        .andWhere('snapshot."internalName" IS NOT NULL')
-        .andWhereExists(
-          this.snapshotRunnerRepository
-            .createQueryBuilder('snapshot_runner')
-            .select('1')
-            .where('snapshot_runner."snapshotRef" = snapshot."internalName"')
-            .andWhere('snapshot_runner.state != :snapshotRunnerState', {
-              snapshotRunnerState: SnapshotRunnerState.REMOVING,
-            }),
-        )
-        .andWhere(
-          () => {
-            const query = this.snapshotRepository
-              .createQueryBuilder('s')
-              .select('1')
-              .where('s."internalName" = snapshot."internalName"')
-              .andWhere('s.state = :snapshotState')
-            return `NOT EXISTS (${query.getQuery()})`
-          },
-          {
-            snapshotState: SnapshotState.ACTIVE,
-          },
-        )
-        .take(100)
-        .getRawMany()
-
-      const inactiveSnapshotInternalNames = queryResult.map((result) => result.internalName)
+      const inactiveSnapshotInternalNames = await this.snapshotService.findInactiveSnapshotInternalNamesForCleanup(100)
 
       if (inactiveSnapshotInternalNames.length > 0) {
         // Set associated SnapshotRunner records to REMOVING state
-        const result = await this.snapshotRunnerRepository.update(
-          { snapshotRef: In(inactiveSnapshotInternalNames) },
-          { state: SnapshotRunnerState.REMOVING },
-        )
+        const result = await this.snapshotService.updateSnapshotRunnersBySnapshotRefs(inactiveSnapshotInternalNames, {
+          state: SnapshotRunnerState.REMOVING,
+        })
 
         this.logger.debug(`Marked ${result.affected} SnapshotRunners for removal`)
       }

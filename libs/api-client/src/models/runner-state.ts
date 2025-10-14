@@ -14,8 +14,6 @@
 
 /**
  * The state of the runner
- * @export
- * @enum {string}
  */
 
 export const RunnerState = {

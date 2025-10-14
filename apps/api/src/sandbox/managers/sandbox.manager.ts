@@ -5,19 +5,17 @@
 
 import { Injectable, Logger, OnApplicationShutdown } from '@nestjs/common'
 import { Cron, CronExpression } from '@nestjs/schedule'
-import { In, MoreThanOrEqual, Not, Raw } from 'typeorm'
 import { randomUUID } from 'crypto'
 
 import { SandboxState } from '../enums/sandbox-state.enum'
 import { SandboxDesiredState } from '../enums/sandbox-desired-state.enum'
-import { RunnerService } from '../services/runner.service'
-import { RunnerState } from '../enums/runner-state.enum'
 
-import { RedisLockProvider, LockCode } from '../common/redis-lock.provider'
+import { LockCode } from '../common/redis-lock.provider'
 
-import { SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION } from '../constants/sandbox.constants'
+import { RedisLockProvider } from '../common/redis-lock.provider'
+import { SandboxService } from '../services/sandbox.service'
 
-import { OnEvent } from '@nestjs/event-emitter'
+import { OnEvent, EventEmitter2 } from '@nestjs/event-emitter'
 import { SandboxEvents } from '../constants/sandbox-events.constants'
 import { SandboxStoppedEvent } from '../events/sandbox-stopped.event'
 import { SandboxStartedEvent } from '../events/sandbox-started.event'
@@ -37,8 +35,8 @@ import { TrackJobExecution } from '../../common/decorators/track-job-execution.d
 import { TrackableJobExecutions } from '../../common/interfaces/trackable-job-executions'
 import { setTimeout } from 'timers/promises'
 import { LogExecution } from '../../common/decorators/log-execution.decorator'
-import { SandboxRepository } from '../repositories/sandbox.repository'
 import { getStateChangeLockKey } from '../utils/lock-key.util'
+import { TypedConfigService } from '../../config/typed-config.service'
 
 @Injectable()
 export class SandboxManager implements TrackableJobExecutions, OnApplicationShutdown {
@@ -47,13 +45,14 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
   private readonly logger = new Logger(SandboxManager.name)
 
   constructor(
-    private readonly sandboxRepository: SandboxRepository,
-    private readonly runnerService: RunnerService,
     private readonly redisLockProvider: RedisLockProvider,
     private readonly sandboxStartAction: SandboxStartAction,
     private readonly sandboxStopAction: SandboxStopAction,
     private readonly sandboxDestroyAction: SandboxDestroyAction,
     private readonly sandboxArchiveAction: SandboxArchiveAction,
+    private readonly eventEmitter: EventEmitter2,
+    private readonly configService: TypedConfigService,
+    private readonly sandboxService: SandboxService,
   ) {}
 
   async onApplicationShutdown() {
@@ -77,57 +76,7 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
     }
 
     try {
-      // Get all ready runners
-      const allRunners = await this.runnerService.findAll()
-      const readyRunners = allRunners.filter((runner) => runner.state === RunnerState.READY)
-
-      // Process all runners in parallel
-      await Promise.all(
-        readyRunners.map(async (runner) => {
-          const sandboxes = await this.sandboxRepository.find({
-            where: {
-              runnerId: runner.id,
-              organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
-              state: SandboxState.STARTED,
-              desiredState: SandboxDesiredState.STARTED,
-              pending: Not(true),
-              autoStopInterval: Not(0),
-              lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoStopInterval"`),
-            },
-            order: {
-              lastBackupAt: 'ASC',
-            },
-            //  todo: increase this number when auto-stop is stable
-            take: 10,
-          })
-
-          await Promise.all(
-            sandboxes.map(async (sandbox) => {
-              const lockKey = getStateChangeLockKey(sandbox.id)
-              const acquired = await this.redisLockProvider.lock(lockKey, 30)
-              if (!acquired) {
-                return
-              }
-
-              try {
-                sandbox.pending = true
-                //  if auto-delete interval is 0, delete the sandbox immediately
-                if (sandbox.autoDeleteInterval === 0) {
-                  sandbox.desiredState = SandboxDesiredState.DESTROYED
-                } else {
-                  sandbox.desiredState = SandboxDesiredState.STOPPED
-                }
-                await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
-                this.syncInstanceState(sandbox.id)
-              } catch (error) {
-                this.logger.error(`Error processing auto-stop state for sandbox ${sandbox.id}:`, error)
-              } finally {
-                await this.redisLockProvider.unlock(lockKey)
-              }
-            }),
-          )
-        }),
-      )
+      await this.sandboxService.handleAutoStopCheck()
     } finally {
       await this.redisLockProvider.unlock(lockKey)
     }
@@ -145,39 +94,7 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
     }
 
     try {
-      const sandboxes = await this.sandboxRepository.find({
-        where: {
-          organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
-          state: SandboxState.STOPPED,
-          desiredState: SandboxDesiredState.STOPPED,
-          pending: Not(true),
-          lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoArchiveInterval"`),
-        },
-        order: {
-          lastBackupAt: 'ASC',
-        },
-        take: 100,
-      })
-
-      await Promise.all(
-        sandboxes.map(async (sandbox) => {
-          const lockKey = getStateChangeLockKey(sandbox.id)
-          const acquired = await this.redisLockProvider.lock(lockKey, 30)
-          if (!acquired) {
-            return
-          }
-
-          try {
-            sandbox.desiredState = SandboxDesiredState.ARCHIVED
-            await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
-            this.syncInstanceState(sandbox.id)
-          } catch (error) {
-            this.logger.error(`Error processing auto-archive state for sandbox ${sandbox.id}:`, error)
-          } finally {
-            await this.redisLockProvider.unlock(lockKey)
-          }
-        }),
-      )
+      await this.sandboxService.handleAutoArchiveCheck()
     } finally {
       await this.redisLockProvider.unlock(lockKey)
     }
@@ -195,51 +112,7 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
     }
 
     try {
-      // Get all ready runners
-      const allRunners = await this.runnerService.findAll()
-      const readyRunners = allRunners.filter((runner) => runner.state === RunnerState.READY)
-
-      // Process all runners in parallel
-      await Promise.all(
-        readyRunners.map(async (runner) => {
-          const sandboxes = await this.sandboxRepository.find({
-            where: {
-              runnerId: runner.id,
-              organizationId: Not(SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION),
-              state: SandboxState.STOPPED,
-              desiredState: SandboxDesiredState.STOPPED,
-              pending: Not(true),
-              autoDeleteInterval: MoreThanOrEqual(0),
-              lastActivityAt: Raw((alias) => `${alias} < NOW() - INTERVAL '1 minute' * "autoDeleteInterval"`),
-            },
-            order: {
-              lastActivityAt: 'ASC',
-            },
-            take: 100,
-          })
-
-          await Promise.all(
-            sandboxes.map(async (sandbox) => {
-              const lockKey = getStateChangeLockKey(sandbox.id)
-              const acquired = await this.redisLockProvider.lock(lockKey, 30)
-              if (!acquired) {
-                return
-              }
-
-              try {
-                sandbox.pending = true
-                sandbox.desiredState = SandboxDesiredState.DESTROYED
-                await this.sandboxRepository.saveWhere(sandbox, { pending: false, state: sandbox.state })
-                this.syncInstanceState(sandbox.id)
-              } catch (error) {
-                this.logger.error(`Error processing auto-delete state for sandbox ${sandbox.id}:`, error)
-              } finally {
-                await this.redisLockProvider.unlock(lockKey)
-              }
-            }),
-          )
-        }),
-      )
+      await this.sandboxService.handleAutoDeleteCheck()
     } finally {
       await this.redisLockProvider.unlock(lockKey)
     }
@@ -256,57 +129,22 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
     }
 
     try {
-      const queryBuilder = this.sandboxRepository
-        .createQueryBuilder('sandbox')
-        .select(['sandbox.id'])
-        .where('sandbox.state NOT IN (:...excludedStates)', {
-          excludedStates: [SandboxState.DESTROYED, SandboxState.ERROR, SandboxState.BUILD_FAILED],
-        })
-        .andWhere('sandbox."desiredState"::text != sandbox.state::text')
-        .andWhere('sandbox."desiredState"::text != :archived', { archived: SandboxDesiredState.ARCHIVED })
-        .orderBy('sandbox."lastActivityAt"', 'DESC')
-
-      const stream = await queryBuilder.stream()
-      let processedCount = 0
-      const maxProcessPerRun = 100
+      const sandboxIds = await this.sandboxService.findSandboxesForSync(100)
       const pendingProcesses: Promise<void>[] = []
 
-      try {
-        await new Promise<void>((resolve, reject) => {
-          stream.on('data', (row: any) => {
-            if (processedCount >= maxProcessPerRun) {
-              resolve()
-              return
-            }
+      for (const sandboxId of sandboxIds) {
+        const processPromise = this.syncInstanceState(sandboxId)
+        pendingProcesses.push(processPromise)
 
-            // Process sandbox asynchronously but track the promise
-            const processPromise = this.syncInstanceState(row.sandbox_id)
-            pendingProcesses.push(processPromise)
-            processedCount++
-
-            // Limit concurrent processing to avoid overwhelming the system
-            if (pendingProcesses.length >= 10) {
-              stream.pause()
-              Promise.all(pendingProcesses.splice(0, pendingProcesses.length))
-                .then(() => stream.resume())
-                .catch(reject)
-            }
-          })
-
-          stream.on('end', () => {
-            Promise.all(pendingProcesses)
-              .then(() => {
-                resolve()
-              })
-              .catch(reject)
-          })
-
-          stream.on('error', reject)
-        })
-      } finally {
-        if (!stream.destroyed) {
-          stream.destroy()
+        // Limit concurrent processing to avoid overwhelming the system
+        if (pendingProcesses.length >= 10) {
+          await Promise.all(pendingProcesses.splice(0, pendingProcesses.length))
         }
+      }
+
+      // Wait for remaining processes
+      if (pendingProcesses.length > 0) {
+        await Promise.all(pendingProcesses)
       }
     } finally {
       await this.redisLockProvider.unlock(globalLockKey)
@@ -323,16 +161,7 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
       return
     }
 
-    const sandboxes = await this.sandboxRepository.find({
-      where: {
-        state: In([SandboxState.ARCHIVING, SandboxState.STOPPED]),
-        desiredState: SandboxDesiredState.ARCHIVED,
-      },
-      take: 100,
-      order: {
-        lastActivityAt: 'ASC',
-      },
-    })
+    const sandboxes = await this.sandboxService.findArchivedDesiredStateSandboxes()
 
     await Promise.all(
       sandboxes.map(async (sandbox) => {
@@ -361,9 +190,7 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
       return
     }
 
-    const sandbox = await this.sandboxRepository.findOneByOrFail({
-      id: sandboxId,
-    })
+    const sandbox = await this.sandboxService.getSandboxForReconciler(sandboxId)
 
     if ([SandboxState.DESTROYED, SandboxState.ERROR, SandboxState.BUILD_FAILED].includes(sandbox.state)) {
       await this.redisLockProvider.unlock(lockKey)
@@ -402,16 +229,12 @@ export class SandboxManager implements TrackableJobExecutions, OnApplicationShut
     } catch (error) {
       this.logger.error(`Error processing desired state for sandbox ${sandboxId}:`, error)
 
-      const sandbox = await this.sandboxRepository.findOneBy({
-        id: sandboxId,
-      })
-      if (!sandbox) {
-        //  edge case where sandbox is deleted while desired state is being processed
-        return
+      try {
+        await this.sandboxService.markSandboxAsError(sandboxId, error.message || String(error))
+      } catch (updateError) {
+        // Sandbox might have been deleted, ignore error
+        this.logger.warn(`Failed to mark sandbox ${sandboxId} as error:`, updateError)
       }
-      sandbox.state = SandboxState.ERROR
-      sandbox.errorReason = error.message || String(error)
-      await this.sandboxRepository.save(sandbox)
     }
 
     await this.redisLockProvider.unlock(lockKey)

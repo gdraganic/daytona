@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ProjectDirResponse
- */
 export interface ProjectDirResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectDirResponse
-   */
   dir?: string
 }
