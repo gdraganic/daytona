@@ -14,8 +14,7 @@ import { SnapshotService } from './sandbox/services/snapshot.service'
 import { SystemRole } from './user/enums/system-role.enum'
 import { TypedConfigService } from './config/typed-config.service'
 import { SchedulerRegistry } from '@nestjs/schedule'
-
-export const DAYTONA_ADMIN_USER_ID = 'daytona-admin'
+import * as crypto from 'crypto'
 
 @Injectable()
 export class AppService implements OnApplicationBootstrap, OnApplicationShutdown {
@@ -57,34 +56,53 @@ export class AppService implements OnApplicationBootstrap, OnApplicationShutdown
   }
 
   private async initializeAdminUser(): Promise<void> {
-    if (await this.userService.findOne(DAYTONA_ADMIN_USER_ID)) {
+    const adminUsername = this.configService.get('security.admin.user')
+
+    // Check if admin user already exists by username
+    const existingAdmin = await this.userService['userRepository'].findOne({
+      where: { username: adminUsername },
+    })
+
+    if (existingAdmin) {
       return
     }
 
     await this.eventEmitterReadinessWatcher.waitUntilReady()
-    const user = await this.userService.create({
-      id: DAYTONA_ADMIN_USER_ID,
-      name: 'Daytona Admin',
-      personalOrganizationQuota: {
-        totalCpuQuota: 0,
-        totalMemoryQuota: 0,
-        totalDiskQuota: 0,
-        maxCpuPerSandbox: 0,
-        maxMemoryPerSandbox: 0,
-        maxDiskPerSandbox: 0,
-        snapshotQuota: 100,
-        maxSnapshotSize: 100,
-        volumeQuota: 0,
-      },
+
+    const adminPassword =
+      this.configService.get('security.admin.password') ||
+      // Auto-generate secure password if not provided (32 random bytes as base64, alphanumeric only)
+      crypto
+        .randomBytes(24)
+        .toString('base64')
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .slice(0, 32)
+
+    this.logger.log('Creating admin user with username and password...')
+    const user = await this.userService.createWithPassword(
+      `${adminUsername}@daytona.local`,
+      adminPassword,
+      'Daytona Admin',
+      adminUsername,
+      true,
+    )
+
+    // Set admin role
+    await this.userService.update(user.id, {
       role: SystemRole.ADMIN,
     })
+
     const personalOrg = await this.organizationService.findPersonal(user.id)
-    const { value } = await this.apiKeyService.createApiKey(personalOrg.id, user.id, DAYTONA_ADMIN_USER_ID, [])
+    const { value } = await this.apiKeyService.createApiKey(personalOrg.id, user.id, `${adminUsername}-api-key`, [])
+
     this.logger.log(
       `
 =========================================
 =========================================
-Admin user created with API key: ${value}
+Admin user created:
+  Username: ${adminUsername}
+  Password: ${adminPassword}
+  API Key: ${value}
 =========================================
 =========================================`,
     )
@@ -190,7 +208,19 @@ Admin user created with API key: ${value}
   }
 
   private async initializeDefaultSnapshot(): Promise<void> {
-    const adminPersonalOrg = await this.organizationService.findPersonal(DAYTONA_ADMIN_USER_ID)
+    const adminUsername = this.configService.get('security.admin.user')
+
+    // Find admin user by username
+    const adminUser = await this.userService['userRepository'].findOne({
+      where: { username: adminUsername },
+    })
+
+    if (!adminUser) {
+      this.logger.warn('Admin user not found, skipping default snapshot initialization')
+      return
+    }
+
+    const adminPersonalOrg = await this.organizationService.findPersonal(adminUser.id)
 
     try {
       const existingSnapshot = await this.snapshotService.getSnapshotByName(

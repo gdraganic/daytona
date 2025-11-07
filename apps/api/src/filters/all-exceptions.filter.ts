@@ -29,12 +29,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let error: string
     let message: string
 
-    // If the exception is a NotFoundException and the request path is not an API request, serve the dashboard index.html file
-    if (exception instanceof NotFoundException && !request.path.startsWith('/api/')) {
-      const response = ctx.getResponse()
-      response.sendFile(join(__dirname, '..', 'dashboard', 'index.html'))
-      return
-    }
+    // // If the exception is a NotFoundException and the request path is not an API request, serve the dashboard index.html file
+    // if (exception instanceof NotFoundException && !request.path.startsWith('/api/')) {
+    //   const response = ctx.getResponse()
+    //   response.sendFile(join(__dirname, '..', 'dashboard', 'index.html'))
+    //   return
+    // }
 
     if (exception instanceof HttpException) {
       statusCode = exception.getStatus()

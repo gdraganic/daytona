@@ -1,0 +1,42 @@
+<div class="logo">Daytona</div>
+
+<div class="card">
+  <div class="card-header">
+    <h1 class="card-title">Oops! Something went wrong</h1>
+    <% if (errorDescription) { %>
+      <p class="card-description"><%= errorDescription %></p>
+    <% } %>
+  </div>
+
+  <div class="card-content">
+    <div style="background-color: hsl(var(--muted)); padding: 1.5rem; border-radius: calc(var(--radius) - 2px); margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: hsl(var(--foreground)); text-align: center;">Error Details:</h2>
+      <div style="font-family: monospace; font-size: 0.875rem; text-align: left;">
+        <% if (error) { %>
+          <div style="margin-bottom: 0.5rem;">
+            <strong style="color: hsl(var(--destructive));">Error:</strong>
+            <span style="color: hsl(var(--muted-foreground));"><%= error %></span>
+          </div>
+        <% } %>
+        <% if (state) { %>
+          <div style="margin-bottom: 0.5rem;">
+            <strong>State:</strong>
+            <span style="color: hsl(var(--muted-foreground));"><%= state %></span>
+          </div>
+        <% } %>
+        <% if (issuer) { %>
+          <div>
+            <strong>Issuer:</strong>
+            <span style="color: hsl(var(--muted-foreground));"><%= issuer %></span>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (tryAgainUrl) { %>
+      <a href="<%= tryAgainUrl %>" class="btn-primary" style="text-decoration: none; display: block; text-align: center;">
+        Try Again
+      </a>
+    <% } %>
+  </div>
+</div>

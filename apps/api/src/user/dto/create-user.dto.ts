@@ -12,10 +12,6 @@ import { CreateOrganizationQuotaDto } from '../../organization/dto/create-organi
 export class CreateUserDto {
   @ApiProperty()
   @IsString()
-  id: string
-
-  @ApiProperty()
-  @IsString()
   name: string
 
   @ApiPropertyOptional()

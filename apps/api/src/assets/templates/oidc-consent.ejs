@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('_head', { title: 'Authorize Access' }) %>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Daytona</div>
+
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Authorize Access</h1>
+        <p class="card-description"><strong><%= clientName %></strong> is requesting access to your account</p>
+      </div>
+
+      <div class="card-content">
+        <div style="background-color: hsl(var(--muted)); padding: 1.5rem; border-radius: calc(var(--radius) - 2px); margin-bottom: 1.5rem;">
+          <h2 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: hsl(var(--foreground)); text-align: center;">This application will be able to:</h2>
+          <ul class="scope-list">
+            <% scopes.forEach(function(scope) { %>
+              <li class="scope-item">
+                <strong><%= scope.name %></strong>: <span><%= scope.description %></span>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+
+        <div class="button-group">
+          <form method="post" action="/api/oidc/interaction/<%= uid %>/abort" style="flex: 1;">
+            <button type="submit" class="btn-secondary">Deny</button>
+          </form>
+          <form method="post" action="/api/oidc/interaction/<%= uid %>/confirm" style="flex: 1;">
+            <button type="submit" class="btn-primary">Allow</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

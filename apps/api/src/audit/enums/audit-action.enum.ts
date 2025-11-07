@@ -9,6 +9,8 @@ export enum AuditAction {
   UPDATE = 'update',
   DELETE = 'delete',
   LOGIN = 'login',
+  REGISTER = 'register',
+  CHANGE_PASSWORD = 'change_password',
   SET_DEFAULT = 'set_default',
   UPDATE_ACCESS = 'update_access',
   UPDATE_QUOTA = 'update_quota',

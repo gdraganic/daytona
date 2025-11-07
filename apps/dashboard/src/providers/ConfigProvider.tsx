@@ -23,9 +23,6 @@ export function ConfigProvider(props: Props) {
   const config = getConfig()
 
   const oidcConfig: AuthProviderProps = useMemo(() => {
-    const isLocalhost = window.location.hostname === 'localhost'
-    const stateStore = isLocalhost ? window.sessionStorage : new InMemoryWebStorage()
-
     return {
       authority: config.oidc.issuer,
       client_id: config.oidc.clientId,
@@ -35,8 +32,8 @@ export function ConfigProvider(props: Props) {
       scope: 'openid profile email',
       redirect_uri: window.location.origin,
       staleStateAgeInSeconds: 60,
-      accessTokenExpiringNotificationTimeInSeconds: 290,
-      userStore: new WebStorageStateStore({ store: stateStore }),
+      accessTokenExpiringNotificationTimeInSeconds: 60,
+      userStore: new WebStorageStateStore({ store: new InMemoryWebStorage() }),
       onSigninCallback: (user) => {
         const state = user?.state as { returnTo?: string } | undefined
         const targetUrl = state?.returnTo || RoutePath.DASHBOARD

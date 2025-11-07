@@ -8,11 +8,14 @@ import { UserController } from './user.controller'
 import { UserService } from './user.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { User } from './user.entity'
+import { UserCredential } from './user-credential.entity'
+import { ExternalIdentity } from './external-identity.entity'
+import { ExternalIdentityService } from './external-identity.service'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User, UserCredential, ExternalIdentity])],
   controllers: [UserController],
-  providers: [UserService],
-  exports: [UserService],
+  providers: [UserService, ExternalIdentityService],
+  exports: [UserService, ExternalIdentityService],
 })
 export class UserModule {}

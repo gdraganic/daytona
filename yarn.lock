@@ -5908,6 +5908,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@koa/cors@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@koa/cors@npm:5.0.0"
+  dependencies:
+    vary: "npm:^1.1.2"
+  checksum: 10c0/49e5f3b861590bd81aa3663a2f0658234a9b378840bb54a2947b3c5f2067f9d966b6fa2e9049fdc7c74c787456d1885bacd0b7ee1f134274d28282c7df99c3fd
+  languageName: node
+  linkType: hard
+
+"@koa/router@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@koa/router@npm:14.0.0"
+  dependencies:
+    debug: "npm:^4.4.1"
+    http-errors: "npm:^2.0.0"
+    koa-compose: "npm:^4.1.0"
+    path-to-regexp: "npm:^8.2.0"
+  checksum: 10c0/b3d542bca5839e2125521f7a7c913393fc2cab85d6c7ef247832caf2fce61bccf711b809ebafffa181207039d148d3e24f4ea92041e76a3f0a586ea6ca85649c
+  languageName: node
+  linkType: hard
+
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.5
   resolution: "@leichtgewicht/ip-codec@npm:2.0.5"
@@ -12561,6 +12582,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bcrypt@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@types/bcrypt@npm:6.0.0"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/48b66408838f5eb59791da5a77260cef59a5291ce0945f2caa3b5a6158c44b321b684b4aa7dce771852c63271c766cadd587374273451b300377a17015c1d51d
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.6
   resolution: "@types/body-parser@npm:1.19.6"
@@ -13160,6 +13190,17 @@ __metadata:
     "@aws-sdk/client-ses": "npm:^3.731.1"
     "@types/node": "npm:*"
   checksum: 10c0/e4d42f6e2a87523de3f6dfe6a856647dbd6d2305c2c787bdefaeb74a89c08598b7c04e23ba8d64c7972afa3823e51a1d37671bc0361bdb844f1f2906dc6e66db
+  languageName: node
+  linkType: hard
+
+"@types/oidc-provider@npm:^9":
+  version: 9.5.0
+  resolution: "@types/oidc-provider@npm:9.5.0"
+  dependencies:
+    "@types/keygrip": "npm:*"
+    "@types/koa": "npm:*"
+    "@types/node": "npm:*"
+  checksum: 10c0/acc12187f67149c3e2ffa7fed2984a992fee1780d8031eddc5e79088a50a53c96fb410265ddcf8c452b00b6d2565d4fa2a6804c49017d424f5685f8608c7cf54
   languageName: node
   linkType: hard
 
@@ -15938,6 +15979,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bcrypt@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "bcrypt@npm:6.0.0"
+  dependencies:
+    node-addon-api: "npm:^8.3.0"
+    node-gyp: "npm:latest"
+    node-gyp-build: "npm:^4.8.4"
+  checksum: 10c0/006e69d4b3f0f021051fa9d998a768721a51dde28e7848e3e775ab608ba3476b25fa9262a7082ececbb0d493b0b6ca83673a6f3810b114fe90ec1bc6ae4b35b2
+  languageName: node
+  linkType: hard
+
 "bcryptjs@npm:2.4.3":
   version: 2.4.3
   resolution: "bcryptjs@npm:2.4.3"
@@ -18262,6 +18314,7 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.90.1"
     "@tanstack/react-table": "npm:^8.21.2"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
+    "@types/bcrypt": "npm:^6.0.0"
     "@types/busboy": "npm:^1.0.0"
     "@types/dockerode": "npm:^3.3.34"
     "@types/ejs": "npm:^3.1.5"
@@ -18269,6 +18322,7 @@ __metadata:
     "@types/multer": "npm:^1.4.12"
     "@types/node": "npm:^22.13.4"
     "@types/nodemailer": "npm:^6.4.17"
+    "@types/oidc-provider": "npm:^9"
     "@types/passport-http-bearer": "npm:^1.0.41"
     "@types/passport-jwt": "npm:^4.0.1"
     "@types/react": "npm:19.0.0"
@@ -18285,6 +18339,7 @@ __metadata:
     axios: "npm:^1.11.0"
     axios-debug-log: "npm:^1.0.0"
     axios-retry: "npm:^4.5.0"
+    bcrypt: "npm:^6.0.0"
     busboy: "npm:^1.0.0"
     cache-manager: "npm:^6.4.1"
     cache-manager-memcached-store: "npm:^6.0.1"
@@ -18337,6 +18392,7 @@ __metadata:
     nodemailer: "npm:^7.0.7"
     nx: "npm:21.4.1"
     oidc-client-ts: "npm:^3.2.0"
+    oidc-provider: "npm:^9.5.2"
     passport: "npm:^0.7.0"
     passport-http-bearer: "npm:^1.0.1"
     passport-jwt: "npm:^4.0.1"
@@ -18412,7 +18468,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.3.6, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.1":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.3, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.3.6, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.1, debug@npm:^4.4.3":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -20318,6 +20374,13 @@ __metadata:
   version: 2.0.3
   resolution: "esutils@npm:2.0.3"
   checksum: 10c0/9a2fe69a41bfdade834ba7c42de4723c97ec776e40656919c62cbd13607c45e127a003f05f724a1ea55e5029a4cf2de444b13009f2af71271e42d93a637137c7
+  languageName: node
+  linkType: hard
+
+"eta@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "eta@npm:4.0.1"
+  checksum: 10c0/a7dc8641705a01373393aba6d0998f7571735c4f5444aa9c3375b2574a93ef3be80cfd5c7d1f8d6f0e56a83a14a7db451195ed3ceeab145f23492bb5b41d1ece
   languageName: node
   linkType: hard
 
@@ -24858,6 +24921,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jose@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "jose@npm:6.1.0"
+  checksum: 10c0/f4518579e907317e144facd15c7627acd06097bbea17735097437217498aa419564c039dd4020f6af5f2d024a7cee6b7be4648ccbbdc238aedb80a47c061217d
+  languageName: node
+  linkType: hard
+
 "jose@npm:~5.10.0":
   version: 5.10.0
   resolution: "jose@npm:5.10.0"
@@ -24959,7 +25029,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsesc@npm:^3.0.2":
+"jsesc@npm:^3.0.2, jsesc@npm:^3.1.0":
   version: 3.1.0
   resolution: "jsesc@npm:3.1.0"
   bin:
@@ -25369,6 +25439,32 @@ __metadata:
     type-is: "npm:^2.0.1"
     vary: "npm:^1.1.2"
   checksum: 10c0/1efb27798490842a285bbb4628b97d5a3b7cfaa96e564f78edb3be9540eb974f3e586bdc84a03d90f784181f6f0238f1ee3270161626481093845ee33b71a8b2
+  languageName: node
+  linkType: hard
+
+"koa@npm:^3.0.3":
+  version: 3.1.1
+  resolution: "koa@npm:3.1.1"
+  dependencies:
+    accepts: "npm:^1.3.8"
+    content-disposition: "npm:~0.5.4"
+    content-type: "npm:^1.0.5"
+    cookies: "npm:~0.9.1"
+    delegates: "npm:^1.0.0"
+    destroy: "npm:^1.2.0"
+    encodeurl: "npm:^2.0.0"
+    escape-html: "npm:^1.0.3"
+    fresh: "npm:~0.5.2"
+    http-assert: "npm:^1.5.0"
+    http-errors: "npm:^2.0.0"
+    koa-compose: "npm:^4.1.0"
+    mime-types: "npm:^3.0.1"
+    on-finished: "npm:^2.4.1"
+    parseurl: "npm:^1.3.3"
+    statuses: "npm:^2.0.1"
+    type-is: "npm:^2.0.1"
+    vary: "npm:^1.1.2"
+  checksum: 10c0/2329fa9b2352dbbed8b5073b3b0d5b71678357222c7b8bc4d29e3383fa31c3dc23c6648a3445efa0e6b01e44de0349f8ec2f43d70cd0d37ce7ba1ce50337be15
   languageName: node
   linkType: hard
 
@@ -27793,6 +27889,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^5.1.6":
+  version: 5.1.6
+  resolution: "nanoid@npm:5.1.6"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 10c0/27b5b055ad8332cf4f0f9f6e2a494aa7e5ded89df4cab8c8490d4eabefe72c4423971d2745d22002868b1d50576a5e42b7b05214733b19f576382323282dd26e
+  languageName: node
+  linkType: hard
+
 "napi-build-utils@npm:^2.0.0":
   version: 2.0.0
   resolution: "napi-build-utils@npm:2.0.0"
@@ -27952,6 +28057,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-addon-api@npm:^8.3.0":
+  version: 8.5.0
+  resolution: "node-addon-api@npm:8.5.0"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10c0/e4de0b4e70998fed7ef41933946f60565fc3a17cb83b7d626a0c0bb1f734cf7852e0e596f12681e7c8ed424163ee3cdbb4f0abaa9cc269d03f48834c263ba162
+  languageName: node
+  linkType: hard
+
 "node-cache@npm:^5.1.2":
   version: 5.1.2
   resolution: "node-cache@npm:5.1.2"
@@ -27993,6 +28107,17 @@ __metadata:
   version: 1.3.1
   resolution: "node-forge@npm:1.3.1"
   checksum: 10c0/e882819b251a4321f9fc1d67c85d1501d3004b4ee889af822fd07f64de3d1a8e272ff00b689570af0465d65d6bf5074df9c76e900e0aff23e60b847f2a46fbe8
+  languageName: node
+  linkType: hard
+
+"node-gyp-build@npm:^4.8.4":
+  version: 4.8.4
+  resolution: "node-gyp-build@npm:4.8.4"
+  bin:
+    node-gyp-build: bin.js
+    node-gyp-build-optional: optional.js
+    node-gyp-build-test: build-test.js
+  checksum: 10c0/444e189907ece2081fe60e75368784f7782cfddb554b60123743dfb89509df89f1f29c03bbfa16b3a3e0be3f48799a4783f487da6203245fa5bed239ba7407e1
   languageName: node
   linkType: hard
 
@@ -28433,6 +28558,24 @@ __metadata:
   dependencies:
     jwt-decode: "npm:^4.0.0"
   checksum: 10c0/f749a0718df00009a4c75a656b7a32e45064b9e30db2cb9df77bdd01a136ed84e1aa29075c18941b644c1fbf6b0bf61d78d2cd0af381336d2c0a6d3420aead82
+  languageName: node
+  linkType: hard
+
+"oidc-provider@npm:^9.5.2":
+  version: 9.5.2
+  resolution: "oidc-provider@npm:9.5.2"
+  dependencies:
+    "@koa/cors": "npm:^5.0.0"
+    "@koa/router": "npm:^14.0.0"
+    debug: "npm:^4.4.3"
+    eta: "npm:^4.0.1"
+    jose: "npm:^6.1.0"
+    jsesc: "npm:^3.1.0"
+    koa: "npm:^3.0.3"
+    nanoid: "npm:^5.1.6"
+    quick-lru: "npm:^7.3.0"
+    raw-body: "npm:^3.0.1"
+  checksum: 10c0/d76be1f8caeea041e0f10718f85478aa8fe96f24b49f3e1cbed4f1eb2be4a2ba883c6fc6e2e05b5361206c028968bf481fd32ef74402615118fafe1ed2416836
   languageName: node
   linkType: hard
 
@@ -29126,7 +29269,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:8.3.0, path-to-regexp@npm:^8.0.0":
+"path-to-regexp@npm:8.3.0, path-to-regexp@npm:^8.0.0, path-to-regexp@npm:^8.2.0":
   version: 8.3.0
   resolution: "path-to-regexp@npm:8.3.0"
   checksum: 10c0/ee1544a73a3f294a97a4c663b0ce71bbf1621d732d80c9c9ed201b3e911a86cb628ebad691b9d40f40a3742fe22011e5a059d8eed2cf63ec2cb94f6fb4efe67c
@@ -30889,6 +31032,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"quick-lru@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "quick-lru@npm:7.3.0"
+  checksum: 10c0/28dc8eaadcd489d26917f238ad27a6b09f8fe3a609152b0a4f399d5805094e07b56fe1e8c0d7ade0c11463c31bef329803672effc559601daf160a85f578fd05
+  languageName: node
+  linkType: hard
+
 "rambda@npm:^9.1.0":
   version: 9.4.2
   resolution: "rambda@npm:9.4.2"
@@ -30943,7 +31093,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raw-body@npm:^3.0.0":
+"raw-body@npm:^3.0.0, raw-body@npm:^3.0.1":
   version: 3.0.1
   resolution: "raw-body@npm:3.0.1"
   dependencies:

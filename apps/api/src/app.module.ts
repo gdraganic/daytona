@@ -35,6 +35,7 @@ import { OpenFeatureModule } from '@openfeature/nestjs-sdk'
 import { OpenFeaturePostHogProvider } from './common/providers/openfeature-posthog.provider'
 import { LoggerModule } from 'nestjs-pino'
 import { getPinoTransport, swapMessageAndObject } from './common/utils/pino.util'
+import { OidcModule } from './oidc/oidc.module'
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { getPinoTransport, swapMessageAndObject } from './common/utils/pino.util
           password: configService.getOrThrow('database.password'),
           database: configService.getOrThrow('database.database'),
           autoLoadEntities: true,
+          synchronize: true,
           migrations: [join(__dirname, 'migrations/**/*{.ts,.js}')],
           migrationsRun: configService.get('runMigrations') || !configService.getOrThrow('production'),
           namingStrategy: new CustomNamingStrategy(),
@@ -149,6 +151,21 @@ import { getPinoTransport, swapMessageAndObject } from './common/utils/pino.util
     ObjectStorageModule,
     AuditModule,
     HealthModule,
+    OidcModule.forRoot({
+      clients: [
+        {
+          // Public client (browser-based dashboard) - uses PKCE instead of client secret
+          client_name: 'Daytona Dashboard',
+          client_id: 'daytona-dashboard',
+          application_type: 'web',
+          redirect_uris: ['http://localhost:3000'],
+          post_logout_redirect_uris: ['http://localhost:3000'],
+          grant_types: ['authorization_code', 'refresh_token'],
+          response_types: ['code'],
+          token_endpoint_auth_method: 'none',
+        },
+      ],
+    }),
     OpenFeatureModule.forRoot({
       contextFactory: (request: ExecutionContext) => {
         const req = request.switchToHttp().getRequest()

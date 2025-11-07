@@ -9,13 +9,6 @@ services:
     volumes:
       - ..:/workspaces/daytona
 
-  dex:
-    image: dexidp/dex:v2.42.0
-    volumes:
-      - ./dex/config.yaml:/etc/dex/config.yaml
-    command: ['dex', 'serve', '/etc/dex/config.yaml']
-    network_mode: service:app
-
   db:
     image: postgres:18
     environment:

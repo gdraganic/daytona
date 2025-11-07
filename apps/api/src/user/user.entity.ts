@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0
  */
 
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import { SystemRole } from './enums/system-role.enum'
 
 export interface UserSSHKeyPair {
@@ -18,11 +18,17 @@ export interface UserPublicKey {
 
 @Entity()
 export class User {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string
 
   @Column()
   name: string
+
+  @Column({
+    unique: true,
+    nullable: true,
+  })
+  username: string
 
   @Column({
     default: '',

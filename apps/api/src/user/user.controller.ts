@@ -82,7 +82,6 @@ export class UserController {
     targetIdFromResult: (result: User) => result?.id,
     requestMetadata: {
       body: (req: TypedRequest<CreateUserDto>) => ({
-        id: req.body?.id,
         name: req.body?.name,
         email: req.body?.email,
         personalOrganizationQuota: req.body?.personalOrganizationQuota,

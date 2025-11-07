@@ -1,0 +1,14 @@
+<div class="logo">Daytona</div>
+
+<div class="card">
+  <div class="card-header">
+    <h1 class="card-title">Signed Out Successfully</h1>
+    <p class="card-description">You will be redirected in a moment...</p>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    window.location.href = '<%= redirectUrl %>';
+  }, 2000);
+</script>

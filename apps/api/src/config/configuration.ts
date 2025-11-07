@@ -28,6 +28,9 @@ const configuration = {
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
     tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
   },
+  oidcAdapter: {
+    useRedis: process.env.OIDC_ADAPTER_USE_REDIS !== 'false', // Default to true (opt-out)
+  },
   posthog: {
     apiKey: process.env.POSTHOG_API_KEY,
     host: process.env.POSTHOG_HOST,
@@ -203,6 +206,25 @@ const configuration = {
     volumeQuota: parseInt(process.env.DEFAULT_ORG_QUOTA_VOLUME_QUOTA || '100', 10),
   },
   defaultRegion: process.env.DEFAULT_REGION || 'us',
+  security: {
+    admin: {
+      user: process.env.SECURITY_ADMIN_USER || 'admin',
+      password: process.env.SECURITY_ADMIN_PASSWORD,
+    },
+    providers: {
+      github: {
+        enabled: process.env.SECURITY_PROVIDERS_GITHUB_ENABLED === 'true',
+        clientId: process.env.SECURITY_PROVIDERS_GITHUB_CLIENT_ID,
+        clientSecret: process.env.SECURITY_PROVIDERS_GITHUB_CLIENT_SECRET,
+      },
+      google: {
+        enabled: process.env.SECURITY_PROVIDERS_GOOGLE_ENABLED === 'true',
+        clientId: process.env.SECURITY_PROVIDERS_GOOGLE_CLIENT_ID,
+        clientSecret: process.env.SECURITY_PROVIDERS_GOOGLE_CLIENT_SECRET,
+        allowedDomains: process.env.SECURITY_PROVIDERS_GOOGLE_ALLOWED_DOMAINS || '',
+      },
+    },
+  },
 }
 
 export { configuration }

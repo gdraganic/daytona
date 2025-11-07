@@ -20,8 +20,8 @@ import { getOpenApiConfig } from './openapi.config'
 import { AuditInterceptor } from './audit/interceptors/audit.interceptor'
 import { join } from 'node:path'
 import { ApiKeyService } from './api-key/api-key.service'
-import { DAYTONA_ADMIN_USER_ID } from './app.service'
 import { OrganizationService } from './organization/services/organization.service'
+import { UserService } from './user/user.service'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { Partitioners } from 'kafkajs'
 import { isApiEnabled, isWorkerEnabled } from './common/utils/app-mode'
@@ -54,6 +54,9 @@ async function bootstrap() {
 
   const configService = app.get(TypedConfigService)
   app.set('trust proxy', true)
+  app.setViewEngine('ejs')
+  app.setBaseViewsDir(join(__dirname, 'assets/templates'))
+  app.useStaticAssets(join(__dirname, 'assets/public'))
   app.useGlobalFilters(new AllExceptionsFilter())
   app.useGlobalInterceptors(new LoggerErrorInterceptor())
   app.useGlobalInterceptors(new MetricsInterceptor(configService))
@@ -223,9 +226,23 @@ async function bootstrap() {
 async function createAdminApiKey(app: INestApplication, apiKeyName: string) {
   const apiKeyService = app.get(ApiKeyService)
   const organizationService = app.get(OrganizationService)
+  const userService = app.get(UserService)
+  const configService = app.get(TypedConfigService)
 
-  const personalOrg = await organizationService.findPersonal(DAYTONA_ADMIN_USER_ID)
-  const { value } = await apiKeyService.createApiKey(personalOrg.id, DAYTONA_ADMIN_USER_ID, apiKeyName, [])
+  const adminUsername = configService.get('security.admin.user')
+
+  // Find admin user by username
+  const adminUser = await userService['userRepository'].findOne({
+    where: { username: adminUsername },
+  })
+
+  if (!adminUser) {
+    Logger.error(`Admin user with username '${adminUsername}' not found`)
+    process.exit(1)
+  }
+
+  const personalOrg = await organizationService.findPersonal(adminUser.id)
+  const { value } = await apiKeyService.createApiKey(personalOrg.id, adminUser.id, apiKeyName, [])
   Logger.log(
     `
 =========================================

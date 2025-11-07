@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('_head', { title: 'Sign In' }) %>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Daytona</div>
+
+    <div class="card">
+      <div class="card-header">
+        <h1 class="card-title">Welcome</h1>
+        <p class="card-description">Sign in to continue to <%= clientName %></p>
+      </div>
+
+      <div class="card-content">
+        <% if (error) { %>
+          <div class="error"><%= error %></div>
+        <% } %>
+
+        <% if (accountMerge) { %>
+          <div class="notice"><%= accountMerge.message %></div>
+        <% } %>
+
+        <% if (providers && providers.length > 0) { %>
+          <div class="oauth-providers">
+            <% providers.forEach(function(provider) { %>
+              <a href="/api/auth/oauth/<%= provider.name %>?returnTo=<%= encodeURIComponent('/api/oidc/interaction/' + uid) %>" class="btn-oauth btn-oauth-<%= provider.name %>">
+                <span class="oauth-icon">
+                  <img src="/img/<%= provider.name %>-icon.svg" alt="<%= provider.displayName %>" height="20" width="20">
+                </span>
+                Continue with <%= provider.displayName %>
+              </a>
+            <% }) %>
+          </div>
+          <div class="divider">
+            <span>or</span>
+          </div>
+        <% } %>
+
+        <% if (!accountMerge) { %>
+          <div class="tabs">
+            <button class="tab active" onclick="showTab('login')">Sign In</button>
+            <button class="tab" onclick="showTab('register')">Sign Up</button>
+          </div>
+        <% } %>
+
+        <form id="login-form" class="form-container active" method="post" action="/api/oidc/interaction/<%= uid %>/login<% if (accountMerge) { %>?accountMerge=true&email=<%= encodeURIComponent(accountMerge.email) %>&provider=<%= accountMerge.provider %>&mergeToken=<%= accountMerge.mergeToken %><% } %>">
+          <div class="form-group">
+            <label for="login-emailOrUsername">Email or username</label>
+            <input type="text" id="login-emailOrUsername" name="emailOrUsername" required autocomplete="username" placeholder="email or username" <% if (accountMerge && accountMerge.email) { %>value="<%= accountMerge.email %>"<% } %>>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn-primary">Sign In</button>
+          </div>
+        </form>
+
+        <% if (!accountMerge) { %>
+        <form id="register-form" class="form-container" method="post" action="/api/oidc/interaction/<%= uid %>/register">
+          <div class="form-group">
+            <label for="register-name">Name</label>
+            <input type="text" id="register-name" name="name" required autocomplete="name" placeholder="Your name">
+          </div>
+
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input type="email" id="register-email" name="email" required autocomplete="email" placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input type="password" id="register-password" name="password" required autocomplete="new-password" minlength="8" placeholder="Minimum 8 characters">
+            <p class="text-muted" style="margin-top: 0.25rem;">Minimum 8 characters</p>
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn-primary">Sign Up</button>
+          </div>
+        </form>
+        <% } %>
+      </div>
+    </div>
+
+    <% if (!accountMerge) { %>
+    <script>
+      function showTab(tab) {
+        const tabs = document.querySelectorAll('.tab');
+        const forms = document.querySelectorAll('.form-container');
+
+        tabs.forEach(t => t.classList.remove('active'));
+        forms.forEach(f => f.classList.remove('active'));
+
+        document.querySelector(`[onclick="showTab('${tab}')"]`).classList.add('active');
+        document.getElementById(`${tab}-form`).classList.add('active');
+      }
+    </script>
+    <% } %>
+  </div>
+</body>
+</html>
