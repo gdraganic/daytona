@@ -534,6 +534,18 @@ export class SnapshotService {
   }
 
   /**
+   * Find snapshot by buildRunnerId and snapshotRef (for BUILD_SNAPSHOT job completion).
+   */
+  async findSnapshotByBuildRunner(buildRunnerId: string, snapshotRef: string): Promise<Snapshot | null> {
+    return this.snapshotRepository
+      .createQueryBuilder('snapshot')
+      .leftJoinAndSelect('snapshot.buildInfo', 'buildInfo')
+      .where('snapshot.buildRunnerId = :buildRunnerId', { buildRunnerId })
+      .andWhere('buildInfo.snapshotRef = :snapshotRef', { snapshotRef })
+      .getOne()
+  }
+
+  /**
    * Update multiple snapshots state by IDs.
    */
   async updateSnapshotsState(snapshotIds: string[], state: SnapshotState): Promise<void> {

@@ -233,8 +233,7 @@ export class SandboxJobService {
 
     try {
       // Find snapshot by buildRunnerId - snapshot.manager sets this when assigning a build runner
-      const snapshots = await this.snapshotService.findAll()
-      const snapshot = snapshots.find((s) => s.buildRunnerId === runnerId && s.buildInfo?.snapshotRef === snapshotRef)
+      const snapshot = await this.snapshotService.findSnapshotByBuildRunner(runnerId, snapshotRef)
 
       if (!snapshot) {
         this.logger.warn(`Snapshot not found for build ref ${snapshotRef} on runner ${runnerId}`)

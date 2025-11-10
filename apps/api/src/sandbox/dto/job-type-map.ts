@@ -33,7 +33,7 @@ export interface JobTypeMap {
     payload: BackupJobPayload
   }
   [JobType.BUILD_SNAPSHOT]: {
-    resourceType: ResourceType.SANDBOX
+    resourceType: ResourceType.SANDBOX | ResourceType.SNAPSHOT
     payload: SnapshotJobPayload
   }
   [JobType.PULL_SNAPSHOT]: {
