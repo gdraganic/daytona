@@ -45,7 +45,6 @@ import type { SandboxInfoResponse } from '../models'
 import type { UpdateNetworkSettingsDTO } from '../models'
 /**
  * SandboxApi - axios parameter creator
- * @export
  */
 export const SandboxApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -452,7 +451,6 @@ export const SandboxApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SandboxApi - functional programming interface
- * @export
  */
 export const SandboxApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SandboxApiAxiosParamCreator(configuration)
@@ -698,7 +696,6 @@ export const SandboxApiFp = function (configuration?: Configuration) {
 
 /**
  * SandboxApi - factory interface
- * @export
  */
 export const SandboxApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SandboxApiFp(configuration)
@@ -816,9 +813,6 @@ export const SandboxApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * SandboxApi - object-oriented interface
- * @export
- * @class SandboxApi
- * @extends {BaseAPI}
  */
 export class SandboxApi extends BaseAPI {
   /**
@@ -827,7 +821,6 @@ export class SandboxApi extends BaseAPI {
    * @param {CreateSandboxDTO} sandbox Create sandbox
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public create(sandbox: CreateSandboxDTO, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -842,7 +835,6 @@ export class SandboxApi extends BaseAPI {
    * @param {CreateBackupDTO} sandbox Create backup
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public createBackup(sandboxId: string, sandbox: CreateBackupDTO, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -856,7 +848,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public destroy(sandboxId: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -870,7 +861,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public getNetworkSettings(sandboxId: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -884,7 +874,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public info(sandboxId: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -898,7 +887,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public removeDestroyed(sandboxId: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -913,7 +901,6 @@ export class SandboxApi extends BaseAPI {
    * @param {ResizeSandboxDTO} sandbox Resize sandbox
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public resize(sandboxId: string, sandbox: ResizeSandboxDTO, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -928,7 +915,6 @@ export class SandboxApi extends BaseAPI {
    * @param {object} [metadata] Metadata
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public start(sandboxId: string, metadata?: object, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -942,7 +928,6 @@ export class SandboxApi extends BaseAPI {
    * @param {string} sandboxId Sandbox ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public stop(sandboxId: string, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)
@@ -957,7 +942,6 @@ export class SandboxApi extends BaseAPI {
    * @param {UpdateNetworkSettingsDTO} sandbox Update network settings
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SandboxApi
    */
   public updateNetworkSettings(sandboxId: string, sandbox: UpdateNetworkSettingsDTO, options?: RawAxiosRequestConfig) {
     return SandboxApiFp(this.configuration)

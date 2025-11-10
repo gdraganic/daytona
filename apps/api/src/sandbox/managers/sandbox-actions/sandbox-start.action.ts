@@ -45,7 +45,15 @@ export class SandboxStartAction extends SandboxAction {
     super(runnerService, runnerAdapterFactory, sandboxRepository, redisLockProvider)
   }
 
-  async run(sandbox: Sandbox, lockCode: LockCode): Promise<SyncState> {
+  async run(sandbox: Sandbox,lockCode: LockCode): Promise<SyncState> {
+    // For v3 runners, skip reconciler - state updates are handled by SandboxJobService
+    if (sandbox.runnerId) {
+      const runner = await this.runnerService.findOne(sandbox.runnerId)
+      if (runner?.version === '3') {
+        return DONT_SYNC_AGAIN
+      }
+    }
+
     switch (sandbox.state) {
       case SandboxState.PENDING_BUILD: {
         return this.handleUnassignedBuildSandbox(sandbox, lockCode)

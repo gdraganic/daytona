@@ -12,34 +12,21 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CreateOrganizationInvitation
- */
 export interface CreateOrganizationInvitation {
   /**
    * Email address of the invitee
-   * @type {string}
-   * @memberof CreateOrganizationInvitation
    */
   email: string
   /**
    * Organization member role for the invitee
-   * @type {string}
-   * @memberof CreateOrganizationInvitation
    */
   role: CreateOrganizationInvitationRoleEnum
   /**
    * Array of assigned role IDs for the invitee
-   * @type {Array<string>}
-   * @memberof CreateOrganizationInvitation
    */
   assignedRoleIds: Array<string>
   /**
    * Expiration date of the invitation
-   * @type {Date}
-   * @memberof CreateOrganizationInvitation
    */
   expiresAt?: Date
 }

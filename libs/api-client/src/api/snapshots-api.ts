@@ -41,7 +41,6 @@ import type { SetSnapshotGeneralStatusDto } from '../models'
 import type { SnapshotDto } from '../models'
 /**
  * SnapshotsApi - axios parameter creator
- * @export
  */
 export const SnapshotsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -505,7 +504,6 @@ export const SnapshotsApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * SnapshotsApi - functional programming interface
- * @export
  */
 export const SnapshotsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SnapshotsApiAxiosParamCreator(configuration)
@@ -778,7 +776,6 @@ export const SnapshotsApiFp = function (configuration?: Configuration) {
 
 /**
  * SnapshotsApi - factory interface
- * @export
  */
 export const SnapshotsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SnapshotsApiFp(configuration)
@@ -945,9 +942,6 @@ export const SnapshotsApiFactory = function (configuration?: Configuration, base
 
 /**
  * SnapshotsApi - object-oriented interface
- * @export
- * @class SnapshotsApi
- * @extends {BaseAPI}
  */
 export class SnapshotsApi extends BaseAPI {
   /**
@@ -957,7 +951,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public activateSnapshot(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -972,7 +965,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public canCleanupImage(imageName: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -987,7 +979,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public createSnapshot(
     createSnapshot: CreateSnapshot,
@@ -1006,7 +997,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public deactivateSnapshot(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -1025,7 +1015,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {GetAllSnapshotsOrderEnum} [order] Direction to sort by
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public getAllSnapshots(
     xDaytonaOrganizationID?: string,
@@ -1048,7 +1037,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public getSnapshot(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -1064,7 +1052,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {boolean} [follow] Whether to follow the logs stream
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public getSnapshotBuildLogs(
     id: string,
@@ -1084,7 +1071,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public removeSnapshot(id: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return SnapshotsApiFp(this.configuration)
@@ -1100,7 +1086,6 @@ export class SnapshotsApi extends BaseAPI {
    * @param {string} [xDaytonaOrganizationID] Use with JWT to specify the organization ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SnapshotsApi
    */
   public setSnapshotGeneralStatus(
     id: string,
@@ -1114,9 +1099,6 @@ export class SnapshotsApi extends BaseAPI {
   }
 }
 
-/**
- * @export
- */
 export const GetAllSnapshotsSortEnum = {
   NAME: 'name',
   STATE: 'state',
@@ -1124,9 +1106,6 @@ export const GetAllSnapshotsSortEnum = {
   CREATED_AT: 'createdAt',
 } as const
 export type GetAllSnapshotsSortEnum = (typeof GetAllSnapshotsSortEnum)[keyof typeof GetAllSnapshotsSortEnum]
-/**
- * @export
- */
 export const GetAllSnapshotsOrderEnum = {
   ASC: 'asc',
   DESC: 'desc',

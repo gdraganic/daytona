@@ -16,35 +16,10 @@
 // @ts-ignore
 import type { AuditLog } from './audit-log'
 
-/**
- *
- * @export
- * @interface PaginatedAuditLogs
- */
 export interface PaginatedAuditLogs {
-  /**
-   *
-   * @type {Array<AuditLog>}
-   * @memberof PaginatedAuditLogs
-   */
   items: Array<AuditLog>
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedAuditLogs
-   */
   total: number
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedAuditLogs
-   */
   page: number
-  /**
-   *
-   * @type {number}
-   * @memberof PaginatedAuditLogs
-   */
   totalPages: number
   /**
    * Token for next page in cursor-based pagination

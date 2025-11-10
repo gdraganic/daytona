@@ -87,6 +87,12 @@ export class RunnerAdapterFactory {
         await adapter.init(runner)
         return adapter
       }
+      case '3': {
+        // V3 runners use job-based approach - jobs are created directly in sandbox.service.ts
+        // Action handlers skip adapter calls for v3 runners
+        // Adapters are only used for legacy v0 runners
+        throw new Error('V3 runners should not use adapters - jobs are created directly in sandbox.service.ts')
+      }
       default:
         throw new Error(`Unsupported runner version: ${runner.version}`)
     }

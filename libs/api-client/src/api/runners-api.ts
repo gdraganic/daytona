@@ -39,7 +39,6 @@ import type { Runner } from '../models'
 import type { RunnerSnapshotDto } from '../models'
 /**
  * RunnersApi - axios parameter creator
- * @export
  */
 export const RunnersApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -274,7 +273,6 @@ export const RunnersApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * RunnersApi - functional programming interface
- * @export
  */
 export const RunnersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = RunnersApiAxiosParamCreator(configuration)
@@ -418,7 +416,6 @@ export const RunnersApiFp = function (configuration?: Configuration) {
 
 /**
  * RunnersApi - factory interface
- * @export
  */
 export const RunnersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = RunnersApiFp(configuration)
@@ -486,9 +483,6 @@ export const RunnersApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * RunnersApi - object-oriented interface
- * @export
- * @class RunnersApi
- * @extends {BaseAPI}
  */
 export class RunnersApi extends BaseAPI {
   /**
@@ -497,7 +491,6 @@ export class RunnersApi extends BaseAPI {
    * @param {CreateRunner} createRunner
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RunnersApi
    */
   public createRunner(createRunner: CreateRunner, options?: RawAxiosRequestConfig) {
     return RunnersApiFp(this.configuration)
@@ -524,7 +517,6 @@ export class RunnersApi extends BaseAPI {
    * @param {string} sandboxId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RunnersApi
    */
   public getRunnerBySandboxId(sandboxId: string, options?: RawAxiosRequestConfig) {
     return RunnersApiFp(this.configuration)
@@ -538,7 +530,6 @@ export class RunnersApi extends BaseAPI {
    * @param {string} ref Snapshot ref
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RunnersApi
    */
   public getRunnersBySnapshotRef(ref: string, options?: RawAxiosRequestConfig) {
     return RunnersApiFp(this.configuration)
@@ -551,7 +542,6 @@ export class RunnersApi extends BaseAPI {
    * @summary List all runners
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RunnersApi
    */
   public listRunners(options?: RawAxiosRequestConfig) {
     return RunnersApiFp(this.configuration)
@@ -565,7 +555,6 @@ export class RunnersApi extends BaseAPI {
    * @param {string} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RunnersApi
    */
   public updateRunnerScheduling(id: string, options?: RawAxiosRequestConfig) {
     return RunnersApiFp(this.configuration)

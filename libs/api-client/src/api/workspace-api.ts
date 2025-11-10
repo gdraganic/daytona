@@ -41,7 +41,6 @@ import type { Workspace } from '../models'
 import type { WorkspacePortPreviewUrl } from '../models'
 /**
  * WorkspaceApi - axios parameter creator
- * @export
  */
 export const WorkspaceApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -780,7 +779,6 @@ export const WorkspaceApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * WorkspaceApi - functional programming interface
- * @export
  */
 export const WorkspaceApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = WorkspaceApiAxiosParamCreator(configuration)
@@ -1238,7 +1236,6 @@ export const WorkspaceApiFp = function (configuration?: Configuration) {
 
 /**
  * WorkspaceApi - factory interface
- * @export
  */
 export const WorkspaceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = WorkspaceApiFp(configuration)
@@ -1518,9 +1515,6 @@ export const WorkspaceApiFactory = function (configuration?: Configuration, base
 
 /**
  * WorkspaceApi - object-oriented interface
- * @export
- * @class WorkspaceApi
- * @extends {BaseAPI}
  */
 export class WorkspaceApi extends BaseAPI {
   /**
@@ -1531,7 +1525,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public archiveWorkspaceDeprecated(
     workspaceId: string,
@@ -1551,7 +1544,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public createBackupWorkspaceDeprecated(
     workspaceId: string,
@@ -1571,7 +1563,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public createWorkspaceDeprecated(
     createWorkspace: CreateWorkspace,
@@ -1592,7 +1583,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public deleteWorkspaceDeprecated(
     workspaceId: string,
@@ -1614,7 +1604,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public getBuildLogsWorkspaceDeprecated(
     workspaceId: string,
@@ -1636,7 +1625,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public getPortPreviewUrlWorkspaceDeprecated(
     workspaceId: string,
@@ -1658,7 +1646,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public getWorkspaceDeprecated(
     workspaceId: string,
@@ -1680,7 +1667,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public listWorkspacesDeprecated(
     xDaytonaOrganizationID?: string,
@@ -1702,7 +1688,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public replaceLabelsWorkspaceDeprecated(
     workspaceId: string,
@@ -1724,7 +1709,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public setAutoArchiveIntervalWorkspaceDeprecated(
     workspaceId: string,
@@ -1746,7 +1730,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public setAutostopIntervalWorkspaceDeprecated(
     workspaceId: string,
@@ -1767,7 +1750,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public startWorkspaceDeprecated(
     workspaceId: string,
@@ -1787,7 +1769,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public stopWorkspaceDeprecated(
     workspaceId: string,
@@ -1808,7 +1789,6 @@ export class WorkspaceApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof WorkspaceApi
    */
   public updatePublicStatusWorkspaceDeprecated(
     workspaceId: string,

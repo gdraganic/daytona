@@ -12,12 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @enum {string}
- */
-
 export const SnapshotState = {
   BUILD_PENDING: 'build_pending',
   BUILDING: 'building',

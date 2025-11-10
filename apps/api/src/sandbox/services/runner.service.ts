@@ -175,6 +175,60 @@ export class RunnerService {
     }
   }
 
+  async updateRunnerHealth(
+    runnerId: string,
+    metrics?: {
+      currentCpuUsagePercentage: number
+      currentMemoryUsagePercentage: number
+      currentDiskUsagePercentage: number
+      currentAllocatedCpu: number
+      currentAllocatedMemoryGiB: number
+      currentAllocatedDiskGiB: number
+      currentSnapshotCount: number
+    },
+  ): Promise<void> {
+    const runner = await this.runnerRepository.findOne({ where: { id: runnerId } })
+    if (!runner) {
+      this.logger.error(`Runner ${runnerId} not found when trying to update health`)
+      return
+    }
+
+    if (runner.state === RunnerState.DECOMMISSIONED) {
+      this.logger.debug(`Runner ${runnerId} is decommissioned, not updating health`)
+      return
+    }
+
+    const updateData: Partial<Runner> = {
+      state: RunnerState.READY,
+      lastChecked: new Date(),
+    }
+
+    if (metrics) {
+      updateData.currentCpuUsagePercentage = metrics.currentCpuUsagePercentage || 0
+      updateData.currentMemoryUsagePercentage = metrics.currentMemoryUsagePercentage || 0
+      updateData.currentDiskUsagePercentage = metrics.currentDiskUsagePercentage || 0
+      updateData.currentAllocatedCpu = metrics.currentAllocatedCpu || 0
+      updateData.currentAllocatedMemoryGiB = metrics.currentAllocatedMemoryGiB || 0
+      updateData.currentAllocatedDiskGiB = metrics.currentAllocatedDiskGiB || 0
+      updateData.currentSnapshotCount = metrics.currentSnapshotCount || 0
+
+      updateData.availabilityScore = this.calculateAvailabilityScore(runnerId, {
+        cpuUsage: updateData.currentCpuUsagePercentage,
+        memoryUsage: updateData.currentMemoryUsagePercentage,
+        diskUsage: updateData.currentDiskUsagePercentage,
+        allocatedCpu: updateData.currentAllocatedCpu,
+        allocatedMemoryGiB: updateData.currentAllocatedMemoryGiB,
+        allocatedDiskGiB: updateData.currentAllocatedDiskGiB,
+        runnerCpu: runner.cpu,
+        runnerMemoryGiB: runner.memoryGiB,
+        runnerDiskGiB: runner.diskGiB,
+      })
+    }
+
+    await this.runnerRepository.update(runnerId, updateData)
+    this.logger.debug(`Updated health for runner ${runnerId}`)
+  }
+
   private async updateRunnerState(runnerId: string, newState: RunnerState): Promise<void> {
     const runner = await this.runnerRepository.findOne({ where: { id: runnerId } })
     if (!runner) {
@@ -220,6 +274,13 @@ export class RunnerService {
 
       await Promise.allSettled(
         runners.map(async (runner) => {
+          // For version 3 runners, check based on lastChecked timestamp
+          if (runner.version === '3') {
+            await this.checkRunnerV3Health(runner)
+            return
+          }
+
+          // For version 0 runners, use imperative health check via API
           const shouldRetry = runner.state === RunnerState.READY
           const retryDelays = shouldRetry ? [500, 1000] : []
 
@@ -234,7 +295,7 @@ export class RunnerService {
             try {
               await Promise.race([
                 (async () => {
-                  this.logger.debug(`Checking runner ${runner.id}`)
+                  this.logger.debug(`Checking runner ${runner.id} (v0)`)
                   const runnerAdapter = await this.runnerAdapterFactory.create(runner)
 
                   await runnerAdapter.healthCheck(abortController.signal)
@@ -285,6 +346,37 @@ export class RunnerService {
       )
     } finally {
       await this.redisLockProvider.unlock(lockKey)
+    }
+  }
+
+  /**
+   * Check health of version 3 runner based on lastChecked timestamp
+   * Version 3 runners send healthcheck via POST /runners/healthcheck
+   */
+  private async checkRunnerV3Health(runner: Runner): Promise<void> {
+    const healthCheckThreshold = 60000 // 60 seconds
+
+    if (!runner.lastChecked) {
+      // Runner never sent healthcheck
+      this.logger.warn(`Runner ${runner.id} (v3) has never sent healthcheck`)
+      await this.updateRunnerState(runner.id, RunnerState.UNRESPONSIVE)
+      return
+    }
+
+    const lastCheckAge = Date.now() - runner.lastChecked.getTime()
+
+    if (lastCheckAge > healthCheckThreshold) {
+      // Runner hasn't sent healthcheck recently
+      this.logger.error(
+        `Runner ${runner.id} (v3) last healthcheck was ${Math.floor(lastCheckAge / 1000)}s ago (threshold: ${healthCheckThreshold / 1000}s)`,
+      )
+      await this.updateRunnerState(runner.id, RunnerState.UNRESPONSIVE)
+    } else {
+      // Runner is healthy
+      if (runner.state !== RunnerState.READY) {
+        this.logger.log(`Runner ${runner.id} (v3) is healthy, updating state to READY`)
+        await this.updateRunnerState(runner.id, RunnerState.READY)
+      }
     }
   }
 
@@ -559,6 +651,42 @@ export class RunnerService {
     topsisScore *= penaltyMultiplier
 
     return Math.round(topsisScore * 100)
+  }
+
+  /**
+   * Helper methods for SnapshotManager - repository access layer
+   */
+
+  /**
+   * Find runners by state=READY and unschedulable=false.
+   */
+  async findReadySchedulableRunners(): Promise<Runner[]> {
+    return this.runnerRepository.find({
+      where: {
+        state: RunnerState.READY,
+        unschedulable: false,
+      },
+    })
+  }
+
+  /**
+   * Find runner by ID or fail.
+   */
+  async findOneOrFail(id: string): Promise<Runner> {
+    return this.runnerRepository.findOneByOrFail({ id })
+  }
+
+  /**
+   * Find one ready runner with minimum availability score and schedulable=true.
+   */
+  async findReadyRunnerWithMinScore(minAvailabilityScore: number): Promise<Runner | null> {
+    return this.runnerRepository.findOne({
+      where: {
+        state: RunnerState.READY,
+        unschedulable: Not(true),
+        availabilityScore: MoreThanOrEqual(minAvailabilityScore),
+      },
+    })
   }
 }
 

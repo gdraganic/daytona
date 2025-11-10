@@ -12,40 +12,25 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ApiKeyResponse
- */
 export interface ApiKeyResponse {
   /**
    * The name of the API key
-   * @type {string}
-   * @memberof ApiKeyResponse
    */
   name: string
   /**
    * The API key value
-   * @type {string}
-   * @memberof ApiKeyResponse
    */
   value: string
   /**
    * When the API key was created
-   * @type {Date}
-   * @memberof ApiKeyResponse
    */
   createdAt: Date
   /**
    * The list of organization resource permissions assigned to the API key
-   * @type {Array<string>}
-   * @memberof ApiKeyResponse
    */
   permissions: Array<ApiKeyResponsePermissionsEnum>
   /**
    * When the API key expires
-   * @type {Date}
-   * @memberof ApiKeyResponse
    */
   expiresAt: Date | null
 }

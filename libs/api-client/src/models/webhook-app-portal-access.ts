@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface WebhookAppPortalAccess
- */
 export interface WebhookAppPortalAccess {
   /**
    * The URL to the webhook app portal
-   * @type {string}
-   * @memberof WebhookAppPortalAccess
    */
   url: string
 }

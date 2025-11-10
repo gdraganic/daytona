@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { DaytonaConfiguration } from '../models'
 /**
  * ConfigApi - axios parameter creator
- * @export
  */
 export const ConfigApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -72,7 +71,6 @@ export const ConfigApiAxiosParamCreator = function (configuration?: Configuratio
 
 /**
  * ConfigApi - functional programming interface
- * @export
  */
 export const ConfigApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ConfigApiAxiosParamCreator(configuration)
@@ -103,7 +101,6 @@ export const ConfigApiFp = function (configuration?: Configuration) {
 
 /**
  * ConfigApi - factory interface
- * @export
  */
 export const ConfigApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = ConfigApiFp(configuration)
@@ -122,9 +119,6 @@ export const ConfigApiFactory = function (configuration?: Configuration, basePat
 
 /**
  * ConfigApi - object-oriented interface
- * @export
- * @class ConfigApi
- * @extends {BaseAPI}
  */
 export class ConfigApi extends BaseAPI {
   /**
@@ -132,7 +126,6 @@ export class ConfigApi extends BaseAPI {
    * @summary Get config
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ConfigApi
    */
   public configControllerGetConfig(options?: RawAxiosRequestConfig) {
     return ConfigApiFp(this.configuration)

@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface UpdateSandboxStateDto
- */
 export interface UpdateSandboxStateDto {
   /**
    * The new state for the sandbox
-   * @type {string}
-   * @memberof UpdateSandboxStateDto
    */
   state: UpdateSandboxStateDtoStateEnum
 }

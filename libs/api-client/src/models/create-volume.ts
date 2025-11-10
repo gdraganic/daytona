@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CreateVolume
- */
 export interface CreateVolume {
-  /**
-   *
-   * @type {string}
-   * @memberof CreateVolume
-   */
   name: string
 }

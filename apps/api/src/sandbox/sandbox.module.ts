@@ -12,7 +12,7 @@ import { Sandbox } from './entities/sandbox.entity'
 import { UserModule } from '../user/user.module'
 import { RunnerService } from './services/runner.service'
 import { Runner } from './entities/runner.entity'
-import { RunnerController } from './controllers/runner.controller'
+import { RunnerController, RunnerServiceController } from './controllers/runner.controller'
 import { ToolboxService } from './services/toolbox.deprecated.service'
 import { DockerRegistryModule } from '../docker-registry/docker-registry.module'
 import { SandboxManager } from './managers/sandbox.manager'
@@ -46,6 +46,10 @@ import { SandboxDestroyAction } from './managers/sandbox-actions/sandbox-destroy
 import { SandboxArchiveAction } from './managers/sandbox-actions/sandbox-archive.action'
 import { SshAccess } from './entities/ssh-access.entity'
 import { SandboxRepository } from './repositories/sandbox.repository'
+import { JobController } from './controllers/job.controller'
+import { Job } from './entities/job.entity'
+import { JobService } from './services/job.service'
+import { SandboxJobService } from './services/sandbox-job.service'
 
 @Module({
   imports: [
@@ -62,16 +66,19 @@ import { SandboxRepository } from './repositories/sandbox.repository'
       WarmPool,
       Volume,
       SshAccess,
+      Job,
     ]),
   ],
   controllers: [
     SandboxController,
     RunnerController,
+    RunnerServiceController,
     ToolboxController,
     SnapshotController,
     WorkspaceController,
     PreviewController,
     VolumeController,
+    JobController,
   ],
   providers: [
     SandboxService,
@@ -94,6 +101,8 @@ import { SandboxRepository } from './repositories/sandbox.repository'
     SandboxStopAction,
     SandboxDestroyAction,
     SandboxArchiveAction,
+    JobService,
+    SandboxJobService,
     {
       provide: SandboxRepository,
       inject: [DataSource],

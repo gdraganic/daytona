@@ -20,6 +20,7 @@ import { AuditTarget } from '../../audit/enums/audit-target.enum'
 import { SshGatewayGuard } from '../../auth/ssh-gateway.guard'
 import { CombinedAuthGuard } from '../../auth/combined-auth.guard'
 import { OrGuard } from '../../auth/or.guard'
+import { RunnerHealthcheckDto } from '../dto/runner-health.dto'
 import { RunnerAuthGuard } from '../../auth/runner-auth.guard'
 import { RunnerContextDecorator } from '../../common/decorators/runner-context.decorator'
 import { RunnerContext } from '../../common/interfaces/runner-context.interface'
@@ -140,5 +141,34 @@ export class RunnerController {
   })
   async getRunnersBySnapshotRef(@Query('ref') ref: string): Promise<RunnerSnapshotDto[]> {
     return this.runnerService.getRunnersBySnapshotRef(ref)
+  }
+}
+
+// Separate controller for runner-authenticated endpoints
+// These endpoints are called BY runners acting as agents (healthcheck, metrics, status reporting, etc.)
+@ApiTags('runner-service')
+@Controller('runner-service')
+@UseGuards(CombinedAuthGuard, RunnerAuthGuard)
+@RequiredApiRole(['runner'])
+@ApiBearerAuth()
+export class RunnerServiceController {
+  constructor(private readonly runnerService: RunnerService) {}
+
+  @Post('healthcheck')
+  @ApiOperation({
+    summary: 'Runner healthcheck',
+    operationId: 'runnerHealthcheck',
+    description:
+      'Endpoint for version 3 runners to send healthcheck and metrics. Updates lastChecked timestamp and runner metrics.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Healthcheck received',
+  })
+  async runnerHealthcheck(
+    @RunnerContextDecorator() runnerContext: RunnerContext,
+    @Body() healthcheck: RunnerHealthcheckDto,
+  ): Promise<void> {
+    await this.runnerService.updateRunnerHealth(runnerContext.runnerId, healthcheck.metrics)
   }
 }

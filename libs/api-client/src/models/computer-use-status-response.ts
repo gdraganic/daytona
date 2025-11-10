@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ComputerUseStatusResponse
- */
 export interface ComputerUseStatusResponse {
   /**
    * Status of computer use services (active, partial, inactive, error)
-   * @type {string}
-   * @memberof ComputerUseStatusResponse
    */
   status: ComputerUseStatusResponseStatusEnum
 }

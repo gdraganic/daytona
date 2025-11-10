@@ -12,22 +12,13 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface SandboxVolume
- */
 export interface SandboxVolume {
   /**
    * The ID of the volume
-   * @type {string}
-   * @memberof SandboxVolume
    */
   volumeId: string
   /**
    * The mount path for the volume
-   * @type {string}
-   * @memberof SandboxVolume
    */
   mountPath: string
 }

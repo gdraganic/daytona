@@ -12,28 +12,8 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ReplaceResult
- */
 export interface ReplaceResult {
-  /**
-   *
-   * @type {string}
-   * @memberof ReplaceResult
-   */
   file?: string
-  /**
-   *
-   * @type {boolean}
-   * @memberof ReplaceResult
-   */
   success?: boolean
-  /**
-   *
-   * @type {string}
-   * @memberof ReplaceResult
-   */
   error?: string
 }

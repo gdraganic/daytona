@@ -155,7 +155,6 @@ import type { WindowsResponse } from '../models'
 import type { WorkDirResponse } from '../models'
 /**
  * ToolboxApi - axios parameter creator
- * @export
  */
 export const ToolboxApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -4077,7 +4076,6 @@ export const ToolboxApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * ToolboxApi - functional programming interface
- * @export
  */
 export const ToolboxApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ToolboxApiAxiosParamCreator(configuration)
@@ -6391,7 +6389,6 @@ export const ToolboxApiFp = function (configuration?: Configuration) {
 
 /**
  * ToolboxApi - factory interface
- * @export
  */
 export const ToolboxApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = ToolboxApiFp(configuration)
@@ -7821,9 +7818,6 @@ export const ToolboxApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * ToolboxApi - object-oriented interface
- * @export
- * @class ToolboxApi
- * @extends {BaseAPI}
  */
 export class ToolboxApi extends BaseAPI {
   /**
@@ -7835,7 +7829,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public clickMouseDeprecated(
     sandboxId: string,
@@ -7858,7 +7851,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public createFolderDeprecated(
     sandboxId: string,
@@ -7881,7 +7873,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public createPTYSessionDeprecated(
     sandboxId: string,
@@ -7903,7 +7894,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public createSessionDeprecated(
     sandboxId: string,
@@ -7926,7 +7916,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public deleteFileDeprecated(
     sandboxId: string,
@@ -7949,7 +7938,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public deletePTYSessionDeprecated(
     sandboxId: string,
@@ -7971,7 +7959,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public deleteSessionDeprecated(
     sandboxId: string,
@@ -7993,7 +7980,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public downloadFileDeprecated(
     sandboxId: string,
@@ -8015,7 +8001,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public downloadFilesDeprecated(
     sandboxId: string,
@@ -8037,7 +8022,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public dragMouseDeprecated(
     sandboxId: string,
@@ -8059,7 +8043,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public executeCommandDeprecated(
     sandboxId: string,
@@ -8082,7 +8065,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public executeSessionCommandDeprecated(
     sandboxId: string,
@@ -8106,7 +8088,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public findInFilesDeprecated(
     sandboxId: string,
@@ -8128,7 +8109,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getComputerUseStatusDeprecated(
     sandboxId: string,
@@ -8207,7 +8187,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getPTYSessionDeprecated(
     sandboxId: string,
@@ -8312,7 +8291,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getSessionCommandDeprecated(
     sandboxId: string,
@@ -8337,7 +8315,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getSessionCommandLogsDeprecated(
     sandboxId: string,
@@ -8382,7 +8359,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getUserHomeDirDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8398,7 +8374,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getWindowsDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8414,7 +8389,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getWorkDirDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8431,7 +8405,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitAddFilesDeprecated(
     sandboxId: string,
@@ -8453,7 +8426,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitCheckoutBranchDeprecated(
     sandboxId: string,
@@ -8475,7 +8447,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitCloneRepositoryDeprecated(
     sandboxId: string,
@@ -8497,7 +8468,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitCommitChangesDeprecated(
     sandboxId: string,
@@ -8519,7 +8489,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitCreateBranchDeprecated(
     sandboxId: string,
@@ -8541,7 +8510,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitDeleteBranchDeprecated(
     sandboxId: string,
@@ -8563,7 +8531,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitGetHistoryDeprecated(
     sandboxId: string,
@@ -8585,7 +8552,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitGetStatusDeprecated(
     sandboxId: string,
@@ -8607,7 +8573,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitListBranchesDeprecated(
     sandboxId: string,
@@ -8629,7 +8594,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitPullChangesDeprecated(
     sandboxId: string,
@@ -8651,7 +8615,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public gitPushChangesDeprecated(
     sandboxId: string,
@@ -8673,7 +8636,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public listFilesDeprecated(
     sandboxId: string,
@@ -8694,7 +8656,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public listPTYSessionsDeprecated(
     sandboxId: string,
@@ -8714,7 +8675,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public listSessionsDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8731,7 +8691,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspCompletionsDeprecated(
     sandboxId: string,
@@ -8753,7 +8712,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspDidCloseDeprecated(
     sandboxId: string,
@@ -8775,7 +8733,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspDidOpenDeprecated(
     sandboxId: string,
@@ -8799,7 +8756,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspDocumentSymbolsDeprecated(
     sandboxId: string,
@@ -8823,7 +8779,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspStartDeprecated(
     sandboxId: string,
@@ -8845,7 +8800,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspStopDeprecated(
     sandboxId: string,
@@ -8869,7 +8823,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public lspWorkspaceSymbolsDeprecated(
     sandboxId: string,
@@ -8894,7 +8847,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public moveFileDeprecated(
     sandboxId: string,
@@ -8917,7 +8869,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public moveMouseDeprecated(
     sandboxId: string,
@@ -8939,7 +8890,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public pressHotkeyDeprecated(
     sandboxId: string,
@@ -8961,7 +8911,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public pressKeyDeprecated(
     sandboxId: string,
@@ -8983,7 +8932,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public replaceInFilesDeprecated(
     sandboxId: string,
@@ -9006,7 +8954,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public resizePTYSessionDeprecated(
     sandboxId: string,
@@ -9029,7 +8976,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public restartProcessDeprecated(
     processName: string,
@@ -9051,7 +8997,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public scrollMouseDeprecated(
     sandboxId: string,
@@ -9074,7 +9019,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public searchFilesDeprecated(
     sandboxId: string,
@@ -9100,7 +9044,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public setFilePermissionsDeprecated(
     sandboxId: string,
@@ -9124,7 +9067,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public startComputerUseDeprecated(
     sandboxId: string,
@@ -9144,7 +9086,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public stopComputerUseDeprecated(
     sandboxId: string,
@@ -9172,7 +9113,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public takeCompressedRegionScreenshotDeprecated(
     sandboxId: string,
@@ -9216,7 +9156,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public takeCompressedScreenshotDeprecated(
     sandboxId: string,
@@ -9253,7 +9192,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public takeRegionScreenshotDeprecated(
     sandboxId: string,
@@ -9279,7 +9217,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public takeScreenshotDeprecated(
     sandboxId: string,
@@ -9301,7 +9238,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public typeTextDeprecated(
     sandboxId: string,
@@ -9324,7 +9260,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public uploadFileDeprecated(
     sandboxId: string,
@@ -9346,7 +9281,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public uploadFilesDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)

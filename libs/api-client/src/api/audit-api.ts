@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { PaginatedAuditLogs } from '../models'
 /**
  * AuditApi - axios parameter creator
- * @export
  */
 export const AuditApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -183,7 +182,6 @@ export const AuditApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * AuditApi - functional programming interface
- * @export
  */
 export const AuditApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = AuditApiAxiosParamCreator(configuration)
@@ -272,7 +270,6 @@ export const AuditApiFp = function (configuration?: Configuration) {
 
 /**
  * AuditApi - factory interface
- * @export
  */
 export const AuditApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = AuditApiFp(configuration)
@@ -330,11 +327,21 @@ export const AuditApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * AuditApi - object-oriented interface
- * @export
- * @class AuditApi
- * @extends {BaseAPI}
  */
 export class AuditApi extends BaseAPI {
+  /**
+   *
+   * @summary Create audit log entry
+   * @param {CreateAuditLog} createAuditLog
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public createAuditLog(createAuditLog: CreateAuditLog, options?: RawAxiosRequestConfig) {
+    return AuditApiFp(this.configuration)
+      .createAuditLog(createAuditLog, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
   /**
    *
    * @summary Get all audit logs
@@ -345,7 +352,6 @@ export class AuditApi extends BaseAPI {
    * @param {string} [nextToken] Token for cursor-based pagination. When provided, takes precedence over page parameter.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof AuditApi
    */
   public getAllAuditLogs(
     page?: number,
@@ -371,7 +377,6 @@ export class AuditApi extends BaseAPI {
    * @param {string} [nextToken] Token for cursor-based pagination. When provided, takes precedence over page parameter.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof AuditApi
    */
   public getOrganizationAuditLogs(
     organizationId: string,

@@ -12,16 +12,9 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface MouseScrollResponse
- */
 export interface MouseScrollResponse {
   /**
    * Whether the mouse scroll operation was successful
-   * @type {boolean}
-   * @memberof MouseScrollResponse
    */
   success: boolean
 }

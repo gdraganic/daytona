@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface WorkDirResponse
- */
 export interface WorkDirResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof WorkDirResponse
-   */
   dir?: string
 }

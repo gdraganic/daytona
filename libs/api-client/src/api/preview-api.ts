@@ -33,7 +33,6 @@ import {
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 /**
  * PreviewApi - axios parameter creator
- * @export
  */
 export const PreviewApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -156,7 +155,6 @@ export const PreviewApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * PreviewApi - functional programming interface
- * @export
  */
 export const PreviewApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = PreviewApiAxiosParamCreator(configuration)
@@ -237,7 +235,6 @@ export const PreviewApiFp = function (configuration?: Configuration) {
 
 /**
  * PreviewApi - factory interface
- * @export
  */
 export const PreviewApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = PreviewApiFp(configuration)
@@ -278,9 +275,6 @@ export const PreviewApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * PreviewApi - object-oriented interface
- * @export
- * @class PreviewApi
- * @extends {BaseAPI}
  */
 export class PreviewApi extends BaseAPI {
   /**
@@ -289,7 +283,6 @@ export class PreviewApi extends BaseAPI {
    * @param {string} sandboxId
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof PreviewApi
    */
   public hasSandboxAccess(sandboxId: string, options?: RawAxiosRequestConfig) {
     return PreviewApiFp(this.configuration)
@@ -303,7 +296,6 @@ export class PreviewApi extends BaseAPI {
    * @param {string} sandboxId ID of the sandbox
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof PreviewApi
    */
   public isSandboxPublic(sandboxId: string, options?: RawAxiosRequestConfig) {
     return PreviewApiFp(this.configuration)
@@ -318,7 +310,6 @@ export class PreviewApi extends BaseAPI {
    * @param {string} authToken Auth token of the sandbox
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof PreviewApi
    */
   public isValidAuthToken(sandboxId: string, authToken: string, options?: RawAxiosRequestConfig) {
     return PreviewApiFp(this.configuration)

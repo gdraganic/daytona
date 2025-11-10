@@ -37,7 +37,6 @@ import type { HealthControllerCheck200Response } from '../models'
 import type { HealthControllerCheck503Response } from '../models'
 /**
  * HealthApi - axios parameter creator
- * @export
  */
 export const HealthApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -73,7 +72,6 @@ export const HealthApiAxiosParamCreator = function (configuration?: Configuratio
 
 /**
  * HealthApi - functional programming interface
- * @export
  */
 export const HealthApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = HealthApiAxiosParamCreator(configuration)
@@ -103,7 +101,6 @@ export const HealthApiFp = function (configuration?: Configuration) {
 
 /**
  * HealthApi - factory interface
- * @export
  */
 export const HealthApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = HealthApiFp(configuration)
@@ -121,16 +118,12 @@ export const HealthApiFactory = function (configuration?: Configuration, basePat
 
 /**
  * HealthApi - object-oriented interface
- * @export
- * @class HealthApi
- * @extends {BaseAPI}
  */
 export class HealthApi extends BaseAPI {
   /**
    *
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof HealthApi
    */
   public healthControllerCheck(options?: RawAxiosRequestConfig) {
     return HealthApiFp(this.configuration)

@@ -12,7 +12,7 @@ import {
   Logger,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, Not, In, Raw, ILike, FindOptionsWhere } from 'typeorm'
+import { Repository, Not, In, Raw, ILike, FindOptionsWhere, LessThan } from 'typeorm'
 import { Snapshot } from '../entities/snapshot.entity'
 import { SnapshotState } from '../enums/snapshot-state.enum'
 import { CreateSnapshotDto } from '../dto/create-snapshot.dto'
@@ -468,5 +468,305 @@ export class SnapshotService {
         error,
       )
     })
+  }
+
+  /**
+   * Helper methods for SnapshotManager - repository access layer
+   */
+
+  /**
+   * Find active snapshots for syncing to runners (with pagination).
+   */
+  async findActiveSnapshotsForSync(limit: number, skip: number): Promise<Snapshot[]> {
+    return this.snapshotRepository
+      .createQueryBuilder('snapshot')
+      .innerJoin('organization', 'org', 'org.id = snapshot.organizationId')
+      .where('snapshot.state = :snapshotState', { snapshotState: SnapshotState.ACTIVE })
+      .andWhere('org.suspended = false')
+      .orderBy('snapshot.createdAt', 'ASC')
+      .take(limit)
+      .skip(skip)
+      .getMany()
+  }
+
+  /**
+   * Find snapshots by state.
+   */
+  async findSnapshotsByState(state: SnapshotState): Promise<Snapshot[]> {
+    return this.snapshotRepository.find({
+      where: { state },
+    })
+  }
+
+  /**
+   * Count active snapshots with given internal name.
+   */
+  async countActiveSnapshotsByInternalName(internalName: string): Promise<number> {
+    return this.snapshotRepository.count({
+      where: {
+        state: SnapshotState.ACTIVE,
+        internalName,
+      },
+    })
+  }
+
+  /**
+   * Remove snapshot entity (hard delete from database).
+   */
+  async removeSnapshotEntity(snapshot: Snapshot): Promise<void> {
+    await this.snapshotRepository.remove(snapshot)
+  }
+
+  /**
+   * Save snapshot entity.
+   */
+  async saveSnapshot(snapshot: Snapshot): Promise<Snapshot> {
+    return this.snapshotRepository.save(snapshot)
+  }
+
+  /**
+   * Find snapshot by ID or fail.
+   */
+  async findSnapshotByIdOrFail(snapshotId: string): Promise<Snapshot> {
+    return this.snapshotRepository.findOneOrFail({
+      where: { id: snapshotId },
+    })
+  }
+
+  /**
+   * Update multiple snapshots state by IDs.
+   */
+  async updateSnapshotsState(snapshotIds: string[], state: SnapshotState): Promise<void> {
+    await this.snapshotRepository.update({ id: In(snapshotIds) }, { state })
+  }
+
+  /**
+   * Find snapshots not in terminal states (for processing).
+   */
+  async findSnapshotsInProcessingStates(): Promise<Snapshot[]> {
+    return this.snapshotRepository.find({
+      where: {
+        state: Not(In([SnapshotState.ACTIVE, SnapshotState.ERROR, SnapshotState.BUILD_FAILED, SnapshotState.INACTIVE])),
+      },
+    })
+  }
+
+  /**
+   * Find old inactive snapshots (not used/created in 2 weeks) that have no recent siblings.
+   */
+  async findOldInactiveSnapshots(twoWeeksAgo: Date, limit = 100): Promise<Snapshot[]> {
+    return this.snapshotRepository
+      .createQueryBuilder('snapshot')
+      .where('snapshot.general = false')
+      .andWhere('snapshot.state = :snapshotState', { snapshotState: SnapshotState.ACTIVE })
+      .andWhere('(snapshot."lastUsedAt" IS NULL OR snapshot."lastUsedAt" < :twoWeeksAgo)', { twoWeeksAgo })
+      .andWhere('snapshot."createdAt" < :twoWeeksAgo', { twoWeeksAgo })
+      .andWhere(
+        () => {
+          const query = this.snapshotRepository
+            .createQueryBuilder('s')
+            .select('1')
+            .where('s."internalName" = snapshot."internalName"')
+            .andWhere('s.state = :activeState')
+            .andWhere('(s."lastUsedAt" >= :twoWeeksAgo OR s."createdAt" >= :twoWeeksAgo)')
+
+          return `NOT EXISTS (${query.getQuery()})`
+        },
+        {
+          activeState: SnapshotState.ACTIVE,
+          twoWeeksAgo,
+        },
+      )
+      .take(limit)
+      .getMany()
+  }
+
+  /**
+   * Find inactive snapshot internal names that have snapshot runner entries but no active snapshots.
+   */
+  async findInactiveSnapshotInternalNamesForCleanup(limit = 100): Promise<string[]> {
+    const queryResult = await this.snapshotRepository
+      .createQueryBuilder('snapshot')
+      .select('snapshot."internalName"')
+      .where('snapshot.state = :snapshotState', { snapshotState: SnapshotState.INACTIVE })
+      .andWhere('snapshot."internalName" IS NOT NULL')
+      .andWhereExists(
+        this.snapshotRunnerRepository
+          .createQueryBuilder('snapshot_runner')
+          .select('1')
+          .where('snapshot_runner."snapshotRef" = snapshot."internalName"')
+          .andWhere('snapshot_runner.state != :snapshotRunnerState', {
+            snapshotRunnerState: SnapshotRunnerState.REMOVING,
+          }),
+      )
+      .andWhere(
+        () => {
+          const query = this.snapshotRepository
+            .createQueryBuilder('s')
+            .select('1')
+            .where('s."internalName" = snapshot."internalName"')
+            .andWhere('s.state = :snapshotState')
+          return `NOT EXISTS (${query.getQuery()})`
+        },
+        {
+          snapshotState: SnapshotState.ACTIVE,
+        },
+      )
+      .take(limit)
+      .getRawMany()
+
+    return queryResult.map((result) => result.internalName)
+  }
+
+  /**
+   * Helper methods for SnapshotRunner operations
+   */
+
+  /**
+   * Find snapshot runners in processing states (for sync).
+   */
+  async findSnapshotRunnersInProcessingStates(limit = 100): Promise<SnapshotRunner[]> {
+    return this.snapshotRunnerRepository
+      .createQueryBuilder('snapshotRunner')
+      .where({
+        state: In([
+          SnapshotRunnerState.PULLING_SNAPSHOT,
+          SnapshotRunnerState.BUILDING_SNAPSHOT,
+          SnapshotRunnerState.REMOVING,
+        ]),
+      })
+      .orderBy('RANDOM()')
+      .take(limit)
+      .getMany()
+  }
+
+  /**
+   * Find snapshot runners by snapshot reference and states.
+   */
+  async findSnapshotRunnersBySnapshotRef(
+    snapshotRef: string,
+    states: SnapshotRunnerState[],
+  ): Promise<SnapshotRunner[]> {
+    return this.snapshotRunnerRepository.find({
+      where: {
+        snapshotRef,
+        state: In(states),
+      },
+    })
+  }
+
+  /**
+   * Find snapshot runner by snapshot reference and runner ID.
+   */
+  async findSnapshotRunnerByRefAndRunner(snapshotRef: string, runnerId: string): Promise<SnapshotRunner | null> {
+    return this.snapshotRunnerRepository.findOne({
+      where: {
+        snapshotRef,
+        runnerId,
+      },
+    })
+  }
+
+  /**
+   * Save snapshot runner entity.
+   */
+  async saveSnapshotRunner(snapshotRunner: SnapshotRunner): Promise<SnapshotRunner> {
+    return this.snapshotRunnerRepository.save(snapshotRunner)
+  }
+
+  /**
+   * Update snapshot runner by ID.
+   */
+  async updateSnapshotRunner(id: string, data: Partial<SnapshotRunner>): Promise<void> {
+    await this.snapshotRunnerRepository.update(id, data)
+  }
+
+  /**
+   * Delete snapshot runner by ID.
+   */
+  async deleteSnapshotRunner(id: string): Promise<void> {
+    await this.snapshotRunnerRepository.delete(id)
+  }
+
+  /**
+   * Find snapshot runners by snapshot reference.
+   */
+  async findSnapshotRunnersBySnapshotRefOnly(snapshotRef: string): Promise<SnapshotRunner[]> {
+    return this.snapshotRunnerRepository.find({
+      where: {
+        snapshotRef,
+      },
+    })
+  }
+
+  /**
+   * Bulk update snapshot runners by snapshot reference.
+   */
+  async updateSnapshotRunnersBySnapshotRef(
+    snapshotRef: string,
+    data: Partial<SnapshotRunner>,
+  ): Promise<{ affected: number }> {
+    const result = await this.snapshotRunnerRepository.update({ snapshotRef }, data)
+    return { affected: result.affected || 0 }
+  }
+
+  /**
+   * Bulk update snapshot runners by snapshot references (multiple).
+   */
+  async updateSnapshotRunnersBySnapshotRefs(
+    snapshotRefs: string[],
+    data: Partial<SnapshotRunner>,
+  ): Promise<{ affected: number }> {
+    const result = await this.snapshotRunnerRepository.update({ snapshotRef: In(snapshotRefs) }, data)
+    return { affected: result.affected || 0 }
+  }
+
+  /**
+   * Helper methods for BuildInfo operations
+   */
+
+  /**
+   * Find old BuildInfo entities that haven't been used since the given date.
+   */
+  async findOldBuildInfos(lastUsedBefore: Date): Promise<BuildInfo[]> {
+    return this.buildInfoRepository.find({
+      where: {
+        lastUsedAt: LessThan(lastUsedBefore),
+      },
+    })
+  }
+
+  /**
+   * Additional helper methods for SnapshotManager direct repository access
+   */
+
+  /**
+   * Find snapshots NOT in the given states (for processing snapshots).
+   */
+  async findSnapshotsNotInStates(excludedStates: SnapshotState[]): Promise<Snapshot[]> {
+    return this.snapshotRepository.find({
+      where: {
+        state: Not(In(excludedStates)),
+      },
+    })
+  }
+
+  /**
+   * Count snapshots by state and internal name.
+   */
+  async countSnapshotsByStateAndInternalName(state: SnapshotState, internalName: string): Promise<number> {
+    return this.snapshotRepository.count({
+      where: {
+        state,
+        internalName,
+      },
+    })
+  }
+
+  /**
+   * Bulk update snapshots by ID.
+   */
+  async updateSnapshots(snapshotIds: string[], updates: Partial<Snapshot>): Promise<void> {
+    await this.snapshotRepository.update({ id: In(snapshotIds) }, updates)
   }
 }

@@ -33,7 +33,6 @@ import {
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 /**
  * ToolboxApi - axios parameter creator
- * @export
  */
 export const ToolboxApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -171,7 +170,6 @@ export const ToolboxApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * ToolboxApi - functional programming interface
- * @export
  */
 export const ToolboxApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ToolboxApiAxiosParamCreator(configuration)
@@ -268,7 +266,6 @@ export const ToolboxApiFp = function (configuration?: Configuration) {
 
 /**
  * ToolboxApi - factory interface
- * @export
  */
 export const ToolboxApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = ToolboxApiFp(configuration)
@@ -329,9 +326,6 @@ export const ToolboxApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * ToolboxApi - object-oriented interface
- * @export
- * @class ToolboxApi
- * @extends {BaseAPI}
  */
 export class ToolboxApi extends BaseAPI {
   /**
@@ -341,7 +335,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {string} path Path to forward
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public sandboxesSandboxIdToolboxPathDelete(sandboxId: string, path: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -356,7 +349,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {string} path Path to forward
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public sandboxesSandboxIdToolboxPathGet(sandboxId: string, path: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -371,7 +363,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {string} path Path to forward
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public sandboxesSandboxIdToolboxPathPost(sandboxId: string, path: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)

@@ -17,6 +17,4 @@ RUN apt update && export DEBIAN_FRONTEND=noninteractive \
 RUN curl -fL https://app.getambassador.io/download/tel2oss/releases/download/v2.17.0/telepresence-linux-${TARGETARCH} -o /usr/local/bin/telepresence && \
     chmod a+x /usr/local/bin/telepresence
 
-RUN echo "address=/proxy.localhost/127.0.0.1" >> /etc/dnsmasq.conf
-
-CMD ["sh", "-c", "service dnsmasq start && echo 'nameserver 127.0.0.1' > /etc/resolv.conf && tail -f /dev/null"]
+CMD ["tail", "-f", "/dev/null"]
