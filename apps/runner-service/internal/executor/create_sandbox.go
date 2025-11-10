@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/registry"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
@@ -78,20 +79,29 @@ func (e *Executor) createSandbox(ctx context.Context, job *apiclient.Job) error 
 		}
 	}
 
-	// Pull image
-	e.log.Info("pulling image", "image", snapshot)
-	reader, err := e.dockerClient.ImagePull(ctx, snapshot, image.PullOptions{RegistryAuth: authStr})
+	// Check if image exists
+	imageExists, err := e.dockerClient.ImageList(ctx, image.ListOptions{Filters: filters.NewArgs(filters.Arg("reference", snapshot))})
 	if err != nil {
-		return fmt.Errorf("pull image: %w", err)
+		return fmt.Errorf("check image exists: %w", err)
 	}
-	// Consume output
-	buf := make([]byte, 4096)
-	for {
-		if _, err := reader.Read(buf); err != nil {
-			break
+	if len(imageExists) == 0 {
+		// Pull image
+		e.log.Info("pulling image", "image", snapshot)
+		reader, err := e.dockerClient.ImagePull(ctx, snapshot, image.PullOptions{RegistryAuth: authStr})
+		if err != nil {
+			return fmt.Errorf("pull image: %w", err)
 		}
+		// Consume output
+		buf := make([]byte, 4096)
+		for {
+			if _, err := reader.Read(buf); err != nil {
+				break
+			}
+		}
+		reader.Close()
+	} else {
+		e.log.Info("image exists", "image", snapshot)
 	}
-	reader.Close()
 
 	// Prepare container config
 	containerConfig := &container.Config{

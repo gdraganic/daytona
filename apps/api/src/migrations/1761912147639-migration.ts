@@ -16,16 +16,16 @@ export class Migration1761912147639 implements MigrationInterface {
     )
 
     // organization defaultRegionId reference
-    await queryRunner.renameColumn('organization', 'defaultRegion', 'defaultRegionId')
+    await queryRunner.query(`ALTER TABLE "organization" RENAME COLUMN "defaultRegion" TO "defaultRegionId"`)
 
     // sandbox regionId reference
-    await queryRunner.renameColumn('sandbox', 'region', 'regionId')
+    await queryRunner.query(`ALTER TABLE "sandbox" RENAME COLUMN "region" TO "regionId"`)
 
     // warm pool regionId reference
-    await queryRunner.renameColumn('warm_pool', 'target', 'regionId')
+    await queryRunner.query(`ALTER TABLE "warm_pool" RENAME COLUMN "target" TO "regionId"`)
 
     // runner regionId reference
-    await queryRunner.renameColumn('runner', 'region', 'regionId')
+    await queryRunner.query(`ALTER TABLE "runner" RENAME COLUMN "region" TO "regionId"`)
     await queryRunner.query(`ALTER TABLE "runner" ALTER COLUMN "regionId" DROP DEFAULT`)
 
     // runner token
@@ -98,16 +98,16 @@ export class Migration1761912147639 implements MigrationInterface {
     await queryRunner.query(`ALTER TABLE "runner" DROP COLUMN "tokenHash"`)
 
     // revert organization defaultRegionId reference
-    await queryRunner.renameColumn('organization', 'defaultRegionId', 'defaultRegion')
+    await queryRunner.query(`ALTER TABLE "organization" RENAME COLUMN "defaultRegionId" TO "defaultRegion"`)
 
     // revert sandbox region reference
-    await queryRunner.renameColumn('sandbox', 'regionId', 'region')
+    await queryRunner.query(`ALTER TABLE "sandbox" RENAME COLUMN "regionId" TO "region"`)
 
     // revert warm pool region reference
-    await queryRunner.renameColumn('warm_pool', 'regionId', 'target')
+    await queryRunner.query(`ALTER TABLE "warm_pool" RENAME COLUMN "regionId" TO "target"`)
 
     // revert runner region reference
-    await queryRunner.renameColumn('runner', 'regionId', 'region')
+    await queryRunner.query(`ALTER TABLE "runner" RENAME COLUMN "regionId" TO "region"`)
     await queryRunner.query(`ALTER TABLE "runner" ALTER COLUMN "region" SET DEFAULT 'us'`)
 
     // drop region table

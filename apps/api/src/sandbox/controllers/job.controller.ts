@@ -12,6 +12,7 @@ import { RunnerContextDecorator } from '../../common/decorators/runner-context.d
 import { RunnerContext } from '../../common/interfaces/runner-context.interface'
 import { JobDto, PollJobsResponseDto, UpdateJobStatusDto } from '../dto/job.dto'
 import { JobService } from '../services/job.service'
+import { RunnerService } from '../services/runner.service'
 
 @ApiTags('jobs')
 @Controller('jobs')
@@ -21,7 +22,10 @@ import { JobService } from '../services/job.service'
 export class JobController {
   private readonly logger = new Logger(JobController.name)
 
-  constructor(private readonly jobService: JobService) {}
+  constructor(
+    private readonly jobService: JobService,
+    private readonly runnerService: RunnerService,
+  ) {}
 
   @Get('poll')
   @ApiOperation({
@@ -54,6 +58,11 @@ export class JobController {
     @Query('limit') limit?: number,
   ): Promise<PollJobsResponseDto> {
     this.logger.debug(`Runner ${runnerContext.runnerId} polling for jobs (timeout: ${timeout}s, limit: ${limit})`)
+
+    // Update lastChecked timestamp for V3 runners (this is their healthcheck)
+    await this.runnerService.updateRunnerLastChecked(runnerContext.runnerId).catch((error) => {
+      this.logger.warn(`Failed to update lastChecked for runner ${runnerContext.runnerId}: ${error.message}`)
+    })
 
     const timeoutSeconds = timeout ? Math.min(Number(timeout), 60) : 30
     const limitNumber = limit ? Math.min(Number(limit), 100) : 10

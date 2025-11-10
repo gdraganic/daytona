@@ -345,8 +345,22 @@ export class RunnerService {
     }
 
     runner.state = newState
-    runner.lastChecked = new Date()
+
+    // Only update lastChecked for V3 runners (job-based)
+    // V3 runners update lastChecked when they actually poll for jobs, not on state changes
+    if (runner.version !== '3') {
+      runner.lastChecked = new Date()
+    }
+
     await this.runnerRepository.save(runner)
+  }
+
+  /**
+   * Update lastChecked timestamp for V3 runners when they poll for jobs.
+   * This is the healthcheck mechanism for V3 runners.
+   */
+  async updateRunnerLastChecked(runnerId: string): Promise<void> {
+    await this.runnerRepository.update({ id: runnerId, version: '3' }, { lastChecked: new Date() })
   }
 
   @Cron(CronExpression.EVERY_10_SECONDS, { name: 'check-runners', waitForCompletion: true })

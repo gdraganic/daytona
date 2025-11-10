@@ -24,7 +24,9 @@ import { InjectRedis } from '@nestjs-modules/ioredis'
 import { Redis } from 'ioredis'
 import { RunnerService } from '../services/runner.service'
 import { SnapshotService } from '../services/snapshot.service'
+import { JobService } from '../services/job.service'
 import { RunnerAdapterFactory } from '../runner-adapter/runnerAdapter'
+import { JobType, ResourceType, SnapshotJobPayload } from '../dto/job.dto'
 
 import { TrackableJobExecutions } from '../../common/interfaces/trackable-job-executions'
 import { TrackJobExecution } from '../../common/decorators/track-job-execution.decorator'
@@ -48,6 +50,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     @InjectRedis() private readonly redis: Redis,
     private readonly runnerService: RunnerService,
     private readonly snapshotService: SnapshotService,
+    private readonly jobService: JobService,
     private readonly dockerRegistryService: DockerRegistryService,
     private readonly dockerProvider: DockerProvider,
     private readonly runnerAdapterFactory: RunnerAdapterFactory,
@@ -251,6 +254,29 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       }
     }
 
+    // V3 runners use job-based approach
+    if (runner.version === '3') {
+      const payload: SnapshotJobPayload = {
+        registry: {
+          url: dockerRegistry.url,
+          username: dockerRegistry.username,
+          password: dockerRegistry.password,
+          project: dockerRegistry.project,
+        },
+      }
+
+      await this.jobService.createJob(
+        null,
+        JobType.PULL_SNAPSHOT,
+        runner.id,
+        ResourceType.SNAPSHOT,
+        internalSnapshotName,
+        payload,
+      )
+      return
+    }
+
+    // V0 runners use adapter
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
 
     let retries = 0
@@ -270,6 +296,29 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   async handleSnapshotRunnerStatePullingSnapshot(snapshotRunner: SnapshotRunner) {
     const runner = await this.runnerService.findOneOrFail(snapshotRunner.runnerId)
 
+    // V3 runners: check if pull job is complete
+    if (runner.version === '3') {
+      // For V3, the job system handles the pull and updates will come through job completion
+      // We just check for timeout and retry if needed
+      const timeoutMinutes = 60
+      const timeoutMs = timeoutMinutes * 60 * 1000
+      if (Date.now() - snapshotRunner.createdAt.getTime() > timeoutMs) {
+        snapshotRunner.state = SnapshotRunnerState.ERROR
+        snapshotRunner.errorReason = 'Timeout while pulling snapshot'
+        await this.snapshotService.saveSnapshotRunner(snapshotRunner)
+        return
+      }
+
+      const retryTimeoutMinutes = 10
+      const retryTimeoutMs = retryTimeoutMinutes * 60 * 1000
+      if (Date.now() - snapshotRunner.createdAt.getTime() > retryTimeoutMs) {
+        await this.retrySnapshotRunnerPull(snapshotRunner)
+        return
+      }
+      return
+    }
+
+    // V0 runners: check using adapter
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (exists) {
@@ -433,6 +482,21 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       return
     }
 
+    // V3 runners: create remove job
+    if (runner.version === '3') {
+      await this.jobService.createJob(
+        null,
+        JobType.REMOVE_SNAPSHOT,
+        runner.id,
+        ResourceType.SNAPSHOT,
+        snapshotRunner.snapshotRef,
+      )
+      snapshotRunner.state = SnapshotRunnerState.REMOVING
+      await this.snapshotService.saveSnapshotRunner(snapshotRunner)
+      return
+    }
+
+    // V0 runners: use adapter
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (exists) {
@@ -466,6 +530,21 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       return
     }
 
+    // V3 runners: create remove job
+    if (runner.version === '3') {
+      await this.jobService.createJob(
+        null,
+        JobType.REMOVE_SNAPSHOT,
+        runner.id,
+        ResourceType.SNAPSHOT,
+        snapshotRunner.snapshotRef,
+      )
+      // Delete the snapshot runner record - the job will handle the actual removal
+      await this.snapshotService.deleteSnapshotRunner(snapshotRunner.id)
+      return
+    }
+
+    // V0 runners: use adapter
     const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     const exists = await runnerAdapter.snapshotExists(snapshotRunner.snapshotRef)
     if (!exists) {
@@ -532,14 +611,39 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       await this.snapshotService.saveSnapshot(snapshot)
 
       const registry = await this.dockerRegistryService.getDefaultInternalRegistry()
+      const internalSnapshotName = `${registry.url}/${registry.project}/${snapshot.buildInfo.snapshotRef}`
 
+      // V3 runners: create build job
+      if (runner.version === '3') {
+        const payload: SnapshotJobPayload = {
+          registry: {
+            url: registry.url,
+            username: registry.username,
+            password: registry.password,
+            project: registry.project,
+          },
+        }
+
+        await this.jobService.createJob(
+          null,
+          JobType.BUILD_SNAPSHOT,
+          runner.id,
+          ResourceType.SNAPSHOT,
+          snapshot.buildInfo.snapshotRef,
+          payload,
+        )
+
+        snapshot.internalName = internalSnapshotName
+        await this.snapshotService.saveSnapshot(snapshot)
+        return
+      }
+
+      // V0 runners: use adapter
       const runnerAdapter = await this.runnerAdapterFactory.create(runner)
 
       await runnerAdapter.buildSnapshot(snapshot.buildInfo, snapshot.organizationId, registry, true)
 
       // save snapshotRunner
-
-      const internalSnapshotName = `${registry.url}/${registry.project}/${snapshot.buildInfo.snapshotRef}`
 
       snapshot.internalName = internalSnapshotName
       await this.snapshotService.saveSnapshot(snapshot)
@@ -768,12 +872,32 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
 
   async retrySnapshotRunnerPull(snapshotRunner: SnapshotRunner) {
     const runner = await this.runnerService.findOneOrFail(snapshotRunner.runnerId)
-
-    const runnerAdapter = await this.runnerAdapterFactory.create(runner)
-
     const dockerRegistry = await this.dockerRegistryService.getDefaultInternalRegistry()
-    //  await this.redis.setex(lockKey, 360, this.instanceId)
 
+    // V3 runners: create pull job
+    if (runner.version === '3') {
+      const payload: SnapshotJobPayload = {
+        registry: {
+          url: dockerRegistry.url,
+          username: dockerRegistry.username,
+          password: dockerRegistry.password,
+          project: dockerRegistry.project,
+        },
+      }
+
+      await this.jobService.createJob(
+        null,
+        JobType.PULL_SNAPSHOT,
+        runner.id,
+        ResourceType.SNAPSHOT,
+        snapshotRunner.snapshotRef,
+        payload,
+      )
+      return
+    }
+
+    // V0 runners: use adapter
+    const runnerAdapter = await this.runnerAdapterFactory.create(runner)
     await runnerAdapter.pullSnapshot(snapshotRunner.snapshotRef, dockerRegistry)
   }
 

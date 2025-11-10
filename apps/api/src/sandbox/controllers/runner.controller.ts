@@ -96,7 +96,7 @@ export class RunnerController {
         gpu: 0,
         gpuType: '',
         class: SandboxClass.SMALL,
-        version: '0',
+        version: '3',
       },
       authContext.organization,
     )
