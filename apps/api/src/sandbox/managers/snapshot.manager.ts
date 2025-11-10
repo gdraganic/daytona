@@ -33,6 +33,7 @@ import { TypedConfigService } from '../../config/typed-config.service'
 import { LogExecution } from '../../common/decorators/log-execution.decorator'
 import { PER_SANDBOX_LIMIT_MESSAGE } from '../../common/constants/error-messages'
 import { WithInstrumentation } from '../../common/decorators/otel.decorator'
+import { RegionService } from '../../region/services/region.service'
 
 @Injectable()
 export class SnapshotManager implements TrackableJobExecutions, OnApplicationShutdown {
@@ -53,6 +54,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
     private readonly redisLockProvider: RedisLockProvider,
     private readonly organizationService: OrganizationService,
     private readonly configService: TypedConfigService,
+    private readonly regionService: RegionService,
   ) {}
 
   async onApplicationShutdown() {
@@ -649,10 +651,17 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
         // Snapshots that have gone through the build process are already in the internal registry
         snapshot.internalName = await this.pushSnapshotToInternalRegistry(snapshot.id)
       }
+
+      const organization = await this.organizationService.findOne(snapshot.organizationId)
+      if (!organization) {
+        throw new NotFoundException(`Organization with ID ${snapshot.organizationId} not found`)
+      }
+
       const runner = await this.runnerService.findReadyRunnerWithMinScore(
         this.configService.getOrThrow('runnerUsage.declarativeBuildScoreThreshold'),
+        organization.defaultRegionId,
       )
-      // Propagate snapshot to one runner so it can be used immediately
+      // Propagate snapshot to one runner in default region so it can be used immediately
       if (runner) {
         await this.propagateSnapshotToRunner(snapshot.internalName, runner)
       }

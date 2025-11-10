@@ -12,28 +12,8 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface LspDocumentRequest
- */
 export interface LspDocumentRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof LspDocumentRequest
-   */
   languageId: string
-  /**
-   *
-   * @type {string}
-   * @memberof LspDocumentRequest
-   */
   pathToProject: string
-  /**
-   *
-   * @type {string}
-   * @memberof LspDocumentRequest
-   */
   uri: string
 }

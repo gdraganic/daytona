@@ -38,6 +38,7 @@ import { Volume } from './entities/volume.entity'
 import { BuildInfo } from './entities/build-info.entity'
 import { BackupManager } from './managers/backup.manager'
 import { VolumeSubscriber } from './subscribers/volume.subscriber'
+import { RunnerSubscriber } from './subscribers/runner.subscriber'
 import { WorkspaceController } from './controllers/workspace.deprecated.controller'
 import { RunnerAdapterFactory } from './runner-adapter/runnerAdapter'
 import { SandboxStartAction } from './managers/sandbox-actions/sandbox-start.action'
@@ -50,12 +51,14 @@ import { JobController } from './controllers/job.controller'
 import { Job } from './entities/job.entity'
 import { JobService } from './services/job.service'
 import { SandboxJobService } from './services/sandbox-job.service'
+import { RegionModule } from '../region/region.module'
 
 @Module({
   imports: [
     UserModule,
     DockerRegistryModule,
     OrganizationModule,
+    RegionModule,
     TypeOrmModule.forFeature([
       Sandbox,
       Runner,
@@ -96,6 +99,7 @@ import { SandboxJobService } from './services/sandbox-job.service'
     VolumeService,
     VolumeManager,
     VolumeSubscriber,
+    RunnerSubscriber,
     RunnerAdapterFactory,
     SandboxStartAction,
     SandboxStopAction,

@@ -28,6 +28,7 @@ __all__ = [
     "ObjectStorageApi",
     "OrganizationsApi",
     "PreviewApi",
+    "RegionsApi",
     "RunnerServiceApi",
     "RunnersApi",
     "SandboxApi",
@@ -61,7 +62,6 @@ __all__ = [
     "ComputerUseStatusResponse",
     "ComputerUseStopResponse",
     "CreateApiKey",
-    "CreateAuditLog",
     "CreateBuildInfo",
     "CreateDockerRegistry",
     "CreateLinkedAccount",
@@ -69,7 +69,9 @@ __all__ = [
     "CreateOrganizationInvitation",
     "CreateOrganizationQuota",
     "CreateOrganizationRole",
+    "CreateRegion",
     "CreateRunner",
+    "CreateRunnerResponse",
     "CreateSandbox",
     "CreateSessionRequest",
     "CreateSnapshot",
@@ -149,6 +151,7 @@ __all__ = [
     "ReplaceRequest",
     "ReplaceResult",
     "Runner",
+    "RunnerFull",
     "RunnerHealthMetrics",
     "RunnerHealthcheck",
     "RunnerSnapshotDto",
@@ -203,6 +206,7 @@ from daytona_api_client.api.jobs_api import JobsApi as JobsApi
 from daytona_api_client.api.object_storage_api import ObjectStorageApi as ObjectStorageApi
 from daytona_api_client.api.organizations_api import OrganizationsApi as OrganizationsApi
 from daytona_api_client.api.preview_api import PreviewApi as PreviewApi
+from daytona_api_client.api.regions_api import RegionsApi as RegionsApi
 from daytona_api_client.api.runner_service_api import RunnerServiceApi as RunnerServiceApi
 from daytona_api_client.api.runners_api import RunnersApi as RunnersApi
 from daytona_api_client.api.sandbox_api import SandboxApi as SandboxApi
@@ -240,7 +244,6 @@ from daytona_api_client.models.computer_use_start_response import ComputerUseSta
 from daytona_api_client.models.computer_use_status_response import ComputerUseStatusResponse as ComputerUseStatusResponse
 from daytona_api_client.models.computer_use_stop_response import ComputerUseStopResponse as ComputerUseStopResponse
 from daytona_api_client.models.create_api_key import CreateApiKey as CreateApiKey
-from daytona_api_client.models.create_audit_log import CreateAuditLog as CreateAuditLog
 from daytona_api_client.models.create_build_info import CreateBuildInfo as CreateBuildInfo
 from daytona_api_client.models.create_docker_registry import CreateDockerRegistry as CreateDockerRegistry
 from daytona_api_client.models.create_linked_account import CreateLinkedAccount as CreateLinkedAccount
@@ -248,7 +251,9 @@ from daytona_api_client.models.create_organization import CreateOrganization as 
 from daytona_api_client.models.create_organization_invitation import CreateOrganizationInvitation as CreateOrganizationInvitation
 from daytona_api_client.models.create_organization_quota import CreateOrganizationQuota as CreateOrganizationQuota
 from daytona_api_client.models.create_organization_role import CreateOrganizationRole as CreateOrganizationRole
+from daytona_api_client.models.create_region import CreateRegion as CreateRegion
 from daytona_api_client.models.create_runner import CreateRunner as CreateRunner
+from daytona_api_client.models.create_runner_response import CreateRunnerResponse as CreateRunnerResponse
 from daytona_api_client.models.create_sandbox import CreateSandbox as CreateSandbox
 from daytona_api_client.models.create_session_request import CreateSessionRequest as CreateSessionRequest
 from daytona_api_client.models.create_snapshot import CreateSnapshot as CreateSnapshot
@@ -328,6 +333,7 @@ from daytona_api_client.models.registry_push_access_dto import RegistryPushAcces
 from daytona_api_client.models.replace_request import ReplaceRequest as ReplaceRequest
 from daytona_api_client.models.replace_result import ReplaceResult as ReplaceResult
 from daytona_api_client.models.runner import Runner as Runner
+from daytona_api_client.models.runner_full import RunnerFull as RunnerFull
 from daytona_api_client.models.runner_health_metrics import RunnerHealthMetrics as RunnerHealthMetrics
 from daytona_api_client.models.runner_healthcheck import RunnerHealthcheck as RunnerHealthcheck
 from daytona_api_client.models.runner_snapshot_dto import RunnerSnapshotDto as RunnerSnapshotDto

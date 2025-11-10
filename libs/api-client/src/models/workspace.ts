@@ -122,10 +122,6 @@ export interface Workspace {
    */
   autoDeleteInterval?: number
   /**
-   * The domain name of the runner
-   */
-  runnerDomain?: string
-  /**
    * Array of volumes attached to the sandbox
    */
   volumes?: Array<SandboxVolume>

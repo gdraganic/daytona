@@ -25,8 +25,4 @@ export interface PortPreviewUrl {
    * Access token
    */
   token: string
-  /**
-   * Legacy preview url using runner domain
-   */
-  legacyProxyUrl?: string
 }

@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **announcements** | [**{ [key: string]: Announcement; }**](Announcement.md) | System announcements | [default to undefined]
 **pylonAppId** | **string** | Pylon application ID | [optional] [default to undefined]
 **proxyTemplateUrl** | **string** | Proxy template URL | [default to undefined]
+**proxyToolboxUrl** | **string** | Toolbox template URL | [default to undefined]
 **defaultSnapshot** | **string** | Default snapshot for sandboxes | [default to undefined]
 **dashboardUrl** | **string** | Dashboard URL | [default to undefined]
 **maxAutoArchiveInterval** | **number** | Maximum auto-archive interval in minutes | [default to undefined]
@@ -33,6 +34,7 @@ const instance: DaytonaConfiguration = {
     announcements,
     pylonAppId,
     proxyTemplateUrl,
+    proxyToolboxUrl,
     defaultSnapshot,
     dashboardUrl,
     maxAutoArchiveInterval,

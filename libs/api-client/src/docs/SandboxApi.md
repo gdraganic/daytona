@@ -12,7 +12,7 @@ All URIs are relative to _http://localhost:3000_
 |[**getBuildLogs**](#getbuildlogs) | **GET** /sandbox/{sandboxIdOrName}/build-logs | Get build logs|
 |[**getPortPreviewUrl**](#getportpreviewurl) | **GET** /sandbox/{sandboxIdOrName}/ports/{port}/preview-url | Get preview URL for a sandbox port|
 |[**getSandbox**](#getsandbox) | **GET** /sandbox/{sandboxIdOrName} | Get sandbox details|
-|[**getSandboxRegions**](#getsandboxregions) | **GET** /sandbox/regions | List all regions where sandboxes have been created|
+|[**getSandboxRegions**](#getsandboxregions) | **GET** /sandbox/regions | List all regions available to the organization|
 |[**getSandboxesForRunner**](#getsandboxesforrunner) | **GET** /sandbox/for-runner | Get sandboxes for the authenticated runner|
 |[**listSandboxes**](#listsandboxes) | **GET** /sandbox | List all sandboxes|
 |[**listSandboxesPaginated**](#listsandboxespaginated) | **GET** /sandbox/paginated | List all sandboxes paginated|
@@ -23,6 +23,7 @@ All URIs are relative to _http://localhost:3000_
 |[**setAutostopInterval**](#setautostopinterval) | **POST** /sandbox/{sandboxIdOrName}/autostop/{interval} | Set sandbox auto-stop interval|
 |[**startSandbox**](#startsandbox) | **POST** /sandbox/{sandboxIdOrName}/start | Start sandbox|
 |[**stopSandbox**](#stopsandbox) | **POST** /sandbox/{sandboxIdOrName}/stop | Stop sandbox|
+|[**updateLastActivity**](#updatelastactivity) | **POST** /sandbox/{sandboxId}/last-activity | Update sandbox last activity|
 |[**updatePublicStatus**](#updatepublicstatus) | **POST** /sandbox/{sandboxIdOrName}/public/{isPublic} | Update public status|
 |[**updateSandboxState**](#updatesandboxstate) | **PUT** /sandbox/{sandboxId}/state | Update sandbox state|
 |[**validateSshAccess**](#validatesshaccess) | **GET** /sandbox/ssh-access/validate | Validate SSH access for sandbox|
@@ -501,7 +502,7 @@ const { status, data } = await apiInstance.getSandboxRegions(
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** | List of regions where sandboxes have been created |  -  |
+|**200** | List of regions available to the organization |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -642,7 +643,7 @@ let labels: string; //JSON encoded labels to filter by (optional) (default to un
 let includeErroredDeleted: boolean; //Include results with errored state and deleted desired state (optional) (default to false)
 let states: Array<'creating' | 'restoring' | 'destroying' | 'started' | 'stopped' | 'starting' | 'stopping' | 'error' | 'build_failed' | 'pending_build' | 'building_snapshot' | 'unknown' | 'pulling_snapshot' | 'archived' | 'archiving'>; //List of states to filter by (optional) (default to undefined)
 let snapshots: Array<string>; //List of snapshot names to filter by (optional) (default to undefined)
-let regions: Array<string>; //List of regions to filter by (optional) (default to undefined)
+let regionIds: Array<string>; //List of regions IDs to filter by (optional) (default to undefined)
 let minCpu: number; //Minimum CPU (optional) (default to undefined)
 let maxCpu: number; //Maximum CPU (optional) (default to undefined)
 let minMemoryGiB: number; //Minimum memory in GiB (optional) (default to undefined)
@@ -664,7 +665,7 @@ const { status, data } = await apiInstance.listSandboxesPaginated(
     includeErroredDeleted,
     states,
     snapshots,
-    regions,
+    regionIds,
     minCpu,
     maxCpu,
     minMemoryGiB,
@@ -691,7 +692,7 @@ const { status, data } = await apiInstance.listSandboxesPaginated(
 | **includeErroredDeleted** | [**boolean**] | Include results with errored state and deleted desired state | (optional) defaults to false|
 | **states** | **Array<&#39;creating&#39; &#124; &#39;restoring&#39; &#124; &#39;destroying&#39; &#124; &#39;started&#39; &#124; &#39;stopped&#39; &#124; &#39;starting&#39; &#124; &#39;stopping&#39; &#124; &#39;error&#39; &#124; &#39;build_failed&#39; &#124; &#39;pending_build&#39; &#124; &#39;building_snapshot&#39; &#124; &#39;unknown&#39; &#124; &#39;pulling_snapshot&#39; &#124; &#39;archived&#39; &#124; &#39;archiving&#39;>** | List of states to filter by | (optional) defaults to undefined|
 | **snapshots** | **Array&lt;string&gt;** | List of snapshot names to filter by | (optional) defaults to undefined|
-| **regions** | **Array&lt;string&gt;** | List of regions to filter by | (optional) defaults to undefined|
+| **regionIds** | **Array&lt;string&gt;** | List of regions IDs to filter by | (optional) defaults to undefined|
 | **minCpu** | [**number**] | Minimum CPU | (optional) defaults to undefined|
 | **maxCpu** | [**number**] | Maximum CPU | (optional) defaults to undefined|
 | **minMemoryGiB** | [**number**] | Minimum memory in GiB | (optional) defaults to undefined|
@@ -1101,6 +1102,58 @@ const { status, data } = await apiInstance.stopSandbox(
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 |**200** | Sandbox has been stopped |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **updateLastActivity**
+>
+> updateLastActivity()
+
+### Example
+
+```typescript
+import {
+    SandboxApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new SandboxApi(configuration);
+
+let sandboxId: string; //ID of the sandbox (default to undefined)
+let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
+
+const { status, data } = await apiInstance.updateLastActivity(
+    sandboxId,
+    xDaytonaOrganizationID
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **sandboxId** | [**string**] | ID of the sandbox | defaults to undefined|
+| **xDaytonaOrganizationID** | [**string**] | Use with JWT to specify the organization ID | (optional) defaults to undefined|
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[bearer](../README.md#bearer), [oauth2](../README.md#oauth2)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**201** | Last activity has been updated |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

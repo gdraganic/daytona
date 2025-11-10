@@ -95,6 +95,7 @@ sequenceDiagram
 ### 1. Authentication Flow Overview
 
 **User Journey:**
+
 1. User opens preview URL in browser (e.g., `https://3000-sandbox-123.proxy.daytona.io`)
 2. No authentication → Redirected to Daytona IDP login
 3. User logs in with credentials
@@ -108,6 +109,7 @@ sequenceDiagram
 ### 2. OIDC State Parameter
 
 **State Structure:**
+
 ```json
 {
   "state": "random_nonce_for_csrf_protection",
@@ -117,11 +119,13 @@ sequenceDiagram
 ```
 
 **Encoded State:**
+
 ```
 Base64(JSON) → passed to IDP → returned in callback
 ```
 
 **Purpose:**
+
 - CSRF protection
 - Store original URL to redirect after auth
 - Track which sandbox is being accessed
@@ -129,11 +133,13 @@ Base64(JSON) → passed to IDP → returned in callback
 ### 3. Cookie-Based Session
 
 **Cookie Name:**
+
 ```
 daytona-sandbox-auth-{sandboxId}
 ```
 
 **Cookie Properties:**
+
 - **Value**: Encrypted with securecookie (contains sandboxId)
 - **Domain**: `.proxy.daytona.io` (wildcard for all subdomains)
 - **HttpOnly**: `true` (prevents JavaScript access)
@@ -142,6 +148,7 @@ daytona-sandbox-auth-{sandboxId}
 - **Path**: `/`
 
 **Cookie Validation:**
+
 ```go
 // Decrypt cookie
 var decodedValue string
@@ -156,6 +163,7 @@ if decodedValue != "sandbox-123" {
 ### 4. JWT Access Token
 
 **Token Contents:**
+
 ```json
 {
   "sub": "user-123",
@@ -169,6 +177,7 @@ if decodedValue != "sandbox-123" {
 ```
 
 **Usage:**
+
 - Validates user identity
 - Checks sandbox access via Daytona API
 - Not stored in cookie (only used during initial auth)
@@ -178,21 +187,25 @@ if decodedValue != "sandbox-123" {
 The proxy checks authentication in this order:
 
 1. **Bearer Token (API Key/JWT)** - For SDK/programmatic access
+
    ```
    Authorization: Bearer {api_key_or_jwt}
    ```
 
 2. **Cookie** - For browser sessions
+
    ```
    Cookie: daytona-sandbox-auth-{sandboxId}={encrypted_value}
    ```
 
 3. **Preview Token Header** - For shared links
+
    ```
    X-Daytona-Preview-Token: {preview_token}
    ```
 
 4. **Query Parameter** - For one-time links
+
    ```
    ?DAYTONA_SANDBOX_AUTH_KEY={preview_token}
    ```
@@ -202,17 +215,20 @@ The proxy checks authentication in this order:
 ### 6. Public vs Private Sandboxes
 
 **Public Sandbox:**
+
 - No authentication required for most ports
 - Terminal (22222) and Toolbox (2280) always require auth
 - API checks: `GET /api/preview/{sandboxId}/is-public`
 
 **Private Sandbox:**
+
 - All ports require authentication
 - Enforced for all requests
 
 ### 7. OIDC Configuration
 
 **Proxy OIDC Config:**
+
 ```yaml
 oidc:
   domain: https://auth.daytona.io
@@ -223,6 +239,7 @@ oidc:
 ```
 
 **OIDC Endpoints:**
+
 ```
 Authorization: https://auth.daytona.io/authorize
 Token:         https://auth.daytona.io/oauth/token
@@ -266,6 +283,7 @@ Browser → https://3000-sandbox-123.proxy.daytona.io/
 ```
 
 **Response:**
+
 ```
 HTTP/1.1 302 Found
 Location: https://auth.daytona.io/authorize?
@@ -305,6 +323,7 @@ client_secret=secret
 ```
 
 **Response:**
+
 ```json
 {
   "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -337,6 +356,7 @@ Cookie: daytona-sandbox-auth-sandbox-123=encrypted_value
 ```
 
 **Response:**
+
 ```
 HTTP/1.1 200 OK
 Content-Type: text/html
@@ -463,11 +483,13 @@ OIDC_AUDIENCE=daytona-api
 **Symptom:** Browser keeps redirecting between proxy and IDP
 
 **Causes:**
+
 - Cookie not being set (check domain, secure flag)
 - Cookie being rejected by browser (SameSite policy)
 - State parameter mismatch
 
 **Solution:**
+
 ```bash
 # Check cookie in browser DevTools → Application → Cookies
 # Verify domain is .proxy.daytona.io (with leading dot)
@@ -479,11 +501,13 @@ OIDC_AUDIENCE=daytona-api
 **Symptom:** User logs in but gets 401 on callback
 
 **Causes:**
+
 - JWT validation fails (user doesn't have sandbox access)
 - Token exchange failed
 - API unreachable
 
 **Solution:**
+
 ```bash
 # Check proxy logs for token exchange errors
 # Verify user has sandbox access: GET /api/preview/{sandboxId}/access
@@ -495,11 +519,13 @@ OIDC_AUDIENCE=daytona-api
 **Symptom:** Cookie exists but not sent with requests
 
 **Causes:**
+
 - Domain mismatch (cookie for different domain)
 - SameSite policy blocking
 - HTTPS required but using HTTP
 
 **Solution:**
+
 ```bash
 # Cookie domain must match request domain
 # Use .proxy.daytona.io for wildcard
@@ -529,6 +555,7 @@ sequenceDiagram
 ```
 
 **Use Cases:**
+
 - Share preview with non-Daytona users
 - Public demos
 - Embedded previews in external sites

@@ -21,12 +21,4 @@ export interface SshAccessValidationDto {
    * ID of the sandbox this SSH access is for
    */
   sandboxId: string
-  /**
-   * ID of the runner hosting the sandbox
-   */
-  runnerId?: string
-  /**
-   * Domain of the runner hosting the sandbox
-   */
-  runnerDomain?: string
 }

@@ -108,6 +108,7 @@ sequenceDiagram
 ### 2. Runner Token Security
 
 **Token Properties:**
+
 - Scoped to specific permissions (principle of least privilege)
 - Cannot access organization data or user endpoints
 - Cannot create/delete resources
@@ -115,6 +116,7 @@ sequenceDiagram
 - Stored as hash in database (bcrypt/argon2)
 
 **Token Validation on Each Request:**
+
 ```go
 // Middleware validates:
 1. Token signature valid
@@ -134,6 +136,7 @@ The API determines runner status dynamically based on `last_healthcheck`:
 | > 120s ago | `OFFLINE` | No heartbeat for 3+ intervals |
 
 **Implementation:**
+
 ```typescript
 function calculateRunnerHealth(lastHealthcheck: Date): RunnerStatus {
   const secondsSinceLastCheck = (Date.now() - lastHealthcheck.getTime()) / 1000;
@@ -147,6 +150,7 @@ function calculateRunnerHealth(lastHealthcheck: Date): RunnerStatus {
 ### 4. Healthcheck Mechanism
 
 **Runner Side (Every 30s):**
+
 ```go
 ticker := time.NewTicker(30 * time.Second)
 for range ticker.C {
@@ -156,6 +160,7 @@ for range ticker.C {
 ```
 
 **API Side:**
+
 - Updates `last_healthcheck` timestamp in DB
 - Stores metrics in Redis with 90s TTL (3x interval)
 - If Redis key expires, runner is considered unhealthy
@@ -242,6 +247,7 @@ curl -X POST http://localhost:3000/api/organization/runner/register \
 ```
 
 **Response:**
+
 ```json
 {
   "runnerId": "runner-abc123",
@@ -274,6 +280,7 @@ curl http://localhost:3000/api/organization/runners \
 ```
 
 **Response:**
+
 ```json
 {
   "runners": [
@@ -307,6 +314,7 @@ curl -X POST http://localhost:3000/api/organization/runners/:id/token/rotate \
 ```
 
 **Response:**
+
 ```json
 {
   "token": "daytona_runner_new_token...",
@@ -331,12 +339,14 @@ curl -X DELETE http://localhost:3000/api/organization/runners/:id \
 ## Security Considerations
 
 ### 1. Token Storage
+
 - Never log tokens in plain text
 - Store only bcrypt hash in database
 - Token transmitted only over HTTPS
 - Returned only once during registration
 
 ### 2. Scope Enforcement
+
 ```go
 // Every runner endpoint checks:
 func ValidateRunnerScope(requiredScope string) Middleware {
@@ -350,6 +360,7 @@ func ValidateRunnerScope(requiredScope string) Middleware {
 ```
 
 ### 3. Organization Isolation
+
 ```go
 // Jobs filtered by organization:
 func PollJobs(c *Context) {
@@ -362,6 +373,7 @@ func PollJobs(c *Context) {
 ```
 
 ### 4. Rate Limiting
+
 - Healthcheck: Max 1 req/10s per runner
 - Job poll: Long-poll prevents spam
 - Registration: Max 10 runners/hour per org
@@ -371,11 +383,13 @@ func PollJobs(c *Context) {
 ### Why Redis + Database?
 
 **Redis (Hot Storage):**
+
 - Fast access to recent metrics
 - TTL auto-expires stale data
 - Powers real-time dashboards
 
 **Database (Cold Storage):**
+
 - `last_healthcheck` timestamp (source of truth)
 - Historical health data
 - Survives Redis restarts

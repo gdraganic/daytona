@@ -150,12 +150,14 @@ sequenceDiagram
 ### 1. Public Cloud Architecture
 
 **Components:**
+
 - **Daytona Proxy**: Centralized proxy hosted by Daytona (`*.proxy.daytona.io`)
 - **Daytona API**: Validates API keys and provides runner routing info
 - **Runner**: Hosts sandboxes, proxies requests to sandbox containers
 - **Sandbox**: Container running daemon on port 2280
 
 **URL Format:**
+
 ```
 https://{port}-{sandboxId}.proxy.daytona.io/path
 Example: https://3000-sandbox-abc123.proxy.daytona.io/api/workspaces
@@ -164,17 +166,20 @@ Example: https://3000-sandbox-abc123.proxy.daytona.io/api/workspaces
 ### 2. Self-Hosted Architecture
 
 **Components:**
+
 - **Runner Proxy**: Deployed in client network alongside runner
 - **Daytona API**: Only validates API keys (cannot access runner/sandbox)
 - **Sandbox**: Container in client network
 
 **URL Format:**
+
 ```
 https://{port}-{sandboxId}-{runnerId}.internal.net/path
 Example: https://3000-sandbox-abc123-runner-001.internal.net/api/workspaces
 ```
 
 **Key Difference:**
+
 - Runner proxy is in the same network as sandboxes
 - Daytona API is only called for API key validation
 - All sandbox routing happens locally
@@ -184,21 +189,25 @@ Example: https://3000-sandbox-abc123-runner-001.internal.net/api/workspaces
 The proxy supports multiple authentication methods (in order of precedence):
 
 1. **Bearer Token (API Key or JWT)**
+
    ```
    Authorization: Bearer {api_key}
    ```
 
 2. **Preview Token Header**
+
    ```
    X-Daytona-Preview-Token: {preview_token}
    ```
 
 3. **Query Parameter**
+
    ```
    ?DAYTONA_SANDBOX_AUTH_KEY={preview_token}
    ```
 
 4. **Cookie**
+
    ```
    Cookie: daytona-sandbox-auth-{sandboxId}={encrypted_value}
    ```
@@ -206,6 +215,7 @@ The proxy supports multiple authentication methods (in order of precedence):
 ### 4. API Key Validation & Caching
 
 **Validation Logic:**
+
 ```typescript
 async function validateApiKey(sandboxId: string, apiKey: string): Promise<boolean> {
   // 1. Check cache first
@@ -226,6 +236,7 @@ async function validateApiKey(sandboxId: string, apiKey: string): Promise<boolea
 ```
 
 **Cache Benefits:**
+
 - Reduces load on Daytona API
 - Improves response time (no external API call)
 - Works for both public cloud and self-hosted
@@ -234,6 +245,7 @@ async function validateApiKey(sandboxId: string, apiKey: string): Promise<boolea
 ### 5. Runner Info Resolution (Public Cloud Only)
 
 **Runner Lookup:**
+
 ```typescript
 async function getRunnerInfo(sandboxId: string): Promise<RunnerInfo> {
   // 1. Check cache
@@ -267,16 +279,19 @@ async function getRunnerInfo(sandboxId: string): Promise<RunnerInfo> {
 ### 7. Security Considerations
 
 **API Key Validation:**
+
 - Every first request validates against Daytona API
 - Subsequent requests use cached validation (2 min)
 - Invalid keys return 401 Unauthorized
 
 **Runner Authentication (Public Cloud):**
+
 - Proxy authenticates to runner with `X-Daytona-Authorization` header
 - Uses runner-specific API key (different from user API key)
 - Prevents unauthorized runner access
 
 **Network Isolation (Self-Hosted):**
+
 - Daytona API never accesses client network
 - Runner proxy handles all local routing
 - Only API key validation requires external call
@@ -426,9 +441,11 @@ proxy:sandbox-public:{sandboxId} = true/false (TTL: 1 hour)
 ### Cache Invalidation
 
 **Automatic:**
+
 - TTL expiration (2 minutes for auth, 1 hour for public status)
 
 **Manual (Future Enhancement):**
+
 - When sandbox permissions change → invalidate auth cache
 - When runner assignment changes → invalidate runner info cache
 - When sandbox is deleted → invalidate all caches
@@ -436,11 +453,13 @@ proxy:sandbox-public:{sandboxId} = true/false (TTL: 1 hour)
 ## Performance Benefits
 
 **Without Caching:**
+
 - Every request: 2-3 API calls to Daytona API
 - Latency: ~300ms extra per request
 - API load: High
 
 **With Caching (2-min TTL):**
+
 - First request: 2-3 API calls
 - Subsequent requests: 0 API calls
 - Latency: ~10ms (cache lookup only)

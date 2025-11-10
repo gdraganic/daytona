@@ -12,22 +12,10 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface KeyboardPressRequest
- */
 export interface KeyboardPressRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof KeyboardPressRequest
-   */
   key?: string
   /**
    * ctrl, alt, shift, cmd
-   * @type {Array<string>}
-   * @memberof KeyboardPressRequest
    */
   modifiers?: Array<string>
 }

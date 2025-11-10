@@ -14,7 +14,23 @@
 
 export interface Region {
   /**
+   * Region ID
+   */
+  id: string
+  /**
    * Region name
    */
   name: string
+  /**
+   * Organization ID
+   */
+  organizationId: string | null
+  /**
+   * Creation timestamp
+   */
+  createdAt: string
+  /**
+   * Last update timestamp
+   */
+  updatedAt: string
 }

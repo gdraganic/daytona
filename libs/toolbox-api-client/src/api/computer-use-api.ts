@@ -75,7 +75,6 @@ import type { ScrollResponse } from '../models'
 import type { WindowsResponse } from '../models'
 /**
  * ComputerUseApi - axios parameter creator
- * @export
  */
 export const ComputerUseApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -895,7 +894,6 @@ export const ComputerUseApiAxiosParamCreator = function (configuration?: Configu
 
 /**
  * ComputerUseApi - functional programming interface
- * @export
  */
 export const ComputerUseApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ComputerUseApiAxiosParamCreator(configuration)
@@ -1448,7 +1446,6 @@ export const ComputerUseApiFp = function (configuration?: Configuration) {
 
 /**
  * ComputerUseApi - factory interface
- * @export
  */
 export const ComputerUseApiFactory = function (
   configuration?: Configuration,
@@ -1718,9 +1715,6 @@ export const ComputerUseApiFactory = function (
 
 /**
  * ComputerUseApi - object-oriented interface
- * @export
- * @class ComputerUseApi
- * @extends {BaseAPI}
  */
 export class ComputerUseApi extends BaseAPI {
   /**
@@ -1729,7 +1723,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {MouseClickRequest} request Mouse click request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public click(request: MouseClickRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1743,7 +1736,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {MouseDragRequest} request Mouse drag request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public drag(request: MouseDragRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1756,7 +1748,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Get computer use process status
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getComputerUseStatus(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1769,7 +1760,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Get computer use status
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getComputerUseSystemStatus(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1782,7 +1772,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Get display information
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getDisplayInfo(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1795,7 +1784,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Get mouse position
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getMousePosition(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1809,7 +1797,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {string} processName Process name to get errors for
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getProcessErrors(processName: string, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1823,7 +1810,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {string} processName Process name to get logs for
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getProcessLogs(processName: string, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1837,7 +1823,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {string} processName Process name to check
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getProcessStatus(processName: string, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1850,7 +1835,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Get windows information
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public getWindows(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1864,7 +1848,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {MouseMoveRequest} request Mouse move request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public moveMouse(request: MouseMoveRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1878,7 +1861,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {KeyboardHotkeyRequest} request Hotkey press request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public pressHotkey(request: KeyboardHotkeyRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1892,7 +1874,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {KeyboardPressRequest} request Key press request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public pressKey(request: KeyboardPressRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1906,7 +1887,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {string} processName Process name to restart
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public restartProcess(processName: string, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1920,7 +1900,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {MouseScrollRequest} request Mouse scroll request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public scroll(request: MouseScrollRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1933,7 +1912,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Start computer use processes
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public startComputerUse(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1946,7 +1924,6 @@ export class ComputerUseApi extends BaseAPI {
    * @summary Stop computer use processes
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public stopComputerUse(options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -1967,7 +1944,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {number} [scale] Scale factor (0.1-1.0)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public takeCompressedRegionScreenshot(
     x: number,
@@ -1994,7 +1970,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {number} [scale] Scale factor (0.1-1.0)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public takeCompressedScreenshot(
     showCursor?: boolean,
@@ -2018,7 +1993,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {boolean} [showCursor] Whether to show cursor in screenshot
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public takeRegionScreenshot(
     x: number,
@@ -2039,7 +2013,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {boolean} [showCursor] Whether to show cursor in screenshot
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public takeScreenshot(showCursor?: boolean, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)
@@ -2053,7 +2026,6 @@ export class ComputerUseApi extends BaseAPI {
    * @param {KeyboardTypeRequest} request Text typing request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ComputerUseApi
    */
   public typeText(request: KeyboardTypeRequest, options?: RawAxiosRequestConfig) {
     return ComputerUseApiFp(this.configuration)

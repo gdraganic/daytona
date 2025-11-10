@@ -57,7 +57,6 @@ import type { SessionExecuteRequest } from '../models'
 import type { SessionExecuteResponse } from '../models'
 /**
  * ProcessApi - axios parameter creator
- * @export
  */
 export const ProcessApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -562,7 +561,6 @@ export const ProcessApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * ProcessApi - functional programming interface
- * @export
  */
 export const ProcessApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ProcessApiAxiosParamCreator(configuration)
@@ -905,7 +903,6 @@ export const ProcessApiFp = function (configuration?: Configuration) {
 
 /**
  * ProcessApi - factory interface
- * @export
  */
 export const ProcessApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = ProcessApiFp(configuration)
@@ -1073,9 +1070,6 @@ export const ProcessApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * ProcessApi - object-oriented interface
- * @export
- * @class ProcessApi
- * @extends {BaseAPI}
  */
 export class ProcessApi extends BaseAPI {
   /**
@@ -1084,7 +1078,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} sessionId PTY session ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public connectPtySession(sessionId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1098,7 +1091,6 @@ export class ProcessApi extends BaseAPI {
    * @param {PtyCreateRequest} request PTY session creation request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public createPtySession(request: PtyCreateRequest, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1112,7 +1104,6 @@ export class ProcessApi extends BaseAPI {
    * @param {CreateSessionRequest} request Session creation request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public createSession(request: CreateSessionRequest, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1126,7 +1117,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} sessionId PTY session ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public deletePtySession(sessionId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1140,7 +1130,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} sessionId Session ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public deleteSession(sessionId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1154,7 +1143,6 @@ export class ProcessApi extends BaseAPI {
    * @param {ExecuteRequest} request Command execution request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public executeCommand(request: ExecuteRequest, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1168,7 +1156,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} sessionId PTY session ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public getPtySession(sessionId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1182,7 +1169,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} sessionId Session ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public getSession(sessionId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1197,7 +1183,6 @@ export class ProcessApi extends BaseAPI {
    * @param {string} commandId Command ID
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public getSessionCommand(sessionId: string, commandId: string, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1213,7 +1198,6 @@ export class ProcessApi extends BaseAPI {
    * @param {boolean} [follow] Follow logs in real-time (WebSocket only)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public getSessionCommandLogs(
     sessionId: string,
@@ -1231,7 +1215,6 @@ export class ProcessApi extends BaseAPI {
    * @summary List all PTY sessions
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public listPtySessions(options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1244,7 +1227,6 @@ export class ProcessApi extends BaseAPI {
    * @summary List all sessions
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public listSessions(options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1259,7 +1241,6 @@ export class ProcessApi extends BaseAPI {
    * @param {PtyResizeRequest} request Resize request with new dimensions
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public resizePtySession(sessionId: string, request: PtyResizeRequest, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)
@@ -1274,7 +1255,6 @@ export class ProcessApi extends BaseAPI {
    * @param {SessionExecuteRequest} request Command execution request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ProcessApi
    */
   public sessionExecuteCommand(sessionId: string, request: SessionExecuteRequest, options?: RawAxiosRequestConfig) {
     return ProcessApiFp(this.configuration)

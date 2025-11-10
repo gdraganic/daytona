@@ -16,22 +16,7 @@
 // @ts-ignore
 import type { Command } from './command'
 
-/**
- *
- * @export
- * @interface Session
- */
 export interface Session {
-  /**
-   *
-   * @type {Array<Command>}
-   * @memberof Session
-   */
   commands: Array<Command>
-  /**
-   *
-   * @type {string}
-   * @memberof Session
-   */
   sessionId: string
 }

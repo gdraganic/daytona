@@ -10,6 +10,7 @@ api/jobs-api.ts
 api/object-storage-api.ts
 api/organizations-api.ts
 api/preview-api.ts
+api/regions-api.ts
 api/runner-service-api.ts
 api/runners-api.ts
 api/sandbox-api.ts
@@ -40,7 +41,6 @@ docs/ComputerUseStatusResponse.md
 docs/ComputerUseStopResponse.md
 docs/ConfigApi.md
 docs/CreateApiKey.md
-docs/CreateAuditLog.md
 docs/CreateBuildInfo.md
 docs/CreateDockerRegistry.md
 docs/CreateLinkedAccount.md
@@ -48,7 +48,9 @@ docs/CreateOrganization.md
 docs/CreateOrganizationInvitation.md
 docs/CreateOrganizationQuota.md
 docs/CreateOrganizationRole.md
+docs/CreateRegion.md
 docs/CreateRunner.md
+docs/CreateRunnerResponse.md
 docs/CreateSandbox.md
 docs/CreateSessionRequest.md
 docs/CreateSnapshot.md
@@ -130,10 +132,12 @@ docs/PtySessionInfo.md
 docs/Range.md
 docs/Region.md
 docs/RegionScreenshotResponse.md
+docs/RegionsApi.md
 docs/RegistryPushAccessDto.md
 docs/ReplaceRequest.md
 docs/ReplaceResult.md
 docs/Runner.md
+docs/RunnerFull.md
 docs/RunnerHealthMetrics.md
 docs/RunnerHealthcheck.md
 docs/RunnerServiceApi.md
@@ -209,6 +213,8 @@ models/create-organization-invitation.ts
 models/create-organization-quota.ts
 models/create-organization-role.ts
 models/create-organization.ts
+models/create-region.ts
+models/create-runner-response.ts
 models/create-runner.ts
 models/create-sandbox.ts
 models/create-session-request.ts
@@ -289,6 +295,7 @@ models/region.ts
 models/registry-push-access-dto.ts
 models/replace-request.ts
 models/replace-result.ts
+models/runner-full.ts
 models/runner-health-metrics.ts
 models/runner-healthcheck.ts
 models/runner-snapshot-dto.ts

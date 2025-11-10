@@ -37,7 +37,6 @@ import type { IsPortInUseResponse } from '../models'
 import type { PortList } from '../models'
 /**
  * PortApi - axios parameter creator
- * @export
  */
 export const PortApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -105,7 +104,6 @@ export const PortApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * PortApi - functional programming interface
- * @export
  */
 export const PortApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = PortApiAxiosParamCreator(configuration)
@@ -159,7 +157,6 @@ export const PortApiFp = function (configuration?: Configuration) {
 
 /**
  * PortApi - factory interface
- * @export
  */
 export const PortApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = PortApiFp(configuration)
@@ -188,9 +185,6 @@ export const PortApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * PortApi - object-oriented interface
- * @export
- * @class PortApi
- * @extends {BaseAPI}
  */
 export class PortApi extends BaseAPI {
   /**
@@ -198,7 +192,6 @@ export class PortApi extends BaseAPI {
    * @summary Get active ports
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof PortApi
    */
   public getPorts(options?: RawAxiosRequestConfig) {
     return PortApiFp(this.configuration)
@@ -212,7 +205,6 @@ export class PortApi extends BaseAPI {
    * @param {number} port Port number (3000-9999)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof PortApi
    */
   public isPortInUse(port: number, options?: RawAxiosRequestConfig) {
     return PortApiFp(this.configuration)

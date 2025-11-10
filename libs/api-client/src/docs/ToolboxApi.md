@@ -4,78 +4,78 @@ All URIs are relative to _http://localhost:3000_
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**clickMouse**](#clickmouse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/click | Click mouse|
-|[**createFolder**](#createfolder) | **POST** /toolbox/{sandboxId}/toolbox/files/folder | Create folder|
-|[**createPTYSession**](#createptysession) | **POST** /toolbox/{sandboxId}/toolbox/process/pty | Create PTY session|
-|[**createSession**](#createsession) | **POST** /toolbox/{sandboxId}/toolbox/process/session | Create session|
-|[**deleteFile**](#deletefile) | **DELETE** /toolbox/{sandboxId}/toolbox/files | Delete file|
-|[**deletePTYSession**](#deleteptysession) | **DELETE** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId} | Delete PTY session|
-|[**deleteSession**](#deletesession) | **DELETE** /toolbox/{sandboxId}/toolbox/process/session/{sessionId} | Delete session|
-|[**downloadFile**](#downloadfile) | **GET** /toolbox/{sandboxId}/toolbox/files/download | Download file|
-|[**downloadFiles**](#downloadfiles) | **POST** /toolbox/{sandboxId}/toolbox/files/bulk-download | Download multiple files|
-|[**dragMouse**](#dragmouse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/drag | Drag mouse|
-|[**executeCommand**](#executecommand) | **POST** /toolbox/{sandboxId}/toolbox/process/execute | Execute command|
-|[**executeSessionCommand**](#executesessioncommand) | **POST** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/exec | Execute command in session|
-|[**findInFiles**](#findinfiles) | **GET** /toolbox/{sandboxId}/toolbox/files/find | Search for text/pattern in files|
-|[**getComputerUseStatus**](#getcomputerusestatus) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/status | Get computer use status|
-|[**getDisplayInfo**](#getdisplayinfo) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/display/info | Get display info|
-|[**getFileInfo**](#getfileinfo) | **GET** /toolbox/{sandboxId}/toolbox/files/info | Get file info|
-|[**getMousePosition**](#getmouseposition) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/mouse/position | Get mouse position|
-|[**getPTYSession**](#getptysession) | **GET** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId} | Get PTY session|
-|[**getProcessErrors**](#getprocesserrors) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/errors | Get process errors|
-|[**getProcessLogs**](#getprocesslogs) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/logs | Get process logs|
-|[**getProcessStatus**](#getprocessstatus) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/status | Get process status|
-|[**getProjectDir**](#getprojectdir) | **GET** /toolbox/{sandboxId}/toolbox/project-dir | Get sandbox project dir|
-|[**getSession**](#getsession) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId} | Get session|
-|[**getSessionCommand**](#getsessioncommand) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/command/{commandId} | Get session command|
-|[**getSessionCommandLogs**](#getsessioncommandlogs) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/command/{commandId}/logs | Get command logs|
-|[**getUserHomeDir**](#getuserhomedir) | **GET** /toolbox/{sandboxId}/toolbox/user-home-dir | Get sandbox user home dir|
-|[**getWindows**](#getwindows) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/display/windows | Get windows|
-|[**getWorkDir**](#getworkdir) | **GET** /toolbox/{sandboxId}/toolbox/work-dir | Get sandbox work-dir|
-|[**gitAddFiles**](#gitaddfiles) | **POST** /toolbox/{sandboxId}/toolbox/git/add | Add files|
-|[**gitCheckoutBranch**](#gitcheckoutbranch) | **POST** /toolbox/{sandboxId}/toolbox/git/checkout | Checkout branch|
-|[**gitCloneRepository**](#gitclonerepository) | **POST** /toolbox/{sandboxId}/toolbox/git/clone | Clone repository|
-|[**gitCommitChanges**](#gitcommitchanges) | **POST** /toolbox/{sandboxId}/toolbox/git/commit | Commit changes|
-|[**gitCreateBranch**](#gitcreatebranch) | **POST** /toolbox/{sandboxId}/toolbox/git/branches | Create branch|
-|[**gitDeleteBranch**](#gitdeletebranch) | **DELETE** /toolbox/{sandboxId}/toolbox/git/branches | Delete branch|
-|[**gitGetHistory**](#gitgethistory) | **GET** /toolbox/{sandboxId}/toolbox/git/history | Get commit history|
-|[**gitGetStatus**](#gitgetstatus) | **GET** /toolbox/{sandboxId}/toolbox/git/status | Get git status|
-|[**gitListBranches**](#gitlistbranches) | **GET** /toolbox/{sandboxId}/toolbox/git/branches | Get branch list|
-|[**gitPullChanges**](#gitpullchanges) | **POST** /toolbox/{sandboxId}/toolbox/git/pull | Pull changes|
-|[**gitPushChanges**](#gitpushchanges) | **POST** /toolbox/{sandboxId}/toolbox/git/push | Push changes|
-|[**listFiles**](#listfiles) | **GET** /toolbox/{sandboxId}/toolbox/files | List files|
-|[**listPTYSessions**](#listptysessions) | **GET** /toolbox/{sandboxId}/toolbox/process/pty | List PTY sessions|
-|[**listSessions**](#listsessions) | **GET** /toolbox/{sandboxId}/toolbox/process/session | List sessions|
-|[**lspCompletions**](#lspcompletions) | **POST** /toolbox/{sandboxId}/toolbox/lsp/completions | Get Lsp Completions|
-|[**lspDidClose**](#lspdidclose) | **POST** /toolbox/{sandboxId}/toolbox/lsp/did-close | Call Lsp DidClose|
-|[**lspDidOpen**](#lspdidopen) | **POST** /toolbox/{sandboxId}/toolbox/lsp/did-open | Call Lsp DidOpen|
-|[**lspDocumentSymbols**](#lspdocumentsymbols) | **GET** /toolbox/{sandboxId}/toolbox/lsp/document-symbols | Call Lsp DocumentSymbols|
-|[**lspStart**](#lspstart) | **POST** /toolbox/{sandboxId}/toolbox/lsp/start | Start Lsp server|
-|[**lspStop**](#lspstop) | **POST** /toolbox/{sandboxId}/toolbox/lsp/stop | Stop Lsp server|
-|[**lspWorkspaceSymbols**](#lspworkspacesymbols) | **GET** /toolbox/{sandboxId}/toolbox/lsp/workspace-symbols | Call Lsp WorkspaceSymbols|
-|[**moveFile**](#movefile) | **POST** /toolbox/{sandboxId}/toolbox/files/move | Move file|
-|[**moveMouse**](#movemouse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/move | Move mouse|
-|[**pressHotkey**](#presshotkey) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/hotkey | Press hotkey|
-|[**pressKey**](#presskey) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/key | Press key|
-|[**replaceInFiles**](#replaceinfiles) | **POST** /toolbox/{sandboxId}/toolbox/files/replace | Replace in files|
-|[**resizePTYSession**](#resizeptysession) | **POST** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId}/resize | Resize PTY session|
-|[**restartProcess**](#restartprocess) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/restart | Restart process|
-|[**scrollMouse**](#scrollmouse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/scroll | Scroll mouse|
-|[**searchFiles**](#searchfiles) | **GET** /toolbox/{sandboxId}/toolbox/files/search | Search files|
-|[**setFilePermissions**](#setfilepermissions) | **POST** /toolbox/{sandboxId}/toolbox/files/permissions | Set file permissions|
-|[**startComputerUse**](#startcomputeruse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/start | Start computer use processes|
-|[**stopComputerUse**](#stopcomputeruse) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/stop | Stop computer use processes|
-|[**takeCompressedRegionScreenshot**](#takecompressedregionscreenshot) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/region/compressed | Take compressed region screenshot|
-|[**takeCompressedScreenshot**](#takecompressedscreenshot) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/compressed | Take compressed screenshot|
-|[**takeRegionScreenshot**](#takeregionscreenshot) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/region | Take region screenshot|
-|[**takeScreenshot**](#takescreenshot) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot | Take screenshot|
-|[**typeText**](#typetext) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/type | Type text|
-|[**uploadFile**](#uploadfile) | **POST** /toolbox/{sandboxId}/toolbox/files/upload | Upload file|
-|[**uploadFiles**](#uploadfiles) | **POST** /toolbox/{sandboxId}/toolbox/files/bulk-upload | Upload multiple files|
+|[**clickMouseDeprecated**](#clickmousedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/click | [DEPRECATED] Click mouse|
+|[**createFolderDeprecated**](#createfolderdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/folder | [DEPRECATED] Create folder|
+|[**createPTYSessionDeprecated**](#createptysessiondeprecated) | **POST** /toolbox/{sandboxId}/toolbox/process/pty | [DEPRECATED] Create PTY session|
+|[**createSessionDeprecated**](#createsessiondeprecated) | **POST** /toolbox/{sandboxId}/toolbox/process/session | [DEPRECATED] Create session|
+|[**deleteFileDeprecated**](#deletefiledeprecated) | **DELETE** /toolbox/{sandboxId}/toolbox/files | [DEPRECATED] Delete file|
+|[**deletePTYSessionDeprecated**](#deleteptysessiondeprecated) | **DELETE** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId} | [DEPRECATED] Delete PTY session|
+|[**deleteSessionDeprecated**](#deletesessiondeprecated) | **DELETE** /toolbox/{sandboxId}/toolbox/process/session/{sessionId} | [DEPRECATED] Delete session|
+|[**downloadFileDeprecated**](#downloadfiledeprecated) | **GET** /toolbox/{sandboxId}/toolbox/files/download | [DEPRECATED] Download file|
+|[**downloadFilesDeprecated**](#downloadfilesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/bulk-download | [DEPRECATED] Download multiple files|
+|[**dragMouseDeprecated**](#dragmousedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/drag | [DEPRECATED] Drag mouse|
+|[**executeCommandDeprecated**](#executecommanddeprecated) | **POST** /toolbox/{sandboxId}/toolbox/process/execute | [DEPRECATED] Execute command|
+|[**executeSessionCommandDeprecated**](#executesessioncommanddeprecated) | **POST** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/exec | [DEPRECATED] Execute command in session|
+|[**findInFilesDeprecated**](#findinfilesdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/files/find | [DEPRECATED] Search for text/pattern in files|
+|[**getComputerUseStatusDeprecated**](#getcomputerusestatusdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/status | [DEPRECATED] Get computer use status|
+|[**getDisplayInfoDeprecated**](#getdisplayinfodeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/display/info | [DEPRECATED] Get display info|
+|[**getFileInfoDeprecated**](#getfileinfodeprecated) | **GET** /toolbox/{sandboxId}/toolbox/files/info | [DEPRECATED] Get file info|
+|[**getMousePositionDeprecated**](#getmousepositiondeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/mouse/position | [DEPRECATED] Get mouse position|
+|[**getPTYSessionDeprecated**](#getptysessiondeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId} | [DEPRECATED] Get PTY session|
+|[**getProcessErrorsDeprecated**](#getprocesserrorsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/errors | [DEPRECATED] Get process errors|
+|[**getProcessLogsDeprecated**](#getprocesslogsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/logs | [DEPRECATED] Get process logs|
+|[**getProcessStatusDeprecated**](#getprocessstatusdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/status | [DEPRECATED] Get process status|
+|[**getProjectDirDeprecated**](#getprojectdirdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/project-dir | [DEPRECATED] Get sandbox project dir|
+|[**getSessionCommandDeprecated**](#getsessioncommanddeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/command/{commandId} | [DEPRECATED] Get session command|
+|[**getSessionCommandLogsDeprecated**](#getsessioncommandlogsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId}/command/{commandId}/logs | [DEPRECATED] Get command logs|
+|[**getSessionDeprecated**](#getsessiondeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/session/{sessionId} | [DEPRECATED] Get session|
+|[**getUserHomeDirDeprecated**](#getuserhomedirdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/user-home-dir | [DEPRECATED] Get sandbox user home dir|
+|[**getWindowsDeprecated**](#getwindowsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/display/windows | [DEPRECATED] Get windows|
+|[**getWorkDirDeprecated**](#getworkdirdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/work-dir | [DEPRECATED] Get sandbox work-dir|
+|[**gitAddFilesDeprecated**](#gitaddfilesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/add | [DEPRECATED] Add files|
+|[**gitCheckoutBranchDeprecated**](#gitcheckoutbranchdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/checkout | [DEPRECATED] Checkout branch|
+|[**gitCloneRepositoryDeprecated**](#gitclonerepositorydeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/clone | [DEPRECATED] Clone repository|
+|[**gitCommitChangesDeprecated**](#gitcommitchangesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/commit | [DEPRECATED] Commit changes|
+|[**gitCreateBranchDeprecated**](#gitcreatebranchdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/branches | [DEPRECATED] Create branch|
+|[**gitDeleteBranchDeprecated**](#gitdeletebranchdeprecated) | **DELETE** /toolbox/{sandboxId}/toolbox/git/branches | [DEPRECATED] Delete branch|
+|[**gitGetHistoryDeprecated**](#gitgethistorydeprecated) | **GET** /toolbox/{sandboxId}/toolbox/git/history | [DEPRECATED] Get commit history|
+|[**gitGetStatusDeprecated**](#gitgetstatusdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/git/status | [DEPRECATED] Get git status|
+|[**gitListBranchesDeprecated**](#gitlistbranchesdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/git/branches | [DEPRECATED] Get branch list|
+|[**gitPullChangesDeprecated**](#gitpullchangesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/pull | [DEPRECATED] Pull changes|
+|[**gitPushChangesDeprecated**](#gitpushchangesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/git/push | [DEPRECATED] Push changes|
+|[**listFilesDeprecated**](#listfilesdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/files | [DEPRECATED] List files|
+|[**listPTYSessionsDeprecated**](#listptysessionsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/pty | [DEPRECATED] List PTY sessions|
+|[**listSessionsDeprecated**](#listsessionsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/process/session | [DEPRECATED] List sessions|
+|[**lspCompletionsDeprecated**](#lspcompletionsdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/lsp/completions | [DEPRECATED] Get Lsp Completions|
+|[**lspDidCloseDeprecated**](#lspdidclosedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/lsp/did-close | [DEPRECATED] Call Lsp DidClose|
+|[**lspDidOpenDeprecated**](#lspdidopendeprecated) | **POST** /toolbox/{sandboxId}/toolbox/lsp/did-open | [DEPRECATED] Call Lsp DidOpen|
+|[**lspDocumentSymbolsDeprecated**](#lspdocumentsymbolsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/lsp/document-symbols | [DEPRECATED] Call Lsp DocumentSymbols|
+|[**lspStartDeprecated**](#lspstartdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/lsp/start | [DEPRECATED] Start Lsp server|
+|[**lspStopDeprecated**](#lspstopdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/lsp/stop | [DEPRECATED] Stop Lsp server|
+|[**lspWorkspaceSymbolsDeprecated**](#lspworkspacesymbolsdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/lsp/workspace-symbols | [DEPRECATED] Call Lsp WorkspaceSymbols|
+|[**moveFileDeprecated**](#movefiledeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/move | [DEPRECATED] Move file|
+|[**moveMouseDeprecated**](#movemousedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/move | [DEPRECATED] Move mouse|
+|[**pressHotkeyDeprecated**](#presshotkeydeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/hotkey | [DEPRECATED] Press hotkey|
+|[**pressKeyDeprecated**](#presskeydeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/key | [DEPRECATED] Press key|
+|[**replaceInFilesDeprecated**](#replaceinfilesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/replace | [DEPRECATED] Replace in files|
+|[**resizePTYSessionDeprecated**](#resizeptysessiondeprecated) | **POST** /toolbox/{sandboxId}/toolbox/process/pty/{sessionId}/resize | [DEPRECATED] Resize PTY session|
+|[**restartProcessDeprecated**](#restartprocessdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/process/{processName}/restart | [DEPRECATED] Restart process|
+|[**scrollMouseDeprecated**](#scrollmousedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/mouse/scroll | [DEPRECATED] Scroll mouse|
+|[**searchFilesDeprecated**](#searchfilesdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/files/search | [DEPRECATED] Search files|
+|[**setFilePermissionsDeprecated**](#setfilepermissionsdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/permissions | [DEPRECATED] Set file permissions|
+|[**startComputerUseDeprecated**](#startcomputerusedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/start | [DEPRECATED] Start computer use processes|
+|[**stopComputerUseDeprecated**](#stopcomputerusedeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/stop | [DEPRECATED] Stop computer use processes|
+|[**takeCompressedRegionScreenshotDeprecated**](#takecompressedregionscreenshotdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/region/compressed | [DEPRECATED] Take compressed region screenshot|
+|[**takeCompressedScreenshotDeprecated**](#takecompressedscreenshotdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/compressed | [DEPRECATED] Take compressed screenshot|
+|[**takeRegionScreenshotDeprecated**](#takeregionscreenshotdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot/region | [DEPRECATED] Take region screenshot|
+|[**takeScreenshotDeprecated**](#takescreenshotdeprecated) | **GET** /toolbox/{sandboxId}/toolbox/computeruse/screenshot | [DEPRECATED] Take screenshot|
+|[**typeTextDeprecated**](#typetextdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/computeruse/keyboard/type | [DEPRECATED] Type text|
+|[**uploadFileDeprecated**](#uploadfiledeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/upload | [DEPRECATED] Upload file|
+|[**uploadFilesDeprecated**](#uploadfilesdeprecated) | **POST** /toolbox/{sandboxId}/toolbox/files/bulk-upload | [DEPRECATED] Upload multiple files|
 
-# **clickMouse**
+# **clickMouseDeprecated**
 >
-> MouseClickResponse clickMouse(mouseClickRequest)
+> MouseClickResponse clickMouseDeprecated(mouseClickRequest)
 
 Click mouse at specified coordinates
 
@@ -95,7 +95,7 @@ let sandboxId: string; // (default to undefined)
 let mouseClickRequest: MouseClickRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.clickMouse(
+const { status, data } = await apiInstance.clickMouseDeprecated(
     sandboxId,
     mouseClickRequest,
     xDaytonaOrganizationID
@@ -131,9 +131,9 @@ const { status, data } = await apiInstance.clickMouse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **createFolder**
+# **createFolderDeprecated**
 >
-> createFolder()
+> createFolderDeprecated()
 
 Create folder inside sandbox
 
@@ -153,7 +153,7 @@ let path: string; // (default to undefined)
 let mode: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.createFolder(
+const { status, data } = await apiInstance.createFolderDeprecated(
     sandboxId,
     path,
     mode,
@@ -191,9 +191,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **createPTYSession**
+# **createPTYSessionDeprecated**
 >
-> PtyCreateResponse createPTYSession(ptyCreateRequest)
+> PtyCreateResponse createPTYSessionDeprecated(ptyCreateRequest)
 
 Create a new PTY session in the sandbox
 
@@ -213,7 +213,7 @@ let sandboxId: string; // (default to undefined)
 let ptyCreateRequest: PtyCreateRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.createPTYSession(
+const { status, data } = await apiInstance.createPTYSessionDeprecated(
     sandboxId,
     ptyCreateRequest,
     xDaytonaOrganizationID
@@ -249,9 +249,9 @@ const { status, data } = await apiInstance.createPTYSession(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **createSession**
+# **createSessionDeprecated**
 >
-> createSession(createSessionRequest)
+> createSessionDeprecated(createSessionRequest)
 
 Create a new session in the sandbox
 
@@ -271,7 +271,7 @@ let sandboxId: string; // (default to undefined)
 let createSessionRequest: CreateSessionRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.createSession(
+const { status, data } = await apiInstance.createSessionDeprecated(
     sandboxId,
     createSessionRequest,
     xDaytonaOrganizationID
@@ -307,9 +307,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteFile**
+# **deleteFileDeprecated**
 >
-> deleteFile()
+> deleteFileDeprecated()
 
 Delete file inside sandbox
 
@@ -329,7 +329,7 @@ let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let recursive: boolean; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.deleteFile(
+const { status, data } = await apiInstance.deleteFileDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID,
@@ -367,9 +367,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deletePTYSession**
+# **deletePTYSessionDeprecated**
 >
-> deletePTYSession()
+> deletePTYSessionDeprecated()
 
 Delete a PTY session and terminate the associated process
 
@@ -388,7 +388,7 @@ let sandboxId: string; // (default to undefined)
 let sessionId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.deletePTYSession(
+const { status, data } = await apiInstance.deletePTYSessionDeprecated(
     sandboxId,
     sessionId,
     xDaytonaOrganizationID
@@ -424,9 +424,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **deleteSession**
+# **deleteSessionDeprecated**
 >
-> deleteSession()
+> deleteSessionDeprecated()
 
 Delete a specific session
 
@@ -445,7 +445,7 @@ let sandboxId: string; // (default to undefined)
 let sessionId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.deleteSession(
+const { status, data } = await apiInstance.deleteSessionDeprecated(
     sandboxId,
     sessionId,
     xDaytonaOrganizationID
@@ -481,9 +481,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **downloadFile**
+# **downloadFileDeprecated**
 >
-> File downloadFile()
+> File downloadFileDeprecated()
 
 Download file from sandbox
 
@@ -502,7 +502,7 @@ let sandboxId: string; // (default to undefined)
 let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.downloadFile(
+const { status, data } = await apiInstance.downloadFileDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID
@@ -538,9 +538,9 @@ const { status, data } = await apiInstance.downloadFile(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **downloadFiles**
+# **downloadFilesDeprecated**
 >
-> File downloadFiles(downloadFiles)
+> File downloadFilesDeprecated(downloadFiles)
 
 Streams back a multipart/form-data bundle of the requested paths
 
@@ -560,7 +560,7 @@ let sandboxId: string; // (default to undefined)
 let downloadFiles: DownloadFiles; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.downloadFiles(
+const { status, data } = await apiInstance.downloadFilesDeprecated(
     sandboxId,
     downloadFiles,
     xDaytonaOrganizationID
@@ -596,9 +596,9 @@ const { status, data } = await apiInstance.downloadFiles(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **dragMouse**
+# **dragMouseDeprecated**
 >
-> MouseDragResponse dragMouse(mouseDragRequest)
+> MouseDragResponse dragMouseDeprecated(mouseDragRequest)
 
 Drag mouse from start to end coordinates
 
@@ -618,7 +618,7 @@ let sandboxId: string; // (default to undefined)
 let mouseDragRequest: MouseDragRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.dragMouse(
+const { status, data } = await apiInstance.dragMouseDeprecated(
     sandboxId,
     mouseDragRequest,
     xDaytonaOrganizationID
@@ -654,9 +654,9 @@ const { status, data } = await apiInstance.dragMouse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **executeCommand**
+# **executeCommandDeprecated**
 >
-> ExecuteResponse executeCommand(executeRequest)
+> ExecuteResponse executeCommandDeprecated(executeRequest)
 
 Execute command synchronously inside sandbox
 
@@ -676,7 +676,7 @@ let sandboxId: string; // (default to undefined)
 let executeRequest: ExecuteRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.executeCommand(
+const { status, data } = await apiInstance.executeCommandDeprecated(
     sandboxId,
     executeRequest,
     xDaytonaOrganizationID
@@ -712,9 +712,9 @@ const { status, data } = await apiInstance.executeCommand(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **executeSessionCommand**
+# **executeSessionCommandDeprecated**
 >
-> SessionExecuteResponse executeSessionCommand(sessionExecuteRequest)
+> SessionExecuteResponse executeSessionCommandDeprecated(sessionExecuteRequest)
 
 Execute a command in a specific session
 
@@ -735,7 +735,7 @@ let sessionId: string; // (default to undefined)
 let sessionExecuteRequest: SessionExecuteRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.executeSessionCommand(
+const { status, data } = await apiInstance.executeSessionCommandDeprecated(
     sandboxId,
     sessionId,
     sessionExecuteRequest,
@@ -774,9 +774,9 @@ const { status, data } = await apiInstance.executeSessionCommand(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **findInFiles**
+# **findInFilesDeprecated**
 >
-> Array<Match> findInFiles()
+> Array<Match> findInFilesDeprecated()
 
 Search for text/pattern inside sandbox files
 
@@ -796,7 +796,7 @@ let path: string; // (default to undefined)
 let pattern: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.findInFiles(
+const { status, data } = await apiInstance.findInFilesDeprecated(
     sandboxId,
     path,
     pattern,
@@ -834,9 +834,9 @@ const { status, data } = await apiInstance.findInFiles(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getComputerUseStatus**
+# **getComputerUseStatusDeprecated**
 >
-> ComputerUseStatusResponse getComputerUseStatus()
+> ComputerUseStatusResponse getComputerUseStatusDeprecated()
 
 Get status of all VNC desktop processes
 
@@ -854,7 +854,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getComputerUseStatus(
+const { status, data } = await apiInstance.getComputerUseStatusDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -888,9 +888,9 @@ const { status, data } = await apiInstance.getComputerUseStatus(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getDisplayInfo**
+# **getDisplayInfoDeprecated**
 >
-> DisplayInfoResponse getDisplayInfo()
+> DisplayInfoResponse getDisplayInfoDeprecated()
 
 Get information about displays
 
@@ -908,7 +908,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getDisplayInfo(
+const { status, data } = await apiInstance.getDisplayInfoDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -942,9 +942,9 @@ const { status, data } = await apiInstance.getDisplayInfo(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getFileInfo**
+# **getFileInfoDeprecated**
 >
-> FileInfo getFileInfo()
+> FileInfo getFileInfoDeprecated()
 
 Get file info inside sandbox
 
@@ -963,7 +963,7 @@ let sandboxId: string; // (default to undefined)
 let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getFileInfo(
+const { status, data } = await apiInstance.getFileInfoDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID
@@ -999,9 +999,9 @@ const { status, data } = await apiInstance.getFileInfo(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getMousePosition**
+# **getMousePositionDeprecated**
 >
-> MousePosition getMousePosition()
+> MousePosition getMousePositionDeprecated()
 
 Get current mouse cursor position
 
@@ -1019,7 +1019,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getMousePosition(
+const { status, data } = await apiInstance.getMousePositionDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -1053,9 +1053,9 @@ const { status, data } = await apiInstance.getMousePosition(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getPTYSession**
+# **getPTYSessionDeprecated**
 >
-> PtySessionInfo getPTYSession()
+> PtySessionInfo getPTYSessionDeprecated()
 
 Get PTY session information by ID
 
@@ -1074,7 +1074,7 @@ let sandboxId: string; // (default to undefined)
 let sessionId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getPTYSession(
+const { status, data } = await apiInstance.getPTYSessionDeprecated(
     sandboxId,
     sessionId,
     xDaytonaOrganizationID
@@ -1110,9 +1110,9 @@ const { status, data } = await apiInstance.getPTYSession(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getProcessErrors**
+# **getProcessErrorsDeprecated**
 >
-> ProcessErrorsResponse getProcessErrors()
+> ProcessErrorsResponse getProcessErrorsDeprecated()
 
 Get error logs for a specific VNC process
 
@@ -1131,7 +1131,7 @@ let processName: string; // (default to undefined)
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getProcessErrors(
+const { status, data } = await apiInstance.getProcessErrorsDeprecated(
     processName,
     sandboxId,
     xDaytonaOrganizationID
@@ -1167,9 +1167,9 @@ const { status, data } = await apiInstance.getProcessErrors(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getProcessLogs**
+# **getProcessLogsDeprecated**
 >
-> ProcessLogsResponse getProcessLogs()
+> ProcessLogsResponse getProcessLogsDeprecated()
 
 Get logs for a specific VNC process
 
@@ -1188,7 +1188,7 @@ let processName: string; // (default to undefined)
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getProcessLogs(
+const { status, data } = await apiInstance.getProcessLogsDeprecated(
     processName,
     sandboxId,
     xDaytonaOrganizationID
@@ -1224,9 +1224,9 @@ const { status, data } = await apiInstance.getProcessLogs(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getProcessStatus**
+# **getProcessStatusDeprecated**
 >
-> ProcessStatusResponse getProcessStatus()
+> ProcessStatusResponse getProcessStatusDeprecated()
 
 Get status of a specific VNC process
 
@@ -1245,7 +1245,7 @@ let processName: string; // (default to undefined)
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getProcessStatus(
+const { status, data } = await apiInstance.getProcessStatusDeprecated(
     processName,
     sandboxId,
     xDaytonaOrganizationID
@@ -1281,9 +1281,9 @@ const { status, data } = await apiInstance.getProcessStatus(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getProjectDir**
+# **getProjectDirDeprecated**
 >
-> ProjectDirResponse getProjectDir()
+> ProjectDirResponse getProjectDirDeprecated()
 
 ### Example
 
@@ -1299,7 +1299,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getProjectDir(
+const { status, data } = await apiInstance.getProjectDirDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -1333,66 +1333,9 @@ const { status, data } = await apiInstance.getProjectDir(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getSession**
+# **getSessionCommandDeprecated**
 >
-> Session getSession()
-
-Get session by ID
-
-### Example
-
-```typescript
-import {
-    ToolboxApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new ToolboxApi(configuration);
-
-let sandboxId: string; // (default to undefined)
-let sessionId: string; // (default to undefined)
-let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
-
-const { status, data } = await apiInstance.getSession(
-    sandboxId,
-    sessionId,
-    xDaytonaOrganizationID
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **sandboxId** | [**string**] |  | defaults to undefined|
-| **sessionId** | [**string**] |  | defaults to undefined|
-| **xDaytonaOrganizationID** | [**string**] | Use with JWT to specify the organization ID | (optional) defaults to undefined|
-
-### Return type
-
-**Session**
-
-### Authorization
-
-[bearer](../README.md#bearer), [oauth2](../README.md#oauth2)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Session retrieved successfully |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **getSessionCommand**
->
-> Command getSessionCommand()
+> Command getSessionCommandDeprecated()
 
 Get session command by ID
 
@@ -1412,7 +1355,7 @@ let sessionId: string; // (default to undefined)
 let commandId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getSessionCommand(
+const { status, data } = await apiInstance.getSessionCommandDeprecated(
     sandboxId,
     sessionId,
     commandId,
@@ -1450,9 +1393,9 @@ const { status, data } = await apiInstance.getSessionCommand(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getSessionCommandLogs**
+# **getSessionCommandLogsDeprecated**
 >
-> string getSessionCommandLogs()
+> string getSessionCommandLogsDeprecated()
 
 Get logs for a specific command in a session
 
@@ -1473,7 +1416,7 @@ let commandId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let follow: boolean; //Whether to stream the logs (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getSessionCommandLogs(
+const { status, data } = await apiInstance.getSessionCommandLogsDeprecated(
     sandboxId,
     sessionId,
     commandId,
@@ -1513,9 +1456,66 @@ const { status, data } = await apiInstance.getSessionCommandLogs(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getUserHomeDir**
+# **getSessionDeprecated**
 >
-> UserHomeDirResponse getUserHomeDir()
+> Session getSessionDeprecated()
+
+Get session by ID
+
+### Example
+
+```typescript
+import {
+    ToolboxApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new ToolboxApi(configuration);
+
+let sandboxId: string; // (default to undefined)
+let sessionId: string; // (default to undefined)
+let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getSessionDeprecated(
+    sandboxId,
+    sessionId,
+    xDaytonaOrganizationID
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **sandboxId** | [**string**] |  | defaults to undefined|
+| **sessionId** | [**string**] |  | defaults to undefined|
+| **xDaytonaOrganizationID** | [**string**] | Use with JWT to specify the organization ID | (optional) defaults to undefined|
+
+### Return type
+
+**Session**
+
+### Authorization
+
+[bearer](../README.md#bearer), [oauth2](../README.md#oauth2)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Session retrieved successfully |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getUserHomeDirDeprecated**
+>
+> UserHomeDirResponse getUserHomeDirDeprecated()
 
 ### Example
 
@@ -1531,7 +1531,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getUserHomeDir(
+const { status, data } = await apiInstance.getUserHomeDirDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -1565,9 +1565,9 @@ const { status, data } = await apiInstance.getUserHomeDir(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getWindows**
+# **getWindowsDeprecated**
 >
-> WindowsResponse getWindows()
+> WindowsResponse getWindowsDeprecated()
 
 Get list of open windows
 
@@ -1585,7 +1585,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getWindows(
+const { status, data } = await apiInstance.getWindowsDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -1619,9 +1619,9 @@ const { status, data } = await apiInstance.getWindows(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getWorkDir**
+# **getWorkDirDeprecated**
 >
-> WorkDirResponse getWorkDir()
+> WorkDirResponse getWorkDirDeprecated()
 
 ### Example
 
@@ -1637,7 +1637,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getWorkDir(
+const { status, data } = await apiInstance.getWorkDirDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -1671,9 +1671,9 @@ const { status, data } = await apiInstance.getWorkDir(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitAddFiles**
+# **gitAddFilesDeprecated**
 >
-> gitAddFiles(gitAddRequest)
+> gitAddFilesDeprecated(gitAddRequest)
 
 Add files to git commit
 
@@ -1693,7 +1693,7 @@ let sandboxId: string; // (default to undefined)
 let gitAddRequest: GitAddRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitAddFiles(
+const { status, data } = await apiInstance.gitAddFilesDeprecated(
     sandboxId,
     gitAddRequest,
     xDaytonaOrganizationID
@@ -1729,9 +1729,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitCheckoutBranch**
+# **gitCheckoutBranchDeprecated**
 >
-> gitCheckoutBranch(gitCheckoutRequest)
+> gitCheckoutBranchDeprecated(gitCheckoutRequest)
 
 Checkout branch or commit in git repository
 
@@ -1751,7 +1751,7 @@ let sandboxId: string; // (default to undefined)
 let gitCheckoutRequest: GitCheckoutRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitCheckoutBranch(
+const { status, data } = await apiInstance.gitCheckoutBranchDeprecated(
     sandboxId,
     gitCheckoutRequest,
     xDaytonaOrganizationID
@@ -1787,9 +1787,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitCloneRepository**
+# **gitCloneRepositoryDeprecated**
 >
-> gitCloneRepository(gitCloneRequest)
+> gitCloneRepositoryDeprecated(gitCloneRequest)
 
 Clone git repository
 
@@ -1809,7 +1809,7 @@ let sandboxId: string; // (default to undefined)
 let gitCloneRequest: GitCloneRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitCloneRepository(
+const { status, data } = await apiInstance.gitCloneRepositoryDeprecated(
     sandboxId,
     gitCloneRequest,
     xDaytonaOrganizationID
@@ -1845,9 +1845,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitCommitChanges**
+# **gitCommitChangesDeprecated**
 >
-> GitCommitResponse gitCommitChanges(gitCommitRequest)
+> GitCommitResponse gitCommitChangesDeprecated(gitCommitRequest)
 
 Commit changes to git repository
 
@@ -1867,7 +1867,7 @@ let sandboxId: string; // (default to undefined)
 let gitCommitRequest: GitCommitRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitCommitChanges(
+const { status, data } = await apiInstance.gitCommitChangesDeprecated(
     sandboxId,
     gitCommitRequest,
     xDaytonaOrganizationID
@@ -1903,9 +1903,9 @@ const { status, data } = await apiInstance.gitCommitChanges(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitCreateBranch**
+# **gitCreateBranchDeprecated**
 >
-> gitCreateBranch(gitBranchRequest)
+> gitCreateBranchDeprecated(gitBranchRequest)
 
 Create branch on git repository
 
@@ -1925,7 +1925,7 @@ let sandboxId: string; // (default to undefined)
 let gitBranchRequest: GitBranchRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitCreateBranch(
+const { status, data } = await apiInstance.gitCreateBranchDeprecated(
     sandboxId,
     gitBranchRequest,
     xDaytonaOrganizationID
@@ -1961,9 +1961,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitDeleteBranch**
+# **gitDeleteBranchDeprecated**
 >
-> gitDeleteBranch(gitDeleteBranchRequest)
+> gitDeleteBranchDeprecated(gitDeleteBranchRequest)
 
 Delete branch on git repository
 
@@ -1983,7 +1983,7 @@ let sandboxId: string; // (default to undefined)
 let gitDeleteBranchRequest: GitDeleteBranchRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitDeleteBranch(
+const { status, data } = await apiInstance.gitDeleteBranchDeprecated(
     sandboxId,
     gitDeleteBranchRequest,
     xDaytonaOrganizationID
@@ -2019,9 +2019,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitGetHistory**
+# **gitGetHistoryDeprecated**
 >
-> Array<GitCommitInfo> gitGetHistory()
+> Array<GitCommitInfo> gitGetHistoryDeprecated()
 
 Get commit history from git repository
 
@@ -2040,7 +2040,7 @@ let sandboxId: string; // (default to undefined)
 let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitGetHistory(
+const { status, data } = await apiInstance.gitGetHistoryDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID
@@ -2076,9 +2076,9 @@ const { status, data } = await apiInstance.gitGetHistory(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitGetStatus**
+# **gitGetStatusDeprecated**
 >
-> GitStatus gitGetStatus()
+> GitStatus gitGetStatusDeprecated()
 
 Get status from git repository
 
@@ -2097,7 +2097,7 @@ let sandboxId: string; // (default to undefined)
 let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitGetStatus(
+const { status, data } = await apiInstance.gitGetStatusDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID
@@ -2133,9 +2133,9 @@ const { status, data } = await apiInstance.gitGetStatus(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitListBranches**
+# **gitListBranchesDeprecated**
 >
-> ListBranchResponse gitListBranches()
+> ListBranchResponse gitListBranchesDeprecated()
 
 Get branch list from git repository
 
@@ -2154,7 +2154,7 @@ let sandboxId: string; // (default to undefined)
 let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitListBranches(
+const { status, data } = await apiInstance.gitListBranchesDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID
@@ -2190,9 +2190,9 @@ const { status, data } = await apiInstance.gitListBranches(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitPullChanges**
+# **gitPullChangesDeprecated**
 >
-> gitPullChanges(gitRepoRequest)
+> gitPullChangesDeprecated(gitRepoRequest)
 
 Pull changes from remote
 
@@ -2212,7 +2212,7 @@ let sandboxId: string; // (default to undefined)
 let gitRepoRequest: GitRepoRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitPullChanges(
+const { status, data } = await apiInstance.gitPullChangesDeprecated(
     sandboxId,
     gitRepoRequest,
     xDaytonaOrganizationID
@@ -2248,9 +2248,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **gitPushChanges**
+# **gitPushChangesDeprecated**
 >
-> gitPushChanges(gitRepoRequest)
+> gitPushChangesDeprecated(gitRepoRequest)
 
 Push changes to remote
 
@@ -2270,7 +2270,7 @@ let sandboxId: string; // (default to undefined)
 let gitRepoRequest: GitRepoRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.gitPushChanges(
+const { status, data } = await apiInstance.gitPushChangesDeprecated(
     sandboxId,
     gitRepoRequest,
     xDaytonaOrganizationID
@@ -2306,9 +2306,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **listFiles**
+# **listFilesDeprecated**
 >
-> Array<FileInfo> listFiles()
+> Array<FileInfo> listFilesDeprecated()
 
 ### Example
 
@@ -2325,7 +2325,7 @@ let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let path: string; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.listFiles(
+const { status, data } = await apiInstance.listFilesDeprecated(
     sandboxId,
     xDaytonaOrganizationID,
     path
@@ -2361,9 +2361,9 @@ const { status, data } = await apiInstance.listFiles(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **listPTYSessions**
+# **listPTYSessionsDeprecated**
 >
-> PtyListResponse listPTYSessions()
+> PtyListResponse listPTYSessionsDeprecated()
 
 List all active PTY sessions in the sandbox
 
@@ -2381,7 +2381,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.listPTYSessions(
+const { status, data } = await apiInstance.listPTYSessionsDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -2415,9 +2415,9 @@ const { status, data } = await apiInstance.listPTYSessions(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **listSessions**
+# **listSessionsDeprecated**
 >
-> Array<Session> listSessions()
+> Array<Session> listSessionsDeprecated()
 
 List all active sessions in the sandbox
 
@@ -2435,7 +2435,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.listSessions(
+const { status, data } = await apiInstance.listSessionsDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -2469,9 +2469,9 @@ const { status, data } = await apiInstance.listSessions(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspCompletions**
+# **lspCompletionsDeprecated**
 >
-> CompletionList lspCompletions(lspCompletionParams)
+> CompletionList lspCompletionsDeprecated(lspCompletionParams)
 
 The Completion request is sent from the client to the server to compute completion items at a given cursor position.
 
@@ -2491,7 +2491,7 @@ let sandboxId: string; // (default to undefined)
 let lspCompletionParams: LspCompletionParams; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspCompletions(
+const { status, data } = await apiInstance.lspCompletionsDeprecated(
     sandboxId,
     lspCompletionParams,
     xDaytonaOrganizationID
@@ -2527,9 +2527,9 @@ const { status, data } = await apiInstance.lspCompletions(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspDidClose**
+# **lspDidCloseDeprecated**
 >
-> lspDidClose(lspDocumentRequest)
+> lspDidCloseDeprecated(lspDocumentRequest)
 
 The document close notification is sent from the client to the server when the document got closed in the client.
 
@@ -2549,7 +2549,7 @@ let sandboxId: string; // (default to undefined)
 let lspDocumentRequest: LspDocumentRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspDidClose(
+const { status, data } = await apiInstance.lspDidCloseDeprecated(
     sandboxId,
     lspDocumentRequest,
     xDaytonaOrganizationID
@@ -2585,9 +2585,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspDidOpen**
+# **lspDidOpenDeprecated**
 >
-> lspDidOpen(lspDocumentRequest)
+> lspDidOpenDeprecated(lspDocumentRequest)
 
 The document open notification is sent from the client to the server to signal newly opened text documents.
 
@@ -2607,7 +2607,7 @@ let sandboxId: string; // (default to undefined)
 let lspDocumentRequest: LspDocumentRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspDidOpen(
+const { status, data } = await apiInstance.lspDidOpenDeprecated(
     sandboxId,
     lspDocumentRequest,
     xDaytonaOrganizationID
@@ -2643,9 +2643,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspDocumentSymbols**
+# **lspDocumentSymbolsDeprecated**
 >
-> Array<LspSymbol> lspDocumentSymbols()
+> Array<LspSymbol> lspDocumentSymbolsDeprecated()
 
 The document symbol request is sent from the client to the server.
 
@@ -2666,7 +2666,7 @@ let pathToProject: string; // (default to undefined)
 let uri: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspDocumentSymbols(
+const { status, data } = await apiInstance.lspDocumentSymbolsDeprecated(
     sandboxId,
     languageId,
     pathToProject,
@@ -2706,9 +2706,9 @@ const { status, data } = await apiInstance.lspDocumentSymbols(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspStart**
+# **lspStartDeprecated**
 >
-> lspStart(lspServerRequest)
+> lspStartDeprecated(lspServerRequest)
 
 Start Lsp server process inside sandbox project
 
@@ -2728,7 +2728,7 @@ let sandboxId: string; // (default to undefined)
 let lspServerRequest: LspServerRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspStart(
+const { status, data } = await apiInstance.lspStartDeprecated(
     sandboxId,
     lspServerRequest,
     xDaytonaOrganizationID
@@ -2764,9 +2764,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspStop**
+# **lspStopDeprecated**
 >
-> lspStop(lspServerRequest)
+> lspStopDeprecated(lspServerRequest)
 
 Stop Lsp server process inside sandbox project
 
@@ -2786,7 +2786,7 @@ let sandboxId: string; // (default to undefined)
 let lspServerRequest: LspServerRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspStop(
+const { status, data } = await apiInstance.lspStopDeprecated(
     sandboxId,
     lspServerRequest,
     xDaytonaOrganizationID
@@ -2822,9 +2822,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **lspWorkspaceSymbols**
+# **lspWorkspaceSymbolsDeprecated**
 >
-> Array<LspSymbol> lspWorkspaceSymbols()
+> Array<LspSymbol> lspWorkspaceSymbolsDeprecated()
 
 The workspace symbol request is sent from the client to the server to list project-wide symbols matching the query string.
 
@@ -2845,7 +2845,7 @@ let pathToProject: string; // (default to undefined)
 let query: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.lspWorkspaceSymbols(
+const { status, data } = await apiInstance.lspWorkspaceSymbolsDeprecated(
     sandboxId,
     languageId,
     pathToProject,
@@ -2885,9 +2885,9 @@ const { status, data } = await apiInstance.lspWorkspaceSymbols(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **moveFile**
+# **moveFileDeprecated**
 >
-> moveFile()
+> moveFileDeprecated()
 
 Move file inside sandbox
 
@@ -2907,7 +2907,7 @@ let source: string; // (default to undefined)
 let destination: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.moveFile(
+const { status, data } = await apiInstance.moveFileDeprecated(
     sandboxId,
     source,
     destination,
@@ -2945,9 +2945,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **moveMouse**
+# **moveMouseDeprecated**
 >
-> MouseMoveResponse moveMouse(mouseMoveRequest)
+> MouseMoveResponse moveMouseDeprecated(mouseMoveRequest)
 
 Move mouse cursor to specified coordinates
 
@@ -2967,7 +2967,7 @@ let sandboxId: string; // (default to undefined)
 let mouseMoveRequest: MouseMoveRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.moveMouse(
+const { status, data } = await apiInstance.moveMouseDeprecated(
     sandboxId,
     mouseMoveRequest,
     xDaytonaOrganizationID
@@ -3003,9 +3003,9 @@ const { status, data } = await apiInstance.moveMouse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **pressHotkey**
+# **pressHotkeyDeprecated**
 >
-> pressHotkey(keyboardHotkeyRequest)
+> pressHotkeyDeprecated(keyboardHotkeyRequest)
 
 Press a hotkey combination
 
@@ -3025,7 +3025,7 @@ let sandboxId: string; // (default to undefined)
 let keyboardHotkeyRequest: KeyboardHotkeyRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.pressHotkey(
+const { status, data } = await apiInstance.pressHotkeyDeprecated(
     sandboxId,
     keyboardHotkeyRequest,
     xDaytonaOrganizationID
@@ -3061,9 +3061,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **pressKey**
+# **pressKeyDeprecated**
 >
-> pressKey(keyboardPressRequest)
+> pressKeyDeprecated(keyboardPressRequest)
 
 Press a key with optional modifiers
 
@@ -3083,7 +3083,7 @@ let sandboxId: string; // (default to undefined)
 let keyboardPressRequest: KeyboardPressRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.pressKey(
+const { status, data } = await apiInstance.pressKeyDeprecated(
     sandboxId,
     keyboardPressRequest,
     xDaytonaOrganizationID
@@ -3119,9 +3119,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **replaceInFiles**
+# **replaceInFilesDeprecated**
 >
-> Array<ReplaceResult> replaceInFiles(replaceRequest)
+> Array<ReplaceResult> replaceInFilesDeprecated(replaceRequest)
 
 Replace text/pattern in multiple files inside sandbox
 
@@ -3141,7 +3141,7 @@ let sandboxId: string; // (default to undefined)
 let replaceRequest: ReplaceRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.replaceInFiles(
+const { status, data } = await apiInstance.replaceInFilesDeprecated(
     sandboxId,
     replaceRequest,
     xDaytonaOrganizationID
@@ -3177,9 +3177,9 @@ const { status, data } = await apiInstance.replaceInFiles(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **resizePTYSession**
+# **resizePTYSessionDeprecated**
 >
-> PtySessionInfo resizePTYSession(ptyResizeRequest)
+> PtySessionInfo resizePTYSessionDeprecated(ptyResizeRequest)
 
 Resize a PTY session
 
@@ -3200,7 +3200,7 @@ let sessionId: string; // (default to undefined)
 let ptyResizeRequest: PtyResizeRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.resizePTYSession(
+const { status, data } = await apiInstance.resizePTYSessionDeprecated(
     sandboxId,
     sessionId,
     ptyResizeRequest,
@@ -3238,9 +3238,9 @@ const { status, data } = await apiInstance.resizePTYSession(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **restartProcess**
+# **restartProcessDeprecated**
 >
-> ProcessRestartResponse restartProcess()
+> ProcessRestartResponse restartProcessDeprecated()
 
 Restart a specific VNC process
 
@@ -3259,7 +3259,7 @@ let processName: string; // (default to undefined)
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.restartProcess(
+const { status, data } = await apiInstance.restartProcessDeprecated(
     processName,
     sandboxId,
     xDaytonaOrganizationID
@@ -3295,9 +3295,9 @@ const { status, data } = await apiInstance.restartProcess(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **scrollMouse**
+# **scrollMouseDeprecated**
 >
-> MouseScrollResponse scrollMouse(mouseScrollRequest)
+> MouseScrollResponse scrollMouseDeprecated(mouseScrollRequest)
 
 Scroll mouse at specified coordinates
 
@@ -3317,7 +3317,7 @@ let sandboxId: string; // (default to undefined)
 let mouseScrollRequest: MouseScrollRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.scrollMouse(
+const { status, data } = await apiInstance.scrollMouseDeprecated(
     sandboxId,
     mouseScrollRequest,
     xDaytonaOrganizationID
@@ -3353,9 +3353,9 @@ const { status, data } = await apiInstance.scrollMouse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **searchFiles**
+# **searchFilesDeprecated**
 >
-> SearchFilesResponse searchFiles()
+> SearchFilesResponse searchFilesDeprecated()
 
 Search for files inside sandbox
 
@@ -3375,7 +3375,7 @@ let path: string; // (default to undefined)
 let pattern: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.searchFiles(
+const { status, data } = await apiInstance.searchFilesDeprecated(
     sandboxId,
     path,
     pattern,
@@ -3413,9 +3413,9 @@ const { status, data } = await apiInstance.searchFiles(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **setFilePermissions**
+# **setFilePermissionsDeprecated**
 >
-> setFilePermissions()
+> setFilePermissionsDeprecated()
 
 Set file owner/group/permissions inside sandbox
 
@@ -3437,7 +3437,7 @@ let owner: string; // (optional) (default to undefined)
 let group: string; // (optional) (default to undefined)
 let mode: string; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.setFilePermissions(
+const { status, data } = await apiInstance.setFilePermissionsDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID,
@@ -3479,9 +3479,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **startComputerUse**
+# **startComputerUseDeprecated**
 >
-> ComputerUseStartResponse startComputerUse()
+> ComputerUseStartResponse startComputerUseDeprecated()
 
 Start all VNC desktop processes (Xvfb, xfce4, x11vnc, novnc)
 
@@ -3499,7 +3499,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.startComputerUse(
+const { status, data } = await apiInstance.startComputerUseDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -3533,9 +3533,9 @@ const { status, data } = await apiInstance.startComputerUse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **stopComputerUse**
+# **stopComputerUseDeprecated**
 >
-> ComputerUseStopResponse stopComputerUse()
+> ComputerUseStopResponse stopComputerUseDeprecated()
 
 Stop all VNC desktop processes (Xvfb, xfce4, x11vnc, novnc)
 
@@ -3553,7 +3553,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.stopComputerUse(
+const { status, data } = await apiInstance.stopComputerUseDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );
@@ -3587,9 +3587,9 @@ const { status, data } = await apiInstance.stopComputerUse(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **takeCompressedRegionScreenshot**
+# **takeCompressedRegionScreenshotDeprecated**
 >
-> CompressedScreenshotResponse takeCompressedRegionScreenshot()
+> CompressedScreenshotResponse takeCompressedRegionScreenshotDeprecated()
 
 Take a compressed screenshot of a specific region
 
@@ -3615,7 +3615,7 @@ let quality: number; // (optional) (default to undefined)
 let format: string; // (optional) (default to undefined)
 let showCursor: boolean; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.takeCompressedRegionScreenshot(
+const { status, data } = await apiInstance.takeCompressedRegionScreenshotDeprecated(
     sandboxId,
     height,
     width,
@@ -3665,9 +3665,9 @@ const { status, data } = await apiInstance.takeCompressedRegionScreenshot(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **takeCompressedScreenshot**
+# **takeCompressedScreenshotDeprecated**
 >
-> CompressedScreenshotResponse takeCompressedScreenshot()
+> CompressedScreenshotResponse takeCompressedScreenshotDeprecated()
 
 Take a compressed screenshot with format, quality, and scale options
 
@@ -3689,7 +3689,7 @@ let quality: number; // (optional) (default to undefined)
 let format: string; // (optional) (default to undefined)
 let showCursor: boolean; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.takeCompressedScreenshot(
+const { status, data } = await apiInstance.takeCompressedScreenshotDeprecated(
     sandboxId,
     xDaytonaOrganizationID,
     scale,
@@ -3731,9 +3731,9 @@ const { status, data } = await apiInstance.takeCompressedScreenshot(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **takeRegionScreenshot**
+# **takeRegionScreenshotDeprecated**
 >
-> RegionScreenshotResponse takeRegionScreenshot()
+> RegionScreenshotResponse takeRegionScreenshotDeprecated()
 
 Take a screenshot of a specific region
 
@@ -3756,7 +3756,7 @@ let x: number; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let showCursor: boolean; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.takeRegionScreenshot(
+const { status, data } = await apiInstance.takeRegionScreenshotDeprecated(
     sandboxId,
     height,
     width,
@@ -3800,9 +3800,9 @@ const { status, data } = await apiInstance.takeRegionScreenshot(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **takeScreenshot**
+# **takeScreenshotDeprecated**
 >
-> ScreenshotResponse takeScreenshot()
+> ScreenshotResponse takeScreenshotDeprecated()
 
 Take a screenshot of the entire screen
 
@@ -3821,7 +3821,7 @@ let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let showCursor: boolean; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.takeScreenshot(
+const { status, data } = await apiInstance.takeScreenshotDeprecated(
     sandboxId,
     xDaytonaOrganizationID,
     showCursor
@@ -3857,9 +3857,9 @@ const { status, data } = await apiInstance.takeScreenshot(
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **typeText**
+# **typeTextDeprecated**
 >
-> typeText(keyboardTypeRequest)
+> typeTextDeprecated(keyboardTypeRequest)
 
 Type text using keyboard
 
@@ -3879,7 +3879,7 @@ let sandboxId: string; // (default to undefined)
 let keyboardTypeRequest: KeyboardTypeRequest; //
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.typeText(
+const { status, data } = await apiInstance.typeTextDeprecated(
     sandboxId,
     keyboardTypeRequest,
     xDaytonaOrganizationID
@@ -3915,9 +3915,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **uploadFile**
+# **uploadFileDeprecated**
 >
-> uploadFile()
+> uploadFileDeprecated()
 
 Upload file inside sandbox
 
@@ -3937,7 +3937,7 @@ let path: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 let file: File; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.uploadFile(
+const { status, data } = await apiInstance.uploadFileDeprecated(
     sandboxId,
     path,
     xDaytonaOrganizationID,
@@ -3975,9 +3975,9 @@ void (empty response body)
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **uploadFiles**
+# **uploadFilesDeprecated**
 >
-> uploadFiles()
+> uploadFilesDeprecated()
 
 Upload multiple files inside sandbox
 
@@ -3995,7 +3995,7 @@ const apiInstance = new ToolboxApi(configuration);
 let sandboxId: string; // (default to undefined)
 let xDaytonaOrganizationID: string; //Use with JWT to specify the organization ID (optional) (default to undefined)
 
-const { status, data } = await apiInstance.uploadFiles(
+const { status, data } = await apiInstance.uploadFilesDeprecated(
     sandboxId,
     xDaytonaOrganizationID
 );

@@ -16,21 +16,8 @@ export interface CreateRunner {
   domain: string
   apiUrl: string
   proxyUrl: string
-  apiKey: string
   cpu: number
   memoryGiB: number
   diskGiB: number
-  gpu: number
-  gpuType: string
-  class: CreateRunnerClassEnum
-  region: string
-  version: string
+  regionId: string
 }
-
-export const CreateRunnerClassEnum = {
-  SMALL: 'small',
-  MEDIUM: 'medium',
-  LARGE: 'large',
-} as const
-
-export type CreateRunnerClassEnum = (typeof CreateRunnerClassEnum)[keyof typeof CreateRunnerClassEnum]

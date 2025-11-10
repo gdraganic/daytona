@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface MouseClickResponse
- */
 export interface MouseClickResponse {
-  /**
-   *
-   * @type {number}
-   * @memberof MouseClickResponse
-   */
   x?: number
-  /**
-   *
-   * @type {number}
-   * @memberof MouseClickResponse
-   */
   y?: number
 }

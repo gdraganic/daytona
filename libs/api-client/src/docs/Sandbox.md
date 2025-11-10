@@ -27,7 +27,6 @@ Name | Type | Description | Notes
 **autoStopInterval** | **number** | Auto-stop interval in minutes (0 means disabled) | [optional] [default to undefined]
 **autoArchiveInterval** | **number** | Auto-archive interval in minutes | [optional] [default to undefined]
 **autoDeleteInterval** | **number** | Auto-delete interval in minutes (negative value means disabled, 0 means delete immediately upon stopping) | [optional] [default to undefined]
-**runnerDomain** | **string** | The domain name of the runner | [optional] [default to undefined]
 **volumes** | [**Array&lt;SandboxVolume&gt;**](SandboxVolume.md) | Array of volumes attached to the sandbox | [optional] [default to undefined]
 **buildInfo** | [**BuildInfo**](BuildInfo.md) | Build information for the sandbox | [optional] [default to undefined]
 **createdAt** | **string** | The creation timestamp of the sandbox | [optional] [default to undefined]
@@ -64,7 +63,6 @@ const instance: Sandbox = {
     autoStopInterval,
     autoArchiveInterval,
     autoDeleteInterval,
-    runnerDomain,
     volumes,
     buildInfo,
     createdAt,

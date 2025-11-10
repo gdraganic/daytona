@@ -12,34 +12,12 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface MouseScrollRequest
- */
 export interface MouseScrollRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof MouseScrollRequest
-   */
   amount?: number
   /**
    * up, down
-   * @type {string}
-   * @memberof MouseScrollRequest
    */
   direction?: string
-  /**
-   *
-   * @type {number}
-   * @memberof MouseScrollRequest
-   */
   x?: number
-  /**
-   *
-   * @type {number}
-   * @memberof MouseScrollRequest
-   */
   y?: number
 }

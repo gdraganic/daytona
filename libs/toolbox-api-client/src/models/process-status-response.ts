@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ProcessStatusResponse
- */
 export interface ProcessStatusResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof ProcessStatusResponse
-   */
   processName?: string
-  /**
-   *
-   * @type {boolean}
-   * @memberof ProcessStatusResponse
-   */
   running?: boolean
 }

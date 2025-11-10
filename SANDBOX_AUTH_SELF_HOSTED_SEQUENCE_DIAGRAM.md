@@ -51,12 +51,14 @@ sequenceDiagram
 ### 1. Architecture Overview
 
 **Components:**
+
 - **Client/SDK**: User application making requests
 - **Daytona API**: Provides sandbox metadata including runner hostname
 - **Runner Service**: Hosts sandboxes and validates API keys (no central proxy)
 - **Sandbox Daemon**: Runs on port 2280 inside container
 
 **Key Difference from Public Cloud:**
+
 - No central Daytona Proxy
 - SDK connects directly to runner service
 - Each runner has its own proxy functionality built-in
@@ -65,6 +67,7 @@ sequenceDiagram
 ### 2. Runner Hostname Resolution
 
 **API Response:**
+
 ```json
 {
   "id": "sandbox-123",
@@ -76,6 +79,7 @@ sequenceDiagram
 ```
 
 **SDK URL Construction:**
+
 ```typescript
 const sandbox = await client.sandboxes.get('sandbox-123');
 // sandbox.runnerHost = "runner-001.company.net"
@@ -121,6 +125,7 @@ https://3000-sandbox-abc123.runner-001.company.net/api/workspaces
 ### 5. API Key Validation & Caching
 
 **Runner-Side Validation:**
+
 ```go
 func (r *Runner) ValidateApiKey(sandboxId, apiKey string) (bool, error) {
     // 1. Check cache first
@@ -158,16 +163,19 @@ func (r *Runner) ValidateApiKey(sandboxId, apiKey string) (bool, error) {
 ### 7. Security Considerations
 
 **API Key Validation:**
+
 - Runner validates API key on first request
 - Subsequent requests use cached validation (2 min)
 - Invalid keys return 401 Unauthorized
 
 **Network Isolation:**
+
 - Runner accessible only within company network
 - Daytona API accessible from runner (outbound only)
 - No inbound access from Daytona to runner required
 
 **Runner Authentication:**
+
 - No runner-to-runner authentication needed (direct access)
 - Only user API key validation required
 - Runner trusts Daytona API for validation
@@ -210,12 +218,14 @@ POST /api/process/exec   - Execute commands
 ### DNS Configuration
 
 **Wildcard DNS for Runner:**
+
 ```
 *.runner-001.company.net → runner-001.company.net
 *.runner-002.company.net → runner-002.company.net
 ```
 
 This allows:
+
 - `3000-sandbox-123.runner-001.company.net` → resolves to runner-001
 - `8080-sandbox-456.runner-002.company.net` → resolves to runner-002
 
@@ -339,6 +349,7 @@ runner:auth-cache:{sandboxId}:{apiKey} = true/false (TTL: 2 min)
 ### Cache Implementation
 
 **In-Memory (Single Runner Instance):**
+
 ```go
 type AuthCache struct {
     mu    sync.RWMutex
@@ -364,6 +375,7 @@ func (c *AuthCache) Get(key string) (bool, bool) {
 ```
 
 **Redis (Multiple Runner Instances):**
+
 ```go
 func (r *Runner) getCachedAuthStatus(sandboxId, apiKey string) (*bool, error) {
     key := fmt.Sprintf("runner:auth-cache:%s:%s", sandboxId, apiKey)
@@ -522,16 +534,19 @@ const sandbox = await client.sandboxes.get('sandbox-123');
 ## Performance Benefits
 
 **Latency Improvement:**
+
 - Public Cloud: Client → Proxy → Runner → Sandbox (3 hops)
 - Self-Hosted: Client → Runner → Sandbox (2 hops)
 - Reduction: ~100-200ms (eliminates proxy hop)
 
 **Network Traffic:**
+
 - All traffic stays within company network
 - No data leaves private network
 - Reduced bandwidth costs
 
 **Caching Benefits:**
+
 - First request: 1 API call to Daytona API
 - Subsequent requests (2 min): 0 API calls
 - Cache hit rate: ~95% (assuming 30s between requests)

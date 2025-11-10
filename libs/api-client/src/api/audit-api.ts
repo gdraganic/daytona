@@ -331,19 +331,6 @@ export const AuditApiFactory = function (configuration?: Configuration, basePath
 export class AuditApi extends BaseAPI {
   /**
    *
-   * @summary Create audit log entry
-   * @param {CreateAuditLog} createAuditLog
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  public createAuditLog(createAuditLog: CreateAuditLog, options?: RawAxiosRequestConfig) {
-    return AuditApiFp(this.configuration)
-      .createAuditLog(createAuditLog, options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
-   *
    * @summary Get all audit logs
    * @param {number} [page] Page number of the results
    * @param {number} [limit] Number of results per page

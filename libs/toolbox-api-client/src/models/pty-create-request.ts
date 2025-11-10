@@ -12,46 +12,14 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface PtyCreateRequest
- */
 export interface PtyCreateRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof PtyCreateRequest
-   */
   cols?: number
-  /**
-   *
-   * @type {string}
-   * @memberof PtyCreateRequest
-   */
   cwd?: string
-  /**
-   *
-   * @type {{ [key: string]: string; }}
-   * @memberof PtyCreateRequest
-   */
   envs?: { [key: string]: string }
-  /**
-   *
-   * @type {string}
-   * @memberof PtyCreateRequest
-   */
   id?: string
   /**
    * Don\'t start PTY until first client connects
-   * @type {boolean}
-   * @memberof PtyCreateRequest
    */
   lazyStart?: boolean
-  /**
-   *
-   * @type {number}
-   * @memberof PtyCreateRequest
-   */
   rows?: number
 }

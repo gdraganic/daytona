@@ -37,7 +37,6 @@ import type { UserHomeDirResponse } from '../models'
 import type { WorkDirResponse } from '../models'
 /**
  * InfoApi - axios parameter creator
- * @export
  */
 export const InfoApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -130,7 +129,6 @@ export const InfoApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * InfoApi - functional programming interface
- * @export
  */
 export const InfoApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = InfoApiAxiosParamCreator(configuration)
@@ -203,7 +201,6 @@ export const InfoApiFp = function (configuration?: Configuration) {
 
 /**
  * InfoApi - factory interface
- * @export
  */
 export const InfoApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = InfoApiFp(configuration)
@@ -240,9 +237,6 @@ export const InfoApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * InfoApi - object-oriented interface
- * @export
- * @class InfoApi
- * @extends {BaseAPI}
  */
 export class InfoApi extends BaseAPI {
   /**
@@ -250,7 +244,6 @@ export class InfoApi extends BaseAPI {
    * @summary Get user home directory
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof InfoApi
    */
   public getUserHomeDir(options?: RawAxiosRequestConfig) {
     return InfoApiFp(this.configuration)
@@ -263,7 +256,6 @@ export class InfoApi extends BaseAPI {
    * @summary Get version
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof InfoApi
    */
   public getVersion(options?: RawAxiosRequestConfig) {
     return InfoApiFp(this.configuration)
@@ -276,7 +268,6 @@ export class InfoApi extends BaseAPI {
    * @summary Get working directory
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof InfoApi
    */
   public getWorkDir(options?: RawAxiosRequestConfig) {
     return InfoApiFp(this.configuration)

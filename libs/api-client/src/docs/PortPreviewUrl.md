@@ -7,7 +7,6 @@ Name | Type | Description | Notes
 **sandboxId** | **string** | ID of the sandbox | [default to undefined]
 **url** | **string** | Preview url | [default to undefined]
 **token** | **string** | Access token | [default to undefined]
-**legacyProxyUrl** | **string** | Legacy preview url using runner domain | [optional] [default to undefined]
 
 ## Example
 
@@ -18,7 +17,6 @@ const instance: PortPreviewUrl = {
     sandboxId,
     url,
     token,
-    legacyProxyUrl,
 };
 ```
 

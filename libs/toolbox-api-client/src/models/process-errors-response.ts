@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ProcessErrorsResponse
- */
 export interface ProcessErrorsResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof ProcessErrorsResponse
-   */
   errors?: string
-  /**
-   *
-   * @type {string}
-   * @memberof ProcessErrorsResponse
-   */
   processName?: string
 }

@@ -16,94 +16,185 @@
 
 __version__ = "0.0.0-dev"
 
+# Define package exports
+__all__ = [
+    "ComputerUseApi",
+    "FileSystemApi",
+    "GitApi",
+    "InfoApi",
+    "LspApi",
+    "PortApi",
+    "ProcessApi",
+    "ApiResponse",
+    "ApiClient",
+    "Configuration",
+    "OpenApiException",
+    "ApiTypeError",
+    "ApiValueError",
+    "ApiKeyError",
+    "ApiAttributeError",
+    "ApiException",
+    "Command",
+    "CompletionContext",
+    "CompletionItem",
+    "CompletionList",
+    "ComputerUseStartResponse",
+    "ComputerUseStatusResponse",
+    "ComputerUseStopResponse",
+    "CreateSessionRequest",
+    "DisplayInfo",
+    "DisplayInfoResponse",
+    "ExecuteRequest",
+    "ExecuteResponse",
+    "FileInfo",
+    "FileStatus",
+    "FilesDownloadRequest",
+    "GitAddRequest",
+    "GitBranchRequest",
+    "GitCheckoutRequest",
+    "GitCloneRequest",
+    "GitCommitInfo",
+    "GitCommitRequest",
+    "GitCommitResponse",
+    "GitGitDeleteBranchRequest",
+    "GitRepoRequest",
+    "GitStatus",
+    "IsPortInUseResponse",
+    "KeyboardHotkeyRequest",
+    "KeyboardPressRequest",
+    "KeyboardTypeRequest",
+    "ListBranchResponse",
+    "LspCompletionParams",
+    "LspDocumentRequest",
+    "LspLocation",
+    "LspPosition",
+    "LspRange",
+    "LspServerRequest",
+    "LspSymbol",
+    "Match",
+    "MouseClickRequest",
+    "MouseClickResponse",
+    "MouseDragRequest",
+    "MouseDragResponse",
+    "MouseMoveRequest",
+    "MousePositionResponse",
+    "MouseScrollRequest",
+    "PortList",
+    "Position",
+    "ProcessErrorsResponse",
+    "ProcessLogsResponse",
+    "ProcessRestartResponse",
+    "ProcessStatus",
+    "ProcessStatusResponse",
+    "PtyCreateRequest",
+    "PtyCreateResponse",
+    "PtyListResponse",
+    "PtyResizeRequest",
+    "PtySessionInfo",
+    "ReplaceRequest",
+    "ReplaceResult",
+    "ScreenshotResponse",
+    "ScrollResponse",
+    "SearchFilesResponse",
+    "Session",
+    "SessionExecuteRequest",
+    "SessionExecuteResponse",
+    "Status",
+    "UserHomeDirResponse",
+    "WindowInfo",
+    "WindowsResponse",
+    "WorkDirResponse",
+]
+
 # import apis into sdk package
-from daytona_toolbox_api_client.api.computer_use_api import ComputerUseApi
-from daytona_toolbox_api_client.api.file_system_api import FileSystemApi
-from daytona_toolbox_api_client.api.git_api import GitApi
-from daytona_toolbox_api_client.api.info_api import InfoApi
-from daytona_toolbox_api_client.api.lsp_api import LspApi
-from daytona_toolbox_api_client.api.port_api import PortApi
-from daytona_toolbox_api_client.api.process_api import ProcessApi
+from daytona_toolbox_api_client.api.computer_use_api import ComputerUseApi as ComputerUseApi
+from daytona_toolbox_api_client.api.file_system_api import FileSystemApi as FileSystemApi
+from daytona_toolbox_api_client.api.git_api import GitApi as GitApi
+from daytona_toolbox_api_client.api.info_api import InfoApi as InfoApi
+from daytona_toolbox_api_client.api.lsp_api import LspApi as LspApi
+from daytona_toolbox_api_client.api.port_api import PortApi as PortApi
+from daytona_toolbox_api_client.api.process_api import ProcessApi as ProcessApi
 
 # import ApiClient
-from daytona_toolbox_api_client.api_response import ApiResponse
-from daytona_toolbox_api_client.api_client import ApiClient
-from daytona_toolbox_api_client.configuration import Configuration
-from daytona_toolbox_api_client.exceptions import OpenApiException
-from daytona_toolbox_api_client.exceptions import ApiTypeError
-from daytona_toolbox_api_client.exceptions import ApiValueError
-from daytona_toolbox_api_client.exceptions import ApiKeyError
-from daytona_toolbox_api_client.exceptions import ApiAttributeError
-from daytona_toolbox_api_client.exceptions import ApiException
+from daytona_toolbox_api_client.api_response import ApiResponse as ApiResponse
+from daytona_toolbox_api_client.api_client import ApiClient as ApiClient
+from daytona_toolbox_api_client.configuration import Configuration as Configuration
+from daytona_toolbox_api_client.exceptions import OpenApiException as OpenApiException
+from daytona_toolbox_api_client.exceptions import ApiTypeError as ApiTypeError
+from daytona_toolbox_api_client.exceptions import ApiValueError as ApiValueError
+from daytona_toolbox_api_client.exceptions import ApiKeyError as ApiKeyError
+from daytona_toolbox_api_client.exceptions import ApiAttributeError as ApiAttributeError
+from daytona_toolbox_api_client.exceptions import ApiException as ApiException
 
 # import models into sdk package
-from daytona_toolbox_api_client.models.command import Command
-from daytona_toolbox_api_client.models.completion_context import CompletionContext
-from daytona_toolbox_api_client.models.completion_item import CompletionItem
-from daytona_toolbox_api_client.models.completion_list import CompletionList
-from daytona_toolbox_api_client.models.computer_use_start_response import ComputerUseStartResponse
-from daytona_toolbox_api_client.models.computer_use_status_response import ComputerUseStatusResponse
-from daytona_toolbox_api_client.models.computer_use_stop_response import ComputerUseStopResponse
-from daytona_toolbox_api_client.models.create_session_request import CreateSessionRequest
-from daytona_toolbox_api_client.models.display_info import DisplayInfo
-from daytona_toolbox_api_client.models.display_info_response import DisplayInfoResponse
-from daytona_toolbox_api_client.models.execute_request import ExecuteRequest
-from daytona_toolbox_api_client.models.execute_response import ExecuteResponse
-from daytona_toolbox_api_client.models.file_info import FileInfo
-from daytona_toolbox_api_client.models.file_status import FileStatus
-from daytona_toolbox_api_client.models.files_download_request import FilesDownloadRequest
-from daytona_toolbox_api_client.models.git_add_request import GitAddRequest
-from daytona_toolbox_api_client.models.git_branch_request import GitBranchRequest
-from daytona_toolbox_api_client.models.git_checkout_request import GitCheckoutRequest
-from daytona_toolbox_api_client.models.git_clone_request import GitCloneRequest
-from daytona_toolbox_api_client.models.git_commit_info import GitCommitInfo
-from daytona_toolbox_api_client.models.git_commit_request import GitCommitRequest
-from daytona_toolbox_api_client.models.git_commit_response import GitCommitResponse
-from daytona_toolbox_api_client.models.git_git_delete_branch_request import GitGitDeleteBranchRequest
-from daytona_toolbox_api_client.models.git_repo_request import GitRepoRequest
-from daytona_toolbox_api_client.models.git_status import GitStatus
-from daytona_toolbox_api_client.models.is_port_in_use_response import IsPortInUseResponse
-from daytona_toolbox_api_client.models.keyboard_hotkey_request import KeyboardHotkeyRequest
-from daytona_toolbox_api_client.models.keyboard_press_request import KeyboardPressRequest
-from daytona_toolbox_api_client.models.keyboard_type_request import KeyboardTypeRequest
-from daytona_toolbox_api_client.models.list_branch_response import ListBranchResponse
-from daytona_toolbox_api_client.models.lsp_completion_params import LspCompletionParams
-from daytona_toolbox_api_client.models.lsp_document_request import LspDocumentRequest
-from daytona_toolbox_api_client.models.lsp_location import LspLocation
-from daytona_toolbox_api_client.models.lsp_position import LspPosition
-from daytona_toolbox_api_client.models.lsp_range import LspRange
-from daytona_toolbox_api_client.models.lsp_server_request import LspServerRequest
-from daytona_toolbox_api_client.models.lsp_symbol import LspSymbol
-from daytona_toolbox_api_client.models.match import Match
-from daytona_toolbox_api_client.models.mouse_click_request import MouseClickRequest
-from daytona_toolbox_api_client.models.mouse_click_response import MouseClickResponse
-from daytona_toolbox_api_client.models.mouse_drag_request import MouseDragRequest
-from daytona_toolbox_api_client.models.mouse_drag_response import MouseDragResponse
-from daytona_toolbox_api_client.models.mouse_move_request import MouseMoveRequest
-from daytona_toolbox_api_client.models.mouse_position_response import MousePositionResponse
-from daytona_toolbox_api_client.models.mouse_scroll_request import MouseScrollRequest
-from daytona_toolbox_api_client.models.port_list import PortList
-from daytona_toolbox_api_client.models.position import Position
-from daytona_toolbox_api_client.models.process_errors_response import ProcessErrorsResponse
-from daytona_toolbox_api_client.models.process_logs_response import ProcessLogsResponse
-from daytona_toolbox_api_client.models.process_restart_response import ProcessRestartResponse
-from daytona_toolbox_api_client.models.process_status import ProcessStatus
-from daytona_toolbox_api_client.models.process_status_response import ProcessStatusResponse
-from daytona_toolbox_api_client.models.pty_create_request import PtyCreateRequest
-from daytona_toolbox_api_client.models.pty_create_response import PtyCreateResponse
-from daytona_toolbox_api_client.models.pty_list_response import PtyListResponse
-from daytona_toolbox_api_client.models.pty_resize_request import PtyResizeRequest
-from daytona_toolbox_api_client.models.pty_session_info import PtySessionInfo
-from daytona_toolbox_api_client.models.replace_request import ReplaceRequest
-from daytona_toolbox_api_client.models.replace_result import ReplaceResult
-from daytona_toolbox_api_client.models.screenshot_response import ScreenshotResponse
-from daytona_toolbox_api_client.models.scroll_response import ScrollResponse
-from daytona_toolbox_api_client.models.search_files_response import SearchFilesResponse
-from daytona_toolbox_api_client.models.session import Session
-from daytona_toolbox_api_client.models.session_execute_request import SessionExecuteRequest
-from daytona_toolbox_api_client.models.session_execute_response import SessionExecuteResponse
-from daytona_toolbox_api_client.models.status import Status
-from daytona_toolbox_api_client.models.user_home_dir_response import UserHomeDirResponse
-from daytona_toolbox_api_client.models.window_info import WindowInfo
-from daytona_toolbox_api_client.models.windows_response import WindowsResponse
-from daytona_toolbox_api_client.models.work_dir_response import WorkDirResponse
+from daytona_toolbox_api_client.models.command import Command as Command
+from daytona_toolbox_api_client.models.completion_context import CompletionContext as CompletionContext
+from daytona_toolbox_api_client.models.completion_item import CompletionItem as CompletionItem
+from daytona_toolbox_api_client.models.completion_list import CompletionList as CompletionList
+from daytona_toolbox_api_client.models.computer_use_start_response import ComputerUseStartResponse as ComputerUseStartResponse
+from daytona_toolbox_api_client.models.computer_use_status_response import ComputerUseStatusResponse as ComputerUseStatusResponse
+from daytona_toolbox_api_client.models.computer_use_stop_response import ComputerUseStopResponse as ComputerUseStopResponse
+from daytona_toolbox_api_client.models.create_session_request import CreateSessionRequest as CreateSessionRequest
+from daytona_toolbox_api_client.models.display_info import DisplayInfo as DisplayInfo
+from daytona_toolbox_api_client.models.display_info_response import DisplayInfoResponse as DisplayInfoResponse
+from daytona_toolbox_api_client.models.execute_request import ExecuteRequest as ExecuteRequest
+from daytona_toolbox_api_client.models.execute_response import ExecuteResponse as ExecuteResponse
+from daytona_toolbox_api_client.models.file_info import FileInfo as FileInfo
+from daytona_toolbox_api_client.models.file_status import FileStatus as FileStatus
+from daytona_toolbox_api_client.models.files_download_request import FilesDownloadRequest as FilesDownloadRequest
+from daytona_toolbox_api_client.models.git_add_request import GitAddRequest as GitAddRequest
+from daytona_toolbox_api_client.models.git_branch_request import GitBranchRequest as GitBranchRequest
+from daytona_toolbox_api_client.models.git_checkout_request import GitCheckoutRequest as GitCheckoutRequest
+from daytona_toolbox_api_client.models.git_clone_request import GitCloneRequest as GitCloneRequest
+from daytona_toolbox_api_client.models.git_commit_info import GitCommitInfo as GitCommitInfo
+from daytona_toolbox_api_client.models.git_commit_request import GitCommitRequest as GitCommitRequest
+from daytona_toolbox_api_client.models.git_commit_response import GitCommitResponse as GitCommitResponse
+from daytona_toolbox_api_client.models.git_git_delete_branch_request import GitGitDeleteBranchRequest as GitGitDeleteBranchRequest
+from daytona_toolbox_api_client.models.git_repo_request import GitRepoRequest as GitRepoRequest
+from daytona_toolbox_api_client.models.git_status import GitStatus as GitStatus
+from daytona_toolbox_api_client.models.is_port_in_use_response import IsPortInUseResponse as IsPortInUseResponse
+from daytona_toolbox_api_client.models.keyboard_hotkey_request import KeyboardHotkeyRequest as KeyboardHotkeyRequest
+from daytona_toolbox_api_client.models.keyboard_press_request import KeyboardPressRequest as KeyboardPressRequest
+from daytona_toolbox_api_client.models.keyboard_type_request import KeyboardTypeRequest as KeyboardTypeRequest
+from daytona_toolbox_api_client.models.list_branch_response import ListBranchResponse as ListBranchResponse
+from daytona_toolbox_api_client.models.lsp_completion_params import LspCompletionParams as LspCompletionParams
+from daytona_toolbox_api_client.models.lsp_document_request import LspDocumentRequest as LspDocumentRequest
+from daytona_toolbox_api_client.models.lsp_location import LspLocation as LspLocation
+from daytona_toolbox_api_client.models.lsp_position import LspPosition as LspPosition
+from daytona_toolbox_api_client.models.lsp_range import LspRange as LspRange
+from daytona_toolbox_api_client.models.lsp_server_request import LspServerRequest as LspServerRequest
+from daytona_toolbox_api_client.models.lsp_symbol import LspSymbol as LspSymbol
+from daytona_toolbox_api_client.models.match import Match as Match
+from daytona_toolbox_api_client.models.mouse_click_request import MouseClickRequest as MouseClickRequest
+from daytona_toolbox_api_client.models.mouse_click_response import MouseClickResponse as MouseClickResponse
+from daytona_toolbox_api_client.models.mouse_drag_request import MouseDragRequest as MouseDragRequest
+from daytona_toolbox_api_client.models.mouse_drag_response import MouseDragResponse as MouseDragResponse
+from daytona_toolbox_api_client.models.mouse_move_request import MouseMoveRequest as MouseMoveRequest
+from daytona_toolbox_api_client.models.mouse_position_response import MousePositionResponse as MousePositionResponse
+from daytona_toolbox_api_client.models.mouse_scroll_request import MouseScrollRequest as MouseScrollRequest
+from daytona_toolbox_api_client.models.port_list import PortList as PortList
+from daytona_toolbox_api_client.models.position import Position as Position
+from daytona_toolbox_api_client.models.process_errors_response import ProcessErrorsResponse as ProcessErrorsResponse
+from daytona_toolbox_api_client.models.process_logs_response import ProcessLogsResponse as ProcessLogsResponse
+from daytona_toolbox_api_client.models.process_restart_response import ProcessRestartResponse as ProcessRestartResponse
+from daytona_toolbox_api_client.models.process_status import ProcessStatus as ProcessStatus
+from daytona_toolbox_api_client.models.process_status_response import ProcessStatusResponse as ProcessStatusResponse
+from daytona_toolbox_api_client.models.pty_create_request import PtyCreateRequest as PtyCreateRequest
+from daytona_toolbox_api_client.models.pty_create_response import PtyCreateResponse as PtyCreateResponse
+from daytona_toolbox_api_client.models.pty_list_response import PtyListResponse as PtyListResponse
+from daytona_toolbox_api_client.models.pty_resize_request import PtyResizeRequest as PtyResizeRequest
+from daytona_toolbox_api_client.models.pty_session_info import PtySessionInfo as PtySessionInfo
+from daytona_toolbox_api_client.models.replace_request import ReplaceRequest as ReplaceRequest
+from daytona_toolbox_api_client.models.replace_result import ReplaceResult as ReplaceResult
+from daytona_toolbox_api_client.models.screenshot_response import ScreenshotResponse as ScreenshotResponse
+from daytona_toolbox_api_client.models.scroll_response import ScrollResponse as ScrollResponse
+from daytona_toolbox_api_client.models.search_files_response import SearchFilesResponse as SearchFilesResponse
+from daytona_toolbox_api_client.models.session import Session as Session
+from daytona_toolbox_api_client.models.session_execute_request import SessionExecuteRequest as SessionExecuteRequest
+from daytona_toolbox_api_client.models.session_execute_response import SessionExecuteResponse as SessionExecuteResponse
+from daytona_toolbox_api_client.models.status import Status as Status
+from daytona_toolbox_api_client.models.user_home_dir_response import UserHomeDirResponse as UserHomeDirResponse
+from daytona_toolbox_api_client.models.window_info import WindowInfo as WindowInfo
+from daytona_toolbox_api_client.models.windows_response import WindowsResponse as WindowsResponse
+from daytona_toolbox_api_client.models.work_dir_response import WorkDirResponse as WorkDirResponse
+

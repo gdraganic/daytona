@@ -53,8 +53,6 @@ export interface DaytonaConfiguration {
   proxyTemplateUrl: string
   /**
    * Toolbox template URL
-   * @type {string}
-   * @memberof DaytonaConfiguration
    */
   proxyToolboxUrl: string
   /**

@@ -6,7 +6,6 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **url** | **string** | Preview url | [default to undefined]
 **token** | **string** | Access token | [default to undefined]
-**legacyProxyUrl** | **string** | Legacy preview url using runner domain | [optional] [default to undefined]
 
 ## Example
 
@@ -16,7 +15,6 @@ import { WorkspacePortPreviewUrl } from './api';
 const instance: WorkspacePortPreviewUrl = {
     url,
     token,
-    legacyProxyUrl,
 };
 ```
 

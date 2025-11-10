@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ComputerUseStatusResponse
- */
 export interface ComputerUseStatusResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof ComputerUseStatusResponse
-   */
   status?: string
 }

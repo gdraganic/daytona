@@ -43,7 +43,6 @@ import type { LspServerRequest } from '../models'
 import type { LspSymbol } from '../models'
 /**
  * LspApi - axios parameter creator
- * @export
  */
 export const LspApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -330,7 +329,6 @@ export const LspApiAxiosParamCreator = function (configuration?: Configuration) 
 
 /**
  * LspApi - functional programming interface
- * @export
  */
 export const LspApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LspApiAxiosParamCreator(configuration)
@@ -510,7 +508,6 @@ export const LspApiFp = function (configuration?: Configuration) {
 
 /**
  * LspApi - factory interface
- * @export
  */
 export const LspApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = LspApiFp(configuration)
@@ -608,9 +605,6 @@ export const LspApiFactory = function (configuration?: Configuration, basePath?:
 
 /**
  * LspApi - object-oriented interface
- * @export
- * @class LspApi
- * @extends {BaseAPI}
  */
 export class LspApi extends BaseAPI {
   /**
@@ -619,7 +613,6 @@ export class LspApi extends BaseAPI {
    * @param {LspCompletionParams} request Completion request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public completions(request: LspCompletionParams, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -633,7 +626,6 @@ export class LspApi extends BaseAPI {
    * @param {LspDocumentRequest} request Document request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public didClose(request: LspDocumentRequest, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -647,7 +639,6 @@ export class LspApi extends BaseAPI {
    * @param {LspDocumentRequest} request Document request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public didOpen(request: LspDocumentRequest, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -663,7 +654,6 @@ export class LspApi extends BaseAPI {
    * @param {string} uri Document URI
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public documentSymbols(languageId: string, pathToProject: string, uri: string, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -677,7 +667,6 @@ export class LspApi extends BaseAPI {
    * @param {LspServerRequest} request LSP server request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public start(request: LspServerRequest, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -691,7 +680,6 @@ export class LspApi extends BaseAPI {
    * @param {LspServerRequest} request LSP server request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public stop(request: LspServerRequest, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)
@@ -707,7 +695,6 @@ export class LspApi extends BaseAPI {
    * @param {string} pathToProject Path to project
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LspApi
    */
   public workspaceSymbols(query: string, languageId: string, pathToProject: string, options?: RawAxiosRequestConfig) {
     return LspApiFp(this.configuration)

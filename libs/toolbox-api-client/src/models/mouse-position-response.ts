@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface MousePositionResponse
- */
 export interface MousePositionResponse {
-  /**
-   *
-   * @type {number}
-   * @memberof MousePositionResponse
-   */
   x?: number
-  /**
-   *
-   * @type {number}
-   * @memberof MousePositionResponse
-   */
   y?: number
 }

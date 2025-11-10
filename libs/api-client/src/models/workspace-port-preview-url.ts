@@ -21,8 +21,4 @@ export interface WorkspacePortPreviewUrl {
    * Access token
    */
   token: string
-  /**
-   * Legacy preview url using runner domain
-   */
-  legacyProxyUrl?: string
 }

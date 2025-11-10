@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **domain** | **string** | The domain of the runner | [default to undefined]
 **apiUrl** | **string** | The API URL of the runner | [default to undefined]
 **proxyUrl** | **string** | The proxy URL of the runner | [default to undefined]
-**apiKey** | **string** | The API key for the runner | [default to undefined]
 **cpu** | **number** | The CPU capacity of the runner | [default to undefined]
 **memory** | **number** | The memory capacity of the runner in GiB | [default to undefined]
 **disk** | **number** | The disk capacity of the runner in GiB | [default to undefined]
@@ -23,7 +22,7 @@ Name | Type | Description | Notes
 **currentAllocatedDiskGiB** | **number** | Current allocated disk in GiB | [optional] [default to undefined]
 **currentSnapshotCount** | **number** | Current snapshot count | [optional] [default to undefined]
 **availabilityScore** | **number** | Runner availability score | [optional] [default to undefined]
-**region** | **string** | The region of the runner | [default to undefined]
+**regionId** | **string** | The region ID of the runner | [default to undefined]
 **state** | [**RunnerState**](RunnerState.md) | The state of the runner | [default to undefined]
 **lastChecked** | **string** | The last time the runner was checked | [optional] [default to undefined]
 **unschedulable** | **boolean** | Whether the runner is unschedulable | [default to undefined]
@@ -41,7 +40,6 @@ const instance: Runner = {
     domain,
     apiUrl,
     proxyUrl,
-    apiKey,
     cpu,
     memory,
     disk,
@@ -56,7 +54,7 @@ const instance: Runner = {
     currentAllocatedDiskGiB,
     currentSnapshotCount,
     availabilityScore,
-    region,
+    regionId,
     state,
     lastChecked,
     unschedulable,

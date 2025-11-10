@@ -8128,7 +8128,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getDisplayInfoDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8145,7 +8144,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getFileInfoDeprecated(
     sandboxId: string,
@@ -8166,7 +8164,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getMousePositionDeprecated(
     sandboxId: string,
@@ -8208,7 +8205,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getProcessErrorsDeprecated(
     processName: string,
@@ -8230,7 +8226,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getProcessLogsDeprecated(
     processName: string,
@@ -8252,7 +8247,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getProcessStatusDeprecated(
     processName: string,
@@ -8273,7 +8267,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getProjectDirDeprecated(sandboxId: string, xDaytonaOrganizationID?: string, options?: RawAxiosRequestConfig) {
     return ToolboxApiFp(this.configuration)
@@ -8338,7 +8331,6 @@ export class ToolboxApi extends BaseAPI {
    * @param {*} [options] Override http request option.
    * @deprecated
    * @throws {RequiredError}
-   * @memberof ToolboxApi
    */
   public getSessionDeprecated(
     sandboxId: string,

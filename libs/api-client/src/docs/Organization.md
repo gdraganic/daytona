@@ -22,6 +22,7 @@ Name | Type | Description | Notes
 **maxMemoryPerSandbox** | **number** | Max memory per sandbox | [default to undefined]
 **maxDiskPerSandbox** | **number** | Max disk per sandbox | [default to undefined]
 **sandboxLimitedNetworkEgress** | **boolean** | Sandbox default network block all | [default to undefined]
+**defaultRegionId** | **string** | Default region ID | [default to undefined]
 
 ## Example
 
@@ -47,6 +48,7 @@ const instance: Organization = {
     maxMemoryPerSandbox,
     maxDiskPerSandbox,
     sandboxLimitedNetworkEgress,
+    defaultRegionId,
 };
 ```
 

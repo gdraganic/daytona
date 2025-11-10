@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **total** | **number** |  | [default to undefined]
 **page** | **number** |  | [default to undefined]
 **totalPages** | **number** |  | [default to undefined]
+**nextToken** | **string** | Token for next page in cursor-based pagination | [optional] [default to undefined]
 
 ## Example
 
@@ -19,6 +20,7 @@ const instance: PaginatedAuditLogs = {
     total,
     page,
     totalPages,
+    nextToken,
 };
 ```
 

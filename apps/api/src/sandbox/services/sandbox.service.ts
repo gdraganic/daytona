@@ -83,6 +83,7 @@ import { JobType, ResourceType } from '../dto/job.dto'
 import { Transactional } from '../../common/decorators/transactional.decorator'
 import { DockerRegistryService } from '../../docker-registry/services/docker-registry.service'
 import { SnapshotService } from './snapshot.service'
+import { RegionService } from '../../region/services/region.service'
 
 const DEFAULT_CPU = 1
 const DEFAULT_MEMORY = 1
@@ -116,6 +117,7 @@ export class SandboxService {
     private readonly jobService: JobService,
     private readonly dockerRegistryService: DockerRegistryService,
     private readonly snapshotService: SnapshotService,
+    private readonly regionService: RegionService,
   ) {}
 
   protected getLockKey(id: string): string {
@@ -252,7 +254,7 @@ export class SandboxService {
   }
 
   async createForWarmPool(warmPoolItem: WarmPool): Promise<Sandbox> {
-    const sandbox = new Sandbox(warmPoolItem.target)
+    const sandbox = new Sandbox(warmPoolItem.regionId)
 
     sandbox.organizationId = SANDBOX_WARM_POOL_UNASSIGNED_ORGANIZATION
 
@@ -278,7 +280,7 @@ export class SandboxService {
     }
 
     const runner = await this.runnerService.getRandomAvailableRunner({
-      region: sandbox.region,
+      regionId: sandbox.regionId,
       sandboxClass: sandbox.class,
       snapshotRef: snapshot.internalName,
     })
@@ -301,7 +303,7 @@ export class SandboxService {
     let pendingDiskIncrement: number | undefined
 
     try {
-      const region = this.getValidatedOrDefaultRegion(organization, createSandboxDto.target)
+      const regionId = await this.getValidatedOrDefaultRegionId(organization, createSandboxDto.target)
       const sandboxClass = this.getValidatedOrDefaultClass(createSandboxDto.class)
 
       let snapshotIdOrName = createSandboxDto.snapshot
@@ -382,7 +384,7 @@ export class SandboxService {
         const warmPoolSandbox = await this.warmPoolService.fetchWarmPoolSandbox({
           organizationId: organization.id,
           snapshot: snapshotIdOrName,
-          target: region,
+          regionId: regionId,
           class: createSandboxDto.class,
           cpu: cpu,
           mem: mem,
@@ -401,12 +403,12 @@ export class SandboxService {
       }
 
       const runner = await this.runnerService.getRandomAvailableRunner({
-        region,
+        regionId,
         sandboxClass,
         snapshotRef: snapshot.internalName,
       })
 
-      const sandbox = new Sandbox(region, createSandboxDto.name)
+      const sandbox = new Sandbox(regionId, createSandboxDto.name)
 
       sandbox.organizationId = organization.id
 
@@ -595,7 +597,7 @@ export class SandboxService {
     let pendingDiskIncrement: number | undefined
 
     try {
-      const region = this.getValidatedOrDefaultRegion(organization, createSandboxDto.target)
+      const regionId = await this.getValidatedOrDefaultRegionId(organization, createSandboxDto.target)
       const sandboxClass = this.getValidatedOrDefaultClass(createSandboxDto.class)
 
       const cpu = createSandboxDto.cpu || DEFAULT_CPU
@@ -623,7 +625,7 @@ export class SandboxService {
         await this.volumeService.validateVolumes(organization.id, volumeIdOrNames)
       }
 
-      const sandbox = new Sandbox(region, createSandboxDto.name)
+      const sandbox = new Sandbox(regionId, createSandboxDto.name)
 
       sandbox.organizationId = organization.id
 
@@ -687,7 +689,7 @@ export class SandboxService {
 
       try {
         runner = await this.runnerService.getRandomAvailableRunner({
-          region: sandbox.region,
+          regionId: sandbox.regionId,
           sandboxClass: sandbox.class,
           snapshotRef: sandbox.buildInfo.snapshotRef,
         })
@@ -822,7 +824,7 @@ export class SandboxService {
       includeErroredDestroyed?: boolean
       states?: SandboxState[]
       snapshots?: string[]
-      regions?: string[]
+      regionIds?: string[]
       minCpu?: number
       maxCpu?: number
       minMemoryGiB?: number
@@ -847,7 +849,7 @@ export class SandboxService {
       includeErroredDestroyed,
       states,
       snapshots,
-      regions,
+      regionIds,
       minCpu,
       maxCpu,
       minMemoryGiB,
@@ -867,7 +869,7 @@ export class SandboxService {
       ...(name ? { name: ILike(`${name}%`) } : {}),
       ...(labels ? { labels: JsonContains(labels) } : {}),
       ...(snapshots ? { snapshot: In(snapshots) } : {}),
-      ...(regions ? { region: In(regions) } : {}),
+      ...(regionIds ? { regionId: In(regionIds) } : {}),
     }
 
     baseFindOptions.cpu = createRangeFilter(minCpu, maxCpu)
@@ -875,21 +877,28 @@ export class SandboxService {
     baseFindOptions.disk = createRangeFilter(minDiskGiB, maxDiskGiB)
     baseFindOptions.lastActivityAt = createRangeFilter(lastEventAfter, lastEventBefore)
 
-    const filteredStates = (states || Object.values(SandboxState)).filter((state) => state !== SandboxState.DESTROYED)
+    const statesToInclude = (states || Object.values(SandboxState)).filter((state) => state !== SandboxState.DESTROYED)
     const errorStates = [SandboxState.ERROR, SandboxState.BUILD_FAILED]
-    const filteredWithoutErrorStates = filteredStates.filter((state) => !errorStates.includes(state))
 
-    const where: FindOptionsWhere<Sandbox>[] = [
-      {
+    const nonErrorStatesToInclude = statesToInclude.filter((state) => !errorStates.includes(state))
+    const errorStatesToInclude = statesToInclude.filter((state) => errorStates.includes(state))
+
+    const where: FindOptionsWhere<Sandbox>[] = []
+
+    if (nonErrorStatesToInclude.length > 0) {
+      where.push({
         ...baseFindOptions,
-        state: In(filteredWithoutErrorStates),
-      },
-      {
+        state: In(nonErrorStatesToInclude),
+      })
+    }
+
+    if (errorStatesToInclude.length > 0) {
+      where.push({
         ...baseFindOptions,
-        state: In(errorStates),
+        state: In(errorStatesToInclude),
         ...(includeErroredDestroyed ? {} : { desiredState: Not(SandboxDesiredState.DESTROYED) }),
-      },
-    ]
+      })
+    }
 
     const [items, total] = await this.sandboxRepository.findAndCount({
       where,
@@ -1247,12 +1256,23 @@ export class SandboxService {
     }
   }
 
-  private getValidatedOrDefaultRegion(organization: Organization, region?: string): string {
-    if (!region || region.trim().length === 0) {
-      return organization.defaultRegion
+  private async getValidatedOrDefaultRegionId(organization: Organization, target?: string): Promise<string> {
+    target = target?.trim()
+
+    if (!target) {
+      return organization.defaultRegionId
     }
 
-    return region.trim()
+    let region = await this.regionService.findOne(target)
+    if (!region) {
+      region = await this.regionService.findOneByName(target, organization.id)
+    }
+
+    if (!region) {
+      throw new NotFoundException('Region not found')
+    }
+
+    return region.id
   }
 
   private getValidatedOrDefaultClass(sandboxClass: SandboxClass): SandboxClass {

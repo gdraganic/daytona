@@ -55,7 +55,6 @@ import type { GitStatus } from '../models'
 import type { ListBranchResponse } from '../models'
 /**
  * GitApi - axios parameter creator
- * @export
  */
 export const GitApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -444,7 +443,6 @@ export const GitApiAxiosParamCreator = function (configuration?: Configuration) 
 
 /**
  * GitApi - functional programming interface
- * @export
  */
 export const GitApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = GitApiAxiosParamCreator(configuration)
@@ -706,7 +704,6 @@ export const GitApiFp = function (configuration?: Configuration) {
 
 /**
  * GitApi - factory interface
- * @export
  */
 export const GitApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = GitApiFp(configuration)
@@ -826,9 +823,6 @@ export const GitApiFactory = function (configuration?: Configuration, basePath?:
 
 /**
  * GitApi - object-oriented interface
- * @export
- * @class GitApi
- * @extends {BaseAPI}
  */
 export class GitApi extends BaseAPI {
   /**
@@ -837,7 +831,6 @@ export class GitApi extends BaseAPI {
    * @param {GitAddRequest} request Add files request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public addFiles(request: GitAddRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -851,7 +844,6 @@ export class GitApi extends BaseAPI {
    * @param {GitCheckoutRequest} request Checkout request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public checkoutBranch(request: GitCheckoutRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -865,7 +857,6 @@ export class GitApi extends BaseAPI {
    * @param {GitCloneRequest} request Clone repository request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public cloneRepository(request: GitCloneRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -879,7 +870,6 @@ export class GitApi extends BaseAPI {
    * @param {GitCommitRequest} request Commit request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public commitChanges(request: GitCommitRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -893,7 +883,6 @@ export class GitApi extends BaseAPI {
    * @param {GitBranchRequest} request Create branch request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public createBranch(request: GitBranchRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -907,7 +896,6 @@ export class GitApi extends BaseAPI {
    * @param {GitGitDeleteBranchRequest} request Delete branch request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public deleteBranch(request: GitGitDeleteBranchRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -921,7 +909,6 @@ export class GitApi extends BaseAPI {
    * @param {string} path Repository path
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public getCommitHistory(path: string, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -935,7 +922,6 @@ export class GitApi extends BaseAPI {
    * @param {string} path Repository path
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public getStatus(path: string, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -949,7 +935,6 @@ export class GitApi extends BaseAPI {
    * @param {string} path Repository path
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public listBranches(path: string, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -963,7 +948,6 @@ export class GitApi extends BaseAPI {
    * @param {GitRepoRequest} request Pull request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public pullChanges(request: GitRepoRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)
@@ -977,7 +961,6 @@ export class GitApi extends BaseAPI {
    * @param {GitRepoRequest} request Push request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof GitApi
    */
   public pushChanges(request: GitRepoRequest, options?: RawAxiosRequestConfig) {
     return GitApiFp(this.configuration)

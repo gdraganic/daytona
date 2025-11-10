@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface GitCommitResponse
- */
 export interface GitCommitResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof GitCommitResponse
-   */
   hash: string
 }

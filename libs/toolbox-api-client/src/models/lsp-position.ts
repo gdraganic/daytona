@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface LspPosition
- */
 export interface LspPosition {
-  /**
-   *
-   * @type {number}
-   * @memberof LspPosition
-   */
   character: number
-  /**
-   *
-   * @type {number}
-   * @memberof LspPosition
-   */
   line: number
 }

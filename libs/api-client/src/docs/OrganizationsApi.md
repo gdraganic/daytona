@@ -33,7 +33,7 @@ All URIs are relative to _http://localhost:3000_
 
 # **acceptOrganizationInvitation**
 >
-> acceptOrganizationInvitation()
+> OrganizationInvitation acceptOrganizationInvitation()
 
 ### Example
 
@@ -61,7 +61,7 @@ const { status, data } = await apiInstance.acceptOrganizationInvitation(
 
 ### Return type
 
-void (empty response body)
+**OrganizationInvitation**
 
 ### Authorization
 
@@ -70,7 +70,7 @@ void (empty response body)
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: application/json
 
 ### HTTP response details
 

@@ -45,7 +45,6 @@ import type { ReplaceResult } from '../models'
 import type { SearchFilesResponse } from '../models'
 /**
  * FileSystemApi - axios parameter creator
- * @export
  */
 export const FileSystemApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -574,7 +573,6 @@ export const FileSystemApiAxiosParamCreator = function (configuration?: Configur
 
 /**
  * FileSystemApi - functional programming interface
- * @export
  */
 export const FileSystemApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = FileSystemApiAxiosParamCreator(configuration)
@@ -899,7 +897,6 @@ export const FileSystemApiFp = function (configuration?: Configuration) {
 
 /**
  * FileSystemApi - factory interface
- * @export
  */
 export const FileSystemApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = FileSystemApiFp(configuration)
@@ -1058,9 +1055,6 @@ export const FileSystemApiFactory = function (configuration?: Configuration, bas
 
 /**
  * FileSystemApi - object-oriented interface
- * @export
- * @class FileSystemApi
- * @extends {BaseAPI}
  */
 export class FileSystemApi extends BaseAPI {
   /**
@@ -1070,7 +1064,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} mode Octal permission mode (default: 0755)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public createFolder(path: string, mode: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1085,7 +1078,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {boolean} [recursive] Enable recursive deletion for directories
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public deleteFile(path: string, recursive?: boolean, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1099,7 +1091,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} path File path to download
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public downloadFile(path: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1113,7 +1104,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {FilesDownloadRequest} downloadFiles Paths of files to download
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public downloadFiles(downloadFiles: FilesDownloadRequest, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1128,7 +1118,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} pattern Text pattern to search for
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public findInFiles(path: string, pattern: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1142,7 +1131,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} path File or directory path
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public getFileInfo(path: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1156,7 +1144,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} [path] Directory path to list (defaults to working directory)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public listFiles(path?: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1171,7 +1158,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} destination Destination file or directory path
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public moveFile(source: string, destination: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1185,7 +1171,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {ReplaceRequest} request Replace request
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public replaceInFiles(request: ReplaceRequest, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1200,7 +1185,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} pattern File pattern to match (e.g., *.txt, *.go)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public searchFiles(path: string, pattern: string, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1217,7 +1201,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {string} [mode] File mode in octal format (e.g., 0755)
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public setFilePermissions(
     path: string,
@@ -1238,7 +1221,6 @@ export class FileSystemApi extends BaseAPI {
    * @param {File} file File to upload
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public uploadFile(path: string, file: File, options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
@@ -1251,7 +1233,6 @@ export class FileSystemApi extends BaseAPI {
    * @summary Upload multiple files
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof FileSystemApi
    */
   public uploadFiles(options?: RawAxiosRequestConfig) {
     return FileSystemApiFp(this.configuration)
