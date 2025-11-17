@@ -65,6 +65,10 @@ func InitTracer() (*sdktrace.TracerProvider, error) {
 
 // ShutdownTracer gracefully shuts down the tracer provider
 func ShutdownTracer(tp *sdktrace.TracerProvider) {
+	if tp == nil {
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 

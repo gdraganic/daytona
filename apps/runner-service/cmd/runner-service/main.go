@@ -44,19 +44,25 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Initialize OpenTelemetry tracing (sets up global propagator)
-	tp, err := telemetry.InitTracer()
-	if err != nil {
-		log.Error("Failed to initialize tracer", "error", err)
-	}
-	defer telemetry.ShutdownTracer(tp)
-
 	log.Info("Configuration loaded",
 		slog.String("api_url", cfg.APIURL),
 		slog.Duration("poll_timeout", cfg.PollTimeout),
 		slog.Int("poll_limit", cfg.PollLimit),
 		slog.Duration("healthcheck_interval", cfg.HealthcheckInterval),
-		slog.Bool("metrics_enabled", cfg.MetricsEnabled))
+		slog.Bool("metrics_enabled", cfg.MetricsEnabled),
+		slog.Bool("otel_enabled", cfg.OtelEnabled))
+
+	// Initialize OpenTelemetry tracing if enabled
+	var tp trace.TracerProvider
+	if cfg.OtelEnabled {
+		tracerProvider, err := telemetry.InitTracer()
+		if err != nil {
+			log.Error("Failed to initialize tracer", "error", err)
+		} else {
+			tp = tracerProvider
+			defer telemetry.ShutdownTracer(tracerProvider)
+		}
+	}
 
 	// Create API client with OpenTelemetry instrumentation
 	// The otelhttp.NewTransport automatically propagates trace context via HTTP headers

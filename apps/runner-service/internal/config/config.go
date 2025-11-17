@@ -6,107 +6,53 @@
 package config
 
 import (
-	"fmt"
-	"os"
 	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/kelseyhightower/envconfig"
 )
 
 // Config holds the runner configuration
 type Config struct {
 	// API Configuration
-	APIURL string
-	APIKey string
+	APIURL string `envconfig:"DAYTONA_API_URL" validate:"required"`
+	APIKey string `envconfig:"DAYTONA_RUNNER_TOKEN" validate:"required"`
 
 	// Job Polling Configuration
-	PollTimeout time.Duration
-	PollLimit   int
+	PollTimeout time.Duration `envconfig:"POLL_TIMEOUT" default:"30s"`
+	PollLimit   int           `envconfig:"POLL_LIMIT" default:"10" validate:"min=1,max=100"`
 
 	// Healthcheck Configuration
-	HealthcheckInterval time.Duration
-	HealthcheckTimeout  time.Duration
+	HealthcheckInterval time.Duration `envconfig:"HEALTHCHECK_INTERVAL" default:"30s" validate:"min=10s"`
+	HealthcheckTimeout  time.Duration `envconfig:"HEALTHCHECK_TIMEOUT" default:"10s"`
 
 	// Metrics Configuration
-	MetricsEnabled bool
+	MetricsEnabled bool `envconfig:"METRICS_ENABLED" default:"false"`
+
+	// Telemetry Configuration
+	OtelEnabled bool `envconfig:"OTEL_ENABLED" default:"false"`
 }
+
+var config *Config
 
 // LoadFromEnv loads configuration from environment variables
 func LoadFromEnv() (*Config, error) {
-	cfg := &Config{
-		// Required
-		APIURL: getEnv("API_URL", ""),
-		APIKey: getEnv("API_KEY", ""),
-
-		// Job Polling
-		PollTimeout: getDurationEnv("POLL_TIMEOUT", 30*time.Second),
-		PollLimit:   getIntEnv("POLL_LIMIT", 10),
-
-		// Healthcheck
-		HealthcheckInterval: getDurationEnv("HEALTHCHECK_INTERVAL", 30*time.Second),
-		HealthcheckTimeout:  getDurationEnv("HEALTHCHECK_TIMEOUT", 10*time.Second),
-
-		// Metrics
-		MetricsEnabled: getBoolEnv("METRICS_ENABLED", true),
+	if config != nil {
+		return config, nil
 	}
 
-	if err := cfg.Validate(); err != nil {
+	config = &Config{}
+
+	err := envconfig.Process("", config)
+	if err != nil {
 		return nil, err
 	}
 
-	return cfg, nil
-}
-
-// Validate checks if the configuration is valid
-func (c *Config) Validate() error {
-	if c.APIURL == "" {
-		return fmt.Errorf("API_URL is required")
-	}
-	if c.APIKey == "" {
-		return fmt.Errorf("API_KEY is required")
-	}
-	if c.PollLimit < 1 || c.PollLimit > 100 {
-		return fmt.Errorf("POLL_LIMIT must be between 1 and 100")
-	}
-	if c.PollTimeout < time.Second || c.PollTimeout > 60*time.Second {
-		return fmt.Errorf("POLL_TIMEOUT must be between 1s and 60s")
-	}
-	if c.HealthcheckInterval < 10*time.Second {
-		return fmt.Errorf("HEALTHCHECK_INTERVAL must be at least 10s")
+	var validate = validator.New()
+	err = validate.Struct(config)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
-}
-
-// Helper functions
-
-func getEnv(key, defaultValue string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-	return defaultValue
-}
-
-func getIntEnv(key string, defaultValue int) int {
-	if value := os.Getenv(key); value != "" {
-		var intVal int
-		if _, err := fmt.Sscanf(value, "%d", &intVal); err == nil {
-			return intVal
-		}
-	}
-	return defaultValue
-}
-
-func getBoolEnv(key string, defaultValue bool) bool {
-	if value := os.Getenv(key); value != "" {
-		return value == "true" || value == "1" || value == "yes"
-	}
-	return defaultValue
-}
-
-func getDurationEnv(key string, defaultValue time.Duration) time.Duration {
-	if value := os.Getenv(key); value != "" {
-		if duration, err := time.ParseDuration(value); err == nil {
-			return duration
-		}
-	}
-	return defaultValue
+	return config, nil
 }

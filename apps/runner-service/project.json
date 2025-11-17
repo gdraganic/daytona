@@ -21,7 +21,7 @@
       "executor": "@nx-go/nx-go:build",
       "options": {
         "main": "{projectRoot}/cmd/runner-service/main.go",
-        "outputPath": "dist/apps/runner-service"
+        "outputPath": "dist/apps/runner-service/bin/runner"
       },
       "configurations": {
         "production": {
@@ -34,7 +34,7 @@
       "executor": "@nx-go/nx-go:build",
       "options": {
         "main": "{projectRoot}/cmd/runner-service/main.go",
-        "outputPath": "dist/apps/runner-service-amd64",
+        "outputPath": "dist/apps/runner-service/bin/runner-amd64",
         "env": {
           "GOARCH": "amd64"
         }
@@ -67,6 +67,23 @@
     },
     "lint": {
       "executor": "@nx-go/nx-go:lint"
+    },
+    "package-deb": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "mkdir -p dist/apps/runner-service/deb/opt/daytona",
+          "mkdir -p dist/apps/runner-service/deb/etc/systemd/system",
+          "mkdir -p dist/apps/runner-service/deb/DEBIAN",
+          "cp dist/apps/runner-service/bin/runner dist/apps/runner-service/deb/opt/daytona/runner",
+          "cp {projectRoot}/packaging/systemd/daytona-runner.service dist/apps/runner-service/deb/etc/systemd/system/",
+          "cp {projectRoot}/packaging/deb/DEBIAN/postinst {projectRoot}/packaging/deb/DEBIAN/prerm {projectRoot}/packaging/deb/DEBIAN/postrm dist/apps/runner-service/deb/DEBIAN/",
+          "VERSION=${VERSION:-0.1.0} envsubst < {projectRoot}/packaging/deb/DEBIAN/control > dist/apps/runner-service/deb/DEBIAN/control",
+          "dpkg-deb --build dist/apps/runner-service/deb dist/apps/runner-service/daytona-runner_${VERSION:-0.1.0}_amd64.deb"
+        ],
+        "parallel": false
+      },
+      "dependsOn": ["build"]
     }
   }
 }
