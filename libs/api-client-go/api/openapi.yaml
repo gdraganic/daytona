@@ -9472,27 +9472,15 @@ components:
       type: object
     CreateRunner:
       example:
-        apiUrl: apiUrl
         regionId: regionId
-        proxyUrl: proxyUrl
-        domain: domain
         name: name
       properties:
-        domain:
-          type: string
-        apiUrl:
-          type: string
-        proxyUrl:
-          type: string
         regionId:
           type: string
         name:
           type: string
       required:
-        - apiUrl
-        - domain
         - name
-        - proxyUrl
         - regionId
       type: object
     CreateRunnerResponse:

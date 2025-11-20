@@ -24,10 +24,7 @@ import { Plus, Copy } from 'lucide-react'
 import { getMaskedToken } from '@/lib/utils'
 
 const DEFAULT_FORM_DATA = {
-  domain: '',
   name: '',
-  apiUrl: '',
-  proxyUrl: '',
   regionId: '',
 }
 
@@ -56,10 +53,6 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
   const validateForm = () => {
     const errors: Record<string, string> = {}
 
-    if (!formData.domain.trim()) {
-      errors.domain = 'Domain is required'
-    }
-
     if (!formData.name.trim()) {
       errors.name = 'Name is required'
     }
@@ -80,10 +73,7 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
     setLoading(true)
     try {
       const runner = await onCreateRunner({
-        domain: formData.domain,
         name: formData.name,
-        apiUrl: formData.apiUrl,
-        proxyUrl: formData.proxyUrl,
         regionId: formData.regionId,
       })
       if (runner) {
@@ -195,23 +185,6 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
                 </SelectContent>
               </Select>
               {formErrors.regionId && <p className="text-sm text-destructive">{formErrors.regionId}</p>}
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="domain">Domain</Label>
-              <Input
-                id="domain"
-                value={formData.domain}
-                onChange={(e) => {
-                  setFormData((prev) => ({ ...prev, domain: e.target.value }))
-                  if (formErrors.domain) {
-                    setFormErrors((prev) => ({ ...prev, domain: '' }))
-                  }
-                }}
-                placeholder="runner.example.com"
-                className={formErrors.domain ? 'border-destructive' : ''}
-              />
-              {formErrors.domain && <p className="text-sm text-destructive">{formErrors.domain}</p>}
             </div>
 
             <div className="space-y-3">

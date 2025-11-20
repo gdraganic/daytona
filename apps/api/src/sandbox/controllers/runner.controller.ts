@@ -67,9 +67,6 @@ export class RunnerController {
     targetIdFromResult: (result: CreateRunnerResponseDto) => result?.id,
     requestMetadata: {
       body: (req: TypedRequest<CreateRunnerDto>) => ({
-        domain: req.body?.domain,
-        apiUrl: req.body?.apiUrl,
-        proxyUrl: req.body?.proxyUrl,
         regionId: req.body?.regionId,
         name: req.body?.name,
       }),
@@ -84,9 +81,10 @@ export class RunnerController {
   ): Promise<CreateRunnerResponseDto> {
     const { runner, token } = await this.runnerService.create(
       {
-        domain: createRunnerDto.domain,
-        apiUrl: createRunnerDto.apiUrl,
-        proxyUrl: createRunnerDto.proxyUrl,
+        // domain random string HACK: TODO: remove this
+        domain: crypto.randomUUID(),
+        apiUrl: '',
+        proxyUrl: '',
         cpu: -1,
         memoryGiB: -1,
         diskGiB: -1,

@@ -13,9 +13,6 @@
  */
 
 export interface CreateRunner {
-  domain: string
-  apiUrl: string
-  proxyUrl: string
   regionId: string
   name: string
 }

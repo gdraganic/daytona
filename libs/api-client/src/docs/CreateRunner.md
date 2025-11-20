@@ -4,9 +4,6 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**domain** | **string** |  | [default to undefined]
-**apiUrl** | **string** |  | [default to undefined]
-**proxyUrl** | **string** |  | [default to undefined]
 **regionId** | **string** |  | [default to undefined]
 **name** | **string** |  | [default to undefined]
 
@@ -16,9 +13,6 @@ Name | Type | Description | Notes
 import { CreateRunner } from './api';
 
 const instance: CreateRunner = {
-    domain,
-    apiUrl,
-    proxyUrl,
     regionId,
     name,
 };
