@@ -1,4 +1,6 @@
 {
+  "header.copyForLlms": "Copy for LLM",
+  "header.viewAsMarkdown": "View as Markdown",
   "footer.needHelp": "Need help?",
   "footer.reachSupport": "Reach support",
   "footer.latestUpdates": "Latest project updates?",
@@ -99,6 +101,8 @@
   "sidebarconfig.dataAnalysis": "Data Analysis with AI",
   "sidebarconfig.ossDeployment": "Open Source",
   "sidebarconfig.deployments": "Deployments",
+  "sidebarconfig.integrations": "Integrations",
+  "sidebarconfig.langchainIntegrations": "LangChain",
   "sidebarconfig.pty": "Pseudo Terminal (PTY)",
   "sidebarconfig.ptyDescription": "Learn how to manage PTY sessions in your Sandboxes using the Daytona SDK."
 }

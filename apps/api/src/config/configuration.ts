@@ -160,6 +160,7 @@ const configuration = {
     gpuType: process.env.DEFAULT_RUNNER_GPU_TYPE,
     class: process.env.DEFAULT_RUNNER_CLASS ? (process.env.DEFAULT_RUNNER_CLASS as SandboxClass) : undefined,
     version: process.env.DEFAULT_RUNNER_VERSION || '0',
+    name: process.env.DEFAULT_RUNNER_NAME || 'default',
   },
   runnerUsage: {
     declarativeBuildScoreThreshold: parseInt(process.env.RUNNER_DECLARATIVE_BUILD_SCORE_THRESHOLD || '60', 10),
@@ -217,6 +218,7 @@ const configuration = {
     maxSnapshotSize: parseInt(process.env.ADMIN_MAX_SNAPSHOT_SIZE || '100', 10),
     volumeQuota: parseInt(process.env.ADMIN_VOLUME_QUOTA || '0', 10),
   },
+  skipUserEmailVerification: process.env.SKIP_USER_EMAIL_VERIFICATION === 'true',
 }
 
 export { configuration }

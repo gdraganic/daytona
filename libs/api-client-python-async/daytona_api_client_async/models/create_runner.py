@@ -18,8 +18,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,12 +30,10 @@ class CreateRunner(BaseModel):
     domain: StrictStr
     api_url: StrictStr = Field(alias="apiUrl")
     proxy_url: StrictStr = Field(alias="proxyUrl")
-    cpu: Union[StrictFloat, StrictInt]
-    memory_gi_b: Union[StrictFloat, StrictInt] = Field(alias="memoryGiB")
-    disk_gi_b: Union[StrictFloat, StrictInt] = Field(alias="diskGiB")
     region_id: StrictStr = Field(alias="regionId")
+    name: StrictStr
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["domain", "apiUrl", "proxyUrl", "cpu", "memoryGiB", "diskGiB", "regionId"]
+    __properties: ClassVar[List[str]] = ["domain", "apiUrl", "proxyUrl", "regionId", "name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -98,10 +96,8 @@ class CreateRunner(BaseModel):
             "domain": obj.get("domain"),
             "apiUrl": obj.get("apiUrl"),
             "proxyUrl": obj.get("proxyUrl"),
-            "cpu": obj.get("cpu"),
-            "memoryGiB": obj.get("memoryGiB"),
-            "diskGiB": obj.get("diskGiB"),
-            "regionId": obj.get("regionId")
+            "regionId": obj.get("regionId"),
+            "name": obj.get("name")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

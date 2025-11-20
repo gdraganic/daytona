@@ -16,8 +16,6 @@ export interface CreateRunner {
   domain: string
   apiUrl: string
   proxyUrl: string
-  cpu: number
-  memoryGiB: number
-  diskGiB: number
   regionId: string
+  name: string
 }

@@ -83,20 +83,22 @@ export class SandboxStartAction extends SandboxAction {
 
         const sandboxInfo = await runnerAdapter.sandboxInfo(sandbox.id)
         if (sandboxInfo.state === SandboxState.STARTED) {
-          const sandboxToUpdate = await this.sandboxRepository.findOneByOrFail({
-            id: sandbox.id,
-          })
-          sandboxToUpdate.state = SandboxState.STARTED
-          sandboxToUpdate.setBackupState(BackupState.NONE)
-
+          let daemonVersion: string | undefined
           try {
-            const daemonVersion = await runnerAdapter.getSandboxDaemonVersion(sandbox.id)
-            sandboxToUpdate.daemonVersion = daemonVersion
+            daemonVersion = await runnerAdapter.getSandboxDaemonVersion(sandbox.id)
           } catch (error) {
             this.logger.error(`Failed to get sandbox daemon version for sandbox ${sandbox.id}:`, error)
           }
 
-          await this.sandboxRepository.save(sandboxToUpdate)
+          await this.updateSandboxState(
+            sandbox.id,
+            SandboxState.STARTED,
+            lockCode,
+            undefined,
+            undefined,
+            daemonVersion,
+            BackupState.NONE,
+          )
           return DONT_SYNC_AGAIN
         }
       }
@@ -384,7 +386,13 @@ export class SandboxStartAction extends SandboxAction {
     if (sandboxInfo.state === SandboxState.PULLING_SNAPSHOT) {
       await this.updateSandboxState(sandbox.id, SandboxState.PULLING_SNAPSHOT, lockCode)
     } else if (sandboxInfo.state === SandboxState.ERROR) {
-      await this.updateSandboxState(sandbox.id, SandboxState.ERROR, lockCode)
+      await this.updateSandboxState(
+        sandbox.id,
+        SandboxState.ERROR,
+        lockCode,
+        undefined,
+        'Sandbox is in error state on runner',
+      )
     } else if (sandboxInfo.state === SandboxState.UNKNOWN) {
       await this.updateSandboxState(sandbox.id, SandboxState.UNKNOWN, lockCode)
     } else {
@@ -412,17 +420,15 @@ export class SandboxStartAction extends SandboxAction {
 
         //  if previous backup state is error or completed, set backup state to none
         if ([BackupState.ERROR, BackupState.COMPLETED].includes(sandbox.backupState)) {
-          sandbox.setBackupState(BackupState.NONE)
-
-          const sandboxToUpdate = await this.sandboxRepository.findOneByOrFail({
-            id: sandbox.id,
-          })
-          sandboxToUpdate.state = SandboxState.STARTED
-          sandboxToUpdate.setBackupState(BackupState.NONE)
-          if (daemonVersion) {
-            sandboxToUpdate.daemonVersion = daemonVersion
-          }
-          await this.sandboxRepository.save(sandboxToUpdate)
+          await this.updateSandboxState(
+            sandbox.id,
+            SandboxState.STARTED,
+            lockCode,
+            undefined,
+            undefined,
+            daemonVersion,
+            BackupState.NONE,
+          )
           return DONT_SYNC_AGAIN
         } else {
           await this.updateSandboxState(sandbox.id, SandboxState.STARTED, lockCode, undefined, undefined, daemonVersion)
@@ -446,13 +452,25 @@ export class SandboxStartAction extends SandboxAction {
         break
       }
       case SandboxState.ERROR: {
-        await this.updateSandboxState(sandbox.id, SandboxState.ERROR, lockCode)
+        await this.updateSandboxState(
+          sandbox.id,
+          SandboxState.ERROR,
+          lockCode,
+          undefined,
+          'Sandbox entered error state on runner during startup wait loop',
+        )
         break
       }
       // also any other state that is not STARTED
       default: {
         console.error(`Sandbox ${sandbox.id} is in unexpected state ${sandboxInfo.state}`)
-        await this.updateSandboxState(sandbox.id, SandboxState.ERROR, lockCode)
+        await this.updateSandboxState(
+          sandbox.id,
+          SandboxState.ERROR,
+          lockCode,
+          undefined,
+          `Sandbox is in unexpected state: ${sandboxInfo.state}`,
+        )
         break
       }
     }

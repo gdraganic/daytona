@@ -39,6 +39,7 @@ export abstract class SandboxAction {
     runnerId?: string | null | undefined,
     errorReason?: string,
     daemonVersion?: string,
+    backupState?: BackupState,
   ) {
     //  check if the lock code is still valid
     const lockKey = getStateChangeLockKey(sandboxId)
@@ -46,22 +47,14 @@ export abstract class SandboxAction {
 
     if (currentLockCode === null) {
       this.logger.warn(
-        'no lock code found - state update action expired - skipping',
-        'sandboxId',
-        sandboxId,
-        'state',
-        state,
+        `no lock code found - state update action expired - skipping - sandboxId: ${sandboxId} - state: ${state}`,
       )
       return
     }
 
     if (expectedLockCode.getCode() !== currentLockCode.getCode()) {
       this.logger.warn(
-        'lock code mismatch - state update action expired - skipping',
-        'sandboxId',
-        sandboxId,
-        'state',
-        state,
+        `lock code mismatch - state update action expired - skipping - sandboxId: ${sandboxId} - state: ${state}`,
       )
       return
     }
@@ -98,12 +91,20 @@ export abstract class SandboxAction {
       sandbox.errorReason = errorReason
     }
 
+    if (sandbox.state === SandboxState.ERROR && !sandbox.errorReason) {
+      sandbox.errorReason = 'Sandbox is in error state during update'
+    }
+
     if (daemonVersion !== undefined) {
       sandbox.daemonVersion = daemonVersion
     }
 
     if (sandbox.state == SandboxState.DESTROYED) {
       sandbox.backupState = BackupState.NONE
+    }
+
+    if (backupState !== undefined) {
+      sandbox.setBackupState(backupState)
     }
 
     await this.sandboxRepository.save(sandbox)

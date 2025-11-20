@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0
  */
 
-import { IsNumber, IsString } from 'class-validator'
+import { IsString } from 'class-validator'
 import { ApiProperty, ApiSchema } from '@nestjs/swagger'
 
 @ApiSchema({ name: 'CreateRunner' })
@@ -20,19 +20,11 @@ export class CreateRunnerDto {
   @ApiProperty()
   proxyUrl: string
 
-  @IsNumber()
-  @ApiProperty()
-  cpu: number
-
-  @IsNumber()
-  @ApiProperty()
-  memoryGiB: number
-
-  @IsNumber()
-  @ApiProperty()
-  diskGiB: number
-
   @IsString()
   @ApiProperty()
   regionId: string
+
+  @IsString()
+  @ApiProperty()
+  name: string
 }

@@ -23,6 +23,7 @@ Name | Type | Description | Notes
 **currentSnapshotCount** | **number** | Current snapshot count | [optional] [default to undefined]
 **availabilityScore** | **number** | Runner availability score | [optional] [default to undefined]
 **regionId** | **string** | The region ID of the runner | [default to undefined]
+**name** | **string** | The name of the runner | [default to undefined]
 **state** | [**RunnerState**](RunnerState.md) | The state of the runner | [default to undefined]
 **lastChecked** | **string** | The last time the runner was checked | [optional] [default to undefined]
 **unschedulable** | **boolean** | Whether the runner is unschedulable | [default to undefined]
@@ -55,6 +56,7 @@ const instance: Runner = {
     currentSnapshotCount,
     availabilityScore,
     regionId,
+    name,
     state,
     lastChecked,
     unschedulable,

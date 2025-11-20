@@ -97,6 +97,10 @@ export interface RunnerFull {
    */
   regionId: string
   /**
+   * The name of the runner
+   */
+  name: string
+  /**
    * The state of the runner
    */
   state: RunnerState

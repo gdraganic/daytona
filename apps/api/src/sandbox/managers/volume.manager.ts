@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0
  */
 
-import { Injectable, Logger, OnApplicationShutdown, OnModuleInit } from '@nestjs/common'
+import { Injectable, Logger, OnApplicationBootstrap, OnApplicationShutdown, OnModuleInit } from '@nestjs/common'
 import { Volume } from '../entities/volume.entity'
 import { VolumeState } from '../enums/volume-state.enum'
-import { VolumeService } from '../services/volume.service'
-import { Cron, CronExpression } from '@nestjs/schedule'
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule'
 import { S3Client, CreateBucketCommand, ListBucketsCommand, PutBucketTaggingCommand } from '@aws-sdk/client-s3'
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { Redis } from 'ioredis'
@@ -20,24 +19,32 @@ import { TrackJobExecution } from '../../common/decorators/track-job-execution.d
 import { setTimeout } from 'timers/promises'
 import { LogExecution } from '../../common/decorators/log-execution.decorator'
 import { WithInstrumentation } from '../../common/decorators/otel.decorator'
+import { VolumeService } from '../services/volume.service'
 
 const VOLUME_STATE_LOCK_KEY = 'volume-state-'
 
 @Injectable()
-export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnApplicationShutdown {
+export class VolumeManager
+  implements OnModuleInit, TrackableJobExecutions, OnApplicationShutdown, OnApplicationBootstrap
+{
   activeJobs = new Set<string>()
 
   private readonly logger = new Logger(VolumeManager.name)
   private processingVolumes: Set<string> = new Set()
-  private skipTestConnection: boolean
-  private s3Client: S3Client
+  private skipTestConnection = false
+  private s3Client: S3Client | null = null
 
   constructor(
     private readonly volumeService: VolumeService,
     private readonly configService: TypedConfigService,
     @InjectRedis() private readonly redis: Redis,
     private readonly redisLockProvider: RedisLockProvider,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {
+    if (!this.configService.get('s3.endpoint')) {
+      return
+    }
+
     const endpoint = this.configService.getOrThrow('s3.endpoint')
     const region = this.configService.getOrThrow('s3.region')
     const accessKeyId = this.configService.getOrThrow('s3.accessKey')
@@ -56,12 +63,24 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
   }
 
   async onModuleInit() {
+    if (!this.s3Client) {
+      return
+    }
+
     if (this.skipTestConnection) {
       this.logger.debug('Skipping S3 connection test')
       return
     }
 
     await this.testConnection()
+  }
+
+  onApplicationBootstrap() {
+    if (!this.s3Client) {
+      return
+    }
+
+    this.schedulerRegistry.getCronJob('process-pending-volumes').start()
   }
 
   async onApplicationShutdown() {
@@ -84,11 +103,15 @@ export class VolumeManager implements OnModuleInit, TrackableJobExecutions, OnAp
     }
   }
 
-  @Cron(CronExpression.EVERY_5_SECONDS, { name: 'process-pending-volumes', waitForCompletion: true })
+  @Cron(CronExpression.EVERY_5_SECONDS, { name: 'process-pending-volumes', waitForCompletion: true, disabled: true })
   @TrackJobExecution()
   @LogExecution('process-pending-volumes')
   @WithInstrumentation()
   async processPendingVolumes() {
+    if (!this.s3Client) {
+      return
+    }
+
     try {
       // Lock the entire process
       const lockKey = 'process-pending-volumes'

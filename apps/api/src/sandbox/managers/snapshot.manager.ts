@@ -611,7 +611,7 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       await this.snapshotService.saveSnapshot(snapshot)
 
       const registry = await this.dockerRegistryService.getDefaultInternalRegistry()
-      const internalSnapshotName = `${registry.url}/${registry.project}/${snapshot.buildInfo.snapshotRef}`
+      const internalSnapshotName = `${registry.url.replace(/^(https?:\/\/)/, '')}/${registry.project}/${snapshot.buildInfo.snapshotRef}`
 
       // V3 runners: create build job
       if (runner.version === '3') {
@@ -690,9 +690,12 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
   async handleSnapshotStatePulling(snapshot: Snapshot) {
     const localImageName = snapshot.buildInfo ? snapshot.internalName : snapshot.imageName
     // Check timeout first
+    // Use updatedAt instead of createdAt because updatedAt reflects when the snapshot
+    // entered PULLING state, giving us the full timeout window from that point
     const timeoutMinutes = 15
     const timeoutMs = timeoutMinutes * 60 * 1000
-    if (Date.now() - snapshot.createdAt.getTime() > timeoutMs) {
+    const pullingStartTime = snapshot.updatedAt.getTime()
+    if (Date.now() - pullingStartTime > timeoutMs) {
       await this.updateSnapshotState(snapshot.id, SnapshotState.ERROR, 'Timeout while pulling snapshot')
       return
     }
@@ -767,9 +770,35 @@ export class SnapshotManager implements TrackableJobExecutions, OnApplicationShu
       )
       // Propagate snapshot to one runner in default region so it can be used immediately
       if (runner) {
+        const snapshotRunner = new SnapshotRunner()
+        snapshotRunner.snapshotRef = snapshot.internalName
+        snapshotRunner.runnerId = runner.id
+        snapshotRunner.state = SnapshotRunnerState.PULLING_SNAPSHOT
+        await this.snapshotService.saveSnapshotRunner(snapshotRunner)
         await this.propagateSnapshotToRunner(snapshot.internalName, runner)
       }
       await this.updateSnapshotState(snapshot.id, SnapshotState.ACTIVE)
+
+      const customRegions = await this.regionService.findAll(organization.id)
+      const customRegionIds = customRegions.map((region) => region.id)
+
+      // const customRunners = await this.runnerRepository.find({
+      const customRunners = await this.runnerService.findReadyRunnersWithMinScoreAndCustomRegion(
+        this.configService.getOrThrow('runnerUsage.declarativeBuildScoreThreshold'),
+        customRegionIds,
+      )
+
+      customRunners.forEach(async (runner) => {
+        const snapshotRunner = new SnapshotRunner()
+        snapshotRunner.snapshotRef = snapshot.internalName
+        snapshotRunner.runnerId = runner.id
+        snapshotRunner.state = SnapshotRunnerState.PULLING_SNAPSHOT
+        await this.snapshotService.saveSnapshotRunner(snapshotRunner)
+        //  do not await the propagation, let the sync job handle it
+        this.propagateSnapshotToRunner(snapshot.internalName, runner).catch((err) => {
+          this.logger.error(`Error propagating snapshot ${snapshot.id} to runner ${runner.id}: ${fromAxiosError(err)}`)
+        })
+      })
 
       // Best effort removal of old snapshot from transient registry
       const registry = await this.dockerRegistryService.findOneBySnapshotImageName(

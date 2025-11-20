@@ -25,11 +25,9 @@ import { getMaskedToken } from '@/lib/utils'
 
 const DEFAULT_FORM_DATA = {
   domain: '',
+  name: '',
   apiUrl: '',
   proxyUrl: '',
-  cpu: 16,
-  memoryGiB: 64,
-  diskGiB: 4000,
   regionId: '',
 }
 
@@ -44,7 +42,7 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
   const [loading, setLoading] = useState(false)
 
   const [createdRunner, setCreatedRunner] = useState<CreateRunnerResponse | null>(null)
-  const [isApiKeyRevealed, setIsApiKeyRevealed] = useState(false)
+  const [isTokenRevealed, setIsTokenRevealed] = useState(false)
 
   const [formData, setFormData] = useState(DEFAULT_FORM_DATA)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
@@ -62,16 +60,8 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
       errors.domain = 'Domain is required'
     }
 
-    if (formData.cpu < 16) {
-      errors.cpu = 'vCPU must be at least 16 cores'
-    }
-
-    if (formData.memoryGiB < 64) {
-      errors.memoryGiB = 'Memory must be at least 64 GiB'
-    }
-
-    if (formData.diskGiB < 4000) {
-      errors.diskGiB = 'Disk must be at least 4000 GiB'
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required'
     }
 
     if (!formData.regionId) {
@@ -91,11 +81,9 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
     try {
       const runner = await onCreateRunner({
         domain: formData.domain,
+        name: formData.name,
         apiUrl: formData.apiUrl,
         proxyUrl: formData.proxyUrl,
-        cpu: formData.cpu,
-        memoryGiB: formData.memoryGiB,
-        diskGiB: formData.diskGiB,
         regionId: formData.regionId,
       })
       if (runner) {
@@ -156,14 +144,14 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
         {createdRunner ? (
           <div className="space-y-6">
             <div className="space-y-3">
-              <Label htmlFor="api-key">API Key</Label>
+              <Label htmlFor="token">Token</Label>
               <div className="p-3 flex justify-between items-center rounded-md bg-green-100 text-green-600 dark:bg-green-900/50 dark:text-green-400">
                 <span
                   className="overflow-x-auto pr-2 cursor-text select-all"
-                  onMouseEnter={() => setIsApiKeyRevealed(true)}
-                  onMouseLeave={() => setIsApiKeyRevealed(false)}
+                  onMouseEnter={() => setIsTokenRevealed(true)}
+                  onMouseLeave={() => setIsTokenRevealed(false)}
                 >
-                  {isApiKeyRevealed ? createdRunner.token : getMaskedToken(createdRunner.token)}
+                  {isTokenRevealed ? createdRunner.token : getMaskedToken(createdRunner.token)}
                 </span>
                 <Copy
                   className="w-4 h-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
@@ -171,7 +159,7 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                Save this API key securely. You won't be able to see it again.
+                Save this token securely. You won't be able to see it again.
               </p>
             </div>
           </div>
@@ -226,60 +214,17 @@ export const CreateRunnerDialog: React.FC<CreateRunnerDialogProps> = ({ regions,
               {formErrors.domain && <p className="text-sm text-destructive">{formErrors.domain}</p>}
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-3">
-                <Label htmlFor="cpu">vCPU</Label>
-                <Input
-                  id="cpu"
-                  type="number"
-                  min="1"
-                  value={formData.cpu}
-                  onChange={(e) => {
-                    setFormData((prev) => ({ ...prev, cpu: parseInt(e.target.value) || 1 }))
-                    if (formErrors.cpu) {
-                      setFormErrors((prev) => ({ ...prev, cpu: '' }))
-                    }
-                  }}
-                  className={formErrors.cpu ? 'border-destructive' : ''}
-                />
-                {formErrors.cpu && <p className="text-sm text-destructive">{formErrors.cpu}</p>}
-              </div>
-
-              <div className="space-y-3">
-                <Label htmlFor="memoryGiB">Memory (GiB)</Label>
-                <Input
-                  id="memoryGiB"
-                  type="number"
-                  min="1"
-                  value={formData.memoryGiB}
-                  onChange={(e) => {
-                    setFormData((prev) => ({ ...prev, memoryGiB: parseInt(e.target.value) || 1 }))
-                    if (formErrors.memoryGiB) {
-                      setFormErrors((prev) => ({ ...prev, memoryGiB: '' }))
-                    }
-                  }}
-                  className={formErrors.memoryGiB ? 'border-destructive' : ''}
-                />
-                {formErrors.memoryGiB && <p className="text-sm text-destructive">{formErrors.memoryGiB}</p>}
-              </div>
-
-              <div className="space-y-3">
-                <Label htmlFor="diskGiB">Disk (GiB)</Label>
-                <Input
-                  id="diskGiB"
-                  type="number"
-                  min="1"
-                  value={formData.diskGiB}
-                  onChange={(e) => {
-                    setFormData((prev) => ({ ...prev, diskGiB: parseInt(e.target.value) || 1 }))
-                    if (formErrors.diskGiB) {
-                      setFormErrors((prev) => ({ ...prev, diskGiB: '' }))
-                    }
-                  }}
-                  className={formErrors.diskGiB ? 'border-destructive' : ''}
-                />
-                {formErrors.diskGiB && <p className="text-sm text-destructive">{formErrors.diskGiB}</p>}
-              </div>
+            <div className="space-y-3">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => {
+                  setFormData((prev) => ({ ...prev, name: e.target.value }))
+                }}
+                placeholder="runner-1"
+              />
+              {formErrors.name && <p className="text-sm text-destructive">{formErrors.name}</p>}
             </div>
           </form>
         )}

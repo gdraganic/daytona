@@ -9472,13 +9472,11 @@ components:
       type: object
     CreateRunner:
       example:
-        diskGiB: 1.4658129805029452
         apiUrl: apiUrl
         regionId: regionId
         proxyUrl: proxyUrl
-        memoryGiB: 6.027456183070403
         domain: domain
-        cpu: 0.8008281904610115
+        name: name
       properties:
         domain:
           type: string
@@ -9486,20 +9484,14 @@ components:
           type: string
         proxyUrl:
           type: string
-        cpu:
-          type: number
-        memoryGiB:
-          type: number
-        diskGiB:
-          type: number
         regionId:
+          type: string
+        name:
           type: string
       required:
         - apiUrl
-        - cpu
-        - diskGiB
         - domain
-        - memoryGiB
+        - name
         - proxyUrl
         - regionId
       type: object
@@ -9562,6 +9554,7 @@ components:
         disk: 100
         regionId: '123456789012'
         domain: runner1.example.com
+        name: runner1
         lastChecked: 2024-10-01T12:00:00Z
       properties:
         id:
@@ -9639,6 +9632,10 @@ components:
         regionId:
           description: The region ID of the runner
           example: '123456789012'
+          type: string
+        name:
+          description: The name of the runner
+          example: runner1
           type: string
         state:
           allOf:
@@ -9676,6 +9673,7 @@ components:
         - gpuType
         - id
         - memory
+        - name
         - proxyUrl
         - regionId
         - state
@@ -9710,6 +9708,7 @@ components:
         disk: 100
         regionId: '123456789012'
         domain: runner1.example.com
+        name: runner1
         lastChecked: 2024-10-01T12:00:00Z
       properties:
         id:
@@ -9787,6 +9786,10 @@ components:
         regionId:
           description: The region ID of the runner
           example: '123456789012'
+          type: string
+        name:
+          description: The name of the runner
+          example: runner1
           type: string
         state:
           allOf:
@@ -9829,6 +9832,7 @@ components:
         - gpuType
         - id
         - memory
+        - name
         - proxyUrl
         - regionId
         - state
