@@ -113,23 +113,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - name: Build and run Dev Container task
+        uses: devcontainers/ci@v0.3
         with:
-          go-version-file: go.work
-          cache: true
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - run: corepack enable
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Build all
-        run: |
-          python3 -m pip install poetry==2.1.3
-          sudo apt-get update && sudo apt-get install -y gcc libx11-dev libxtst-dev
-          yarn
-          yarn build --nxBail=true
+          # Change this to be your CI task/script
+          push: never
+          runCmd: yarn && yarn build
 
   license-check:
     runs-on: ubuntu-latest
